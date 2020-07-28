@@ -19,6 +19,7 @@ def about():
 @app.route('/target')
 def target():
     p = figure(plot_width=1500, plot_height=1500)
+
     # draw the circles of the target from the largest to the smallest
     c1 = p.quad(top=[600], bottom=[-600], left=[-600], right=[600], color="black").glyph
     c1.line_color = "white"
