@@ -14,6 +14,9 @@ def home():
 def about():
     return render_template('about.html')
 
-
+@app.route('/index')
+def index():
+    lol1 = 1
+    return None
 if __name__ == '__main__':
     app.run()
