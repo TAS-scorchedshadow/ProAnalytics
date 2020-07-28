@@ -14,6 +14,9 @@ def home():
 def about():
     return render_template('about.html')
 
+def bruh():
+    return "Hello dylan"
+
 
 if __name__ == '__main__':
     app.run()
