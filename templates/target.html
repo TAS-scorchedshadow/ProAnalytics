@@ -11,8 +11,12 @@
         crossorigin="anonymous"></script>
 
 <div class="container">
-    {{ script | safe }}
-    {{ div | safe }}
+    <div class="row">
+        <div class = "col-6">
+            {{ script | safe }}
+            {{ div | safe }}
+        </div>
+    </div>
 </div>
 
 {% endblock %}
