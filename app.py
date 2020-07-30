@@ -7,6 +7,8 @@ app = Flask(__name__)
 app.secret_key = "super secret"
 bootstrap = Bootstrap(app)
 
+array_shots = [[150,0]]
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -37,9 +39,14 @@ def target():
     c6 = p.circle([0], [0], size=70, color="black").glyph
     c6.line_color = "white"
     c6.line_width = 4
-    c6 = p.circle([0], [0], size=35, color="black").glyph
+    c6 = p.circle([100], [0], size=35, color="black").glyph
     c6.line_color = "white"
     c6.line_width = 2
+    for shots in range(len(array_shots)):
+        print(array_shots[0])
+        c7 = p.circle([array_shots[0][0]], [array_shots[0][1]], size=15, color="red").glyph
+        c7.line_color = "white"
+        c7.line_width = 2
     p.axis.visible = False
     p.xgrid.visible = False
     p.ygrid.visible = False
@@ -48,7 +55,7 @@ def target():
     return render_template('target.html', script=script, div=div)
 
 
-def plotShot(p, x, y, num):
+def plotShot(p, x, y, num):K
     p.circle([x], [y], size=30, color="black", line_color="white", line_width=2)
     p.text([x],[y], text=[str(num)], text_baseline="middle", text_align="center", color="white")
 
