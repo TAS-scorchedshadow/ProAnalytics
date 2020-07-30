@@ -55,7 +55,7 @@ def target():
     return render_template('target.html', script=script, div=div)
 
 
-def plotShot(p, x, y, num):K
+def plotShot(p, x, y, num):
     p.circle([x], [y], size=30, color="black", line_color="white", line_width=2)
     p.text([x],[y], text=[str(num)], text_baseline="middle", text_align="center", color="white")
 
