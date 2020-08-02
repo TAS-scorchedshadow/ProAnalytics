@@ -3,6 +3,7 @@ from flask_bootstrap import Bootstrap
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import Range1d
+from jsonProcessing import validateShots
 
 app = Flask(__name__)
 app.secret_key = "super secret"
@@ -14,6 +15,9 @@ array_shots = [[150, 0],[300,100],[499,700]]
 @app.route('/')
 @app.route('/home')
 def home():
+    jsonID = 1592616479803  #ID of json file
+    filePath = "testJson/string-" + str(jsonID) + ".txt"
+    validateShots(filePath)
     return render_template('home.html')
 
 
