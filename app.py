@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import Range1d
-from jsonProcessing import validateShots
+from shotProcessing import validateShots, getScore
 
 app = Flask(__name__)
 app.secret_key = "super secret"
@@ -15,6 +15,12 @@ array_shots = [[150, 0],[300,100],[499,700]]
 @app.route('/')
 @app.route('/home')
 def home():
+    jsonID = 1551500850141  #ID of json file
+    filePath = "testJson/string-" + str(jsonID) + ".txt"
+    s = validateShots(filePath)
+    for i in range(len(s['validShots'])):
+        score = getScore(s['validShots'][i])
+        print(str(score))
     return render_template('home.html')
 
 
@@ -50,7 +56,7 @@ def drawTarget():
     # add a shot (test)
     jsonID = 1592616479803  #ID of json file
     filePath = "testJson/string-" + str(jsonID) + ".txt"
-    s = validateShots(filePath)
+    s = validateShots(filePath)['validShots']
     for i in range(len(s)):
         plotShot(p, s[i]['x'], s[i]['y'], i+1)
     script, div = components(p)
