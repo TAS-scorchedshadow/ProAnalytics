@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% set active_page = "test" %}
+{% set active_page = "target" %}
 {% block page_title %} Target Test {% endblock %}
 {% block page_content %}
 
@@ -11,8 +11,12 @@
         crossorigin="anonymous"></script>
 
 <div class="container">
-    {{ script | safe }}
-    {{ div | safe }}
+    <div class="row">
+        <div class = "col-6">
+            {{ script | safe }}
+            {{ div | safe }}
+        </div>
+    </div>
 </div>
 
 {% endblock %}
