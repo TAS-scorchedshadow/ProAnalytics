@@ -14,5 +14,4 @@ def validateShots(txtfile):
         if numValidShot != data["n_shots"]:         #Check to see if number of validated shots met expected value
             print("validateShots validated" , str(numValidShot), "shots. Which differed from the original JSON"
                   , str(data["n_shots"]))
-
-        print(validShots)
+    return validShots

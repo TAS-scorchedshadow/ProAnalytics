@@ -15,9 +15,6 @@ array_shots = [[150, 0],[300,100],[499,700]]
 @app.route('/')
 @app.route('/home')
 def home():
-    jsonID = 1592616479803  #ID of json file
-    filePath = "testJson/string-" + str(jsonID) + ".txt"
-    validateShots(filePath)
     return render_template('home.html')
 
 
@@ -51,8 +48,11 @@ def drawTarget():
     p.ygrid.visible = False
 
     # add a shot (test)
-    for i in range(len(array_shots)):
-        plotShot(p, array_shots[i][0], array_shots[i][1], i+1)
+    jsonID = 1592616479803  #ID of json file
+    filePath = "testJson/string-" + str(jsonID) + ".txt"
+    s = validateShots(filePath)
+    for i in range(len(s)):
+        plotShot(p, s[i]['x'], s[i]['y'], i+1)
     script, div = components(p)
     return render_template('target.html', script=script, div=div)
 
