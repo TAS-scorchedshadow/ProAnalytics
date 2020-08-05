@@ -29,6 +29,10 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/upload')
+def upload():
+    return render_template('upload.html')
+
 @app.route('/target')
 def drawTarget():
     p = figure(plot_width=1500, plot_height=1500, tools="", sizing_mode="scale_width")
