@@ -2,5 +2,11 @@
 {% set active_page = "upload" %}
 {% block page_title %} Upload {% endblock %}
 {% block page_content %}
-    <div></div>
+    <form method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <!--Create upload button-->
+        {{ form.file.label }}
+        {{ form.file() }}
+        {{ form.submit }}
+    </form>
 {% endblock %}
