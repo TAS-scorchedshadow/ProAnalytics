@@ -5,8 +5,9 @@
     <form method="post" enctype="multipart/form-data">
         {{ form.csrf_token }}
         <!--Create upload button-->
-        {{ form.file.label }}
-        {{ form.file() }}
+        {{ form.file(class_="filestyle", data_dragdrop='true', data_btnClass="btn-primary", placeholder="Drop Files Here") }}
         {{ form.submit }}
     </form>
+    <!-- Bootstrap filestyle plugin https://markusslima.github.io/bootstrap-filestyle/options.html -->
+    <script type="text/javascript" src="../static/bootstrap-filestyle.min.js"></script>
 {% endblock %}

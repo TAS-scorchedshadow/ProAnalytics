@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file, send_from_directory, safe_join, abort
 from flask_bootstrap import Bootstrap
 from bokeh.plotting import figure
 from bokeh.embed import components
@@ -11,7 +11,6 @@ import os
 app = Flask(__name__)
 app.secret_key = "super secret"
 bootstrap = Bootstrap(app)
-
 array_shots = [[150, 0], [300, 100], [499, 700]]
 
 
