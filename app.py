@@ -23,7 +23,7 @@ def home():
     for i in range(len(s['validShots'])):
         score = getScore(s['validShots'][i])
         print(str(score))
-    return render_template('styleTest.html')
+    return render_template('base.html')
 
 
 @app.route('/about')
