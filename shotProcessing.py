@@ -29,3 +29,28 @@ def getScore(shot):
     else:
         score['score'] = shot['score']
     return score
+
+def statisticsScore():
+    jsonID = 1551500850141  # ID of json file
+    filePath = "testJson/string-" + str(jsonID) + ".txt"
+    s = validateShots(filePath)
+    score = []
+    totalShots = 0
+    totalScore = 0
+    for i in range(len(s['validShots'])):
+        loopScore = getScore(s['validShots'][i])
+        totalShots += 1
+        totalScore = loopScore['score'] + totalScore
+        score.append(loopScore["score"])
+    score = sorted(score)
+    mean = totalScore/totalShots
+    if (len(score))%2 == 0:
+        median = (((score[int(len(score)/2)])) + (((score[int(len(score)/2) + 1]))) ) / 2
+    else:
+        median = ((score[math.ceil(len(score)/2)]))
+    scoreRange = score[-1] - score[0]
+    print(mean)
+    print(median)
+    print(scoreRange)
+
+statisticsScore()
