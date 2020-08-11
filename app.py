@@ -7,6 +7,8 @@ from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm
 from werkzeug.utils import secure_filename
 import os
+import math
+import statistics
 
 app = Flask(__name__)
 app.secret_key = "super secret"
@@ -22,7 +24,7 @@ def home():
     s = validateShots(filePath)
     for i in range(len(s['validShots'])):
         score = getScore(s['validShots'][i])
-        print(str(score))
+        randomCalculations(score)
     return render_template('home.html')
 
 
@@ -87,6 +89,29 @@ def plotShot(p, x, y, num):
     p.circle([x], [y], size=30, color="black", line_color="white", line_width=2)
     p.text([x], [y], text=[str(num)], text_baseline="middle", text_align="center", color="white")
 
+# Using the
+def randomCalculations(score):
+    jsonID = 1551500850141  # ID of json file
+    filePath = "testJson/string-" + str(jsonID) + ".txt"
+    s = validateShots(filePath)
+    score = []
+    totalShots = 0
+    totalScore = 0
+    for i in range(len(s['validShots'])):
+        loopScore = getScore(s['validShots'][i])
+        totalShots += 1
+        totalScore = loopScore['score'] + totalScore
+        score.append(loopScore["score"])
+    score = sorted(score)
+    mean = totalScore/totalShots
+    if (len(score))%2 == 0:
+        median = (((score[int(len(score)/2)])) + (((score[int(len(score)/2) + 1]))) ) / 2
+    else:
+        median = ((score[math.ceil(len(score)/2)]))
+    scoreRange = score[-1] - score[0]
+    print(mean)
+    print(median)
+    print(scoreRange)
 
 if __name__ == '__main__':
     app.run(debug=True)
