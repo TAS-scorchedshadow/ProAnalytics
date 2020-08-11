@@ -53,4 +53,5 @@ def statisticsScore():
     print(median)
     print(scoreRange)
 
-statisticsScore()
+if __name__ == "__main__":
+    statisticsScore()
