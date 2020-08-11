@@ -1,4 +1,5 @@
-
+import math
+import statistics
 import json
 def validateShots(txtfile):
     numValidShot = 0
@@ -30,6 +31,8 @@ def getScore(shot):
         score['score'] = shot['score']
     return score
 
+#general calculations for the mean, median and range of the dataset. The information is returned at the bottom
+#data brought in from the json, and the shot score statistical information is created
 def statisticsScore():
     jsonID = 1551500850141  # ID of json file
     filePath = "testJson/string-" + str(jsonID) + ".txt"
@@ -49,9 +52,7 @@ def statisticsScore():
     else:
         median = ((score[math.ceil(len(score)/2)]))
     scoreRange = score[-1] - score[0]
-    print(mean)
-    print(median)
-    print(scoreRange)
+    return mean,median,scoreRange
 
 if __name__ == "__main__":
     statisticsScore()

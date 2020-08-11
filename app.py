@@ -7,8 +7,6 @@ from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm
 from werkzeug.utils import secure_filename
 import os
-import math
-import statistics
 
 app = Flask(__name__)
 app.secret_key = "super secret"
