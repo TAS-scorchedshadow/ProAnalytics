@@ -21,11 +21,11 @@ def create_target(range_type):
     p = figure(plot_width=plot_size, plot_height=plot_size, tools="", sizing_mode="scale_width")
     p.toolbar.logo = None
     # Draws the circles of the target from the largest to the smallest
-    p.circle([0], [0], radius=target_details[range_type][5]/2, color="black", line_color="white", line_width=4)
-    p.circle([0], [0], radius=target_details[range_type][4]/2, color="black", line_color="white", line_width=4)
-    p.circle([0], [0], radius=target_details[range_type][3]/2, color="black", line_color="white", line_width=4)
-    p.circle([0], [0], radius=target_details[range_type][2]/2, color="black", line_color="white", line_width=4)
-    p.circle([0], [0], radius=target_details[range_type][1]/2, color="black", line_color="white", line_width=4)
+    p.circle([0], [0], radius=int(target_details[range_type][5]/2), color="black", line_color="white", line_width=4)
+    p.circle([0], [0], radius=int(target_details[range_type][4]/2), color="black", line_color="white", line_width=4)
+    p.circle([0], [0], radius=int(target_details[range_type][3]/2), color="black", line_color="white", line_width=4)
+    p.circle([0], [0], radius=int(target_details[range_type][2]/2), color="black", line_color="white", line_width=4)
+    p.circle([0], [0], radius=int(target_details[range_type][1]/2), color="black", line_color="white", line_width=4)
 
     # Draws the gridlines of the target, from middle to left/top, then middle to right/bottom
     x = 0
