@@ -7,6 +7,7 @@ from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm
 from werkzeug.utils import secure_filename
 import os
+import graphProcessing
 
 app = Flask(__name__)
 app.secret_key = "super secret"
@@ -76,7 +77,13 @@ def drawTarget():
     for i in range(len(s)):
         plotShot(p, s[i]['x'], s[i]['y'], i + 1)
     script, div = components(p)
-    return render_template('target.html', script=script, div=div)
+
+    # testing compare line graph
+    scriptLine, divLine = graphProcessing.compareLine([[50, 46, 48, 49, 50, 50], [50, 44, 50, 49, 48, 49]],
+                                              ['10/08/2020', '11/08/2020', '12/08/2020', '13/08/2020', '14/08/2020',
+                                               '15/08/2020'], ['Andrew', 'Ryan'])
+
+    return render_template('target.html', script=script, div=div, scriptLine=scriptLine, divLine=divLine)
 
 
 # Add a circle with the number of the shot in the middle
