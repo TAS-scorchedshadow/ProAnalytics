@@ -4,8 +4,7 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import Range1d
 from shotProcessing import validateShots, getScore
-# todo: Uncomment this when you need to test it
-# from uploadForms import uploadForm
+from uploadForms import uploadForm
 from werkzeug.utils import secure_filename
 from drawtarget import create_target
 import os

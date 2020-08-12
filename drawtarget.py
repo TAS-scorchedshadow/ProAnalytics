@@ -18,7 +18,7 @@ def create_target(range_type):
                       "600yds": (548.64, 145, 290, 600, 915, 1320)}
     plot_size = 1700
 
-    p = figure(plot_width=plot_size, plot_height=plot_size, tools="", sizing_mode="scale_width")
+    p = figure(plot_width=plot_size, plot_height=plot_size, tools="", sizing_mode="scale_width",toolbar_location=None)
     p.toolbar.logo = None
     # Draws the circles of the target from the largest to the smallest
     p.circle([0], [0], radius=int(target_details[range_type][5]/2), color="black", line_color="white", line_width=4)
@@ -48,4 +48,7 @@ def create_target(range_type):
     p.axis.visible = False
     p.xgrid.visible = False
     p.ygrid.visible = False
+
+    # Make border
+    p.border_fill_color = "slategray"
     return p
