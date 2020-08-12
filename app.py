@@ -4,8 +4,10 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import Range1d
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm
+# todo: Uncomment this when you need to test it
+# from uploadForms import uploadForm
 from werkzeug.utils import secure_filename
+from drawtarget import create_target
 import os
 
 app = Flask(__name__)
@@ -46,27 +48,11 @@ def upload():
 
 @app.route('/target')
 def drawTarget():
-    p = figure(plot_width=1500, plot_height=1500, tools="", sizing_mode="scale_width")
-    p.toolbar.logo = None
-
-    # draw the circles of the target from the largest to the smallest
-    p.circle([0], [0], radius=600, color="black", line_color="white", line_width=4)
-    p.circle([0], [0], radius=420, color="black", line_color="white", line_width=4)
-    p.circle([0], [0], radius=280, color="black", line_color="white", line_width=4)
-    p.circle([0], [0], radius=140, color="black", line_color="white", line_width=4)
-    p.circle([0], [0], radius=70, color="black", line_color="white", line_width=4)
-
-    # Resize viewpoint so origin is at the middle and the entire graph is onscreen
-    axisLimit = 600  # Height of Graph
-    p.y_range = Range1d(start=-1 * axisLimit, end=axisLimit)
-
-    axisLimit = 600  # Length of Graph
-    p.x_range = Range1d(start=-1 * axisLimit, end=axisLimit)
-
-    # make the rest of the grid invisible so only the target is seen
-    p.axis.visible = False
-    p.xgrid.visible = False
-    p.ygrid.visible = False
+    p = create_target("300m")   # Creates a target with the 300m face
+    # todo: Change this to pull from database info instead of directly from json
+    # Required: x/y value of shot, shot number
+    # Required: shot grouping radius, shot grouping center point
+    # Required: target size
 
     # add a shot (test)
     jsonID = 1592616479803  # ID of json file
@@ -74,6 +60,11 @@ def drawTarget():
     s = validateShots(filePath)['validShots']
     for i in range(len(s)):
         plotShot(p, s[i]['x'], s[i]['y'], i + 1)
+    # Uses stats_circle_center and stats_circle_radius in order to perform
+    # Currently hardcoded to json 1592616479803
+    group_center = (12.66, -32.5)
+    group_radius = 228.8
+    p.circle([group_center[0]], [group_center[1]], radius=group_radius, fill_alpha=0, line_color="yellow", line_width=4)
     script, div = components(p)
     return render_template('target.html', script=script, div=div)
 
