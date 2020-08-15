@@ -78,6 +78,54 @@ def plotShot(p, x, y, num):
 
 # Using the
 
+@app.route('/comparitiveBar')
+def comparitiveBar():
+
+    allStudentsTotal= {"SMITH_John": [7, 12], "JACK_Bob": [7, 6], "LI_Reginald": [9, 33]}
+    year7name = []
+    year7points = []
+    year8name = []
+    year8points = []
+    year9name = []
+    year9points = []
+    year10name = []
+    year10points = []
+    year11name = []
+    year11points = []
+    year12name = []
+    year12points = []
+
+    for i in allStudentsTotal:
+        if (allStudentsTotal[i])[0] == 7:
+            year7name.append((i))
+            year7points.append(((allStudentsTotal[i])[1]))
+        if (allStudentsTotal[i])[0] == 8:
+            year8name.append((i))
+            year8points.append(((allStudentsTotal[i])[1]))
+        if (allStudentsTotal[i])[0] == 9:
+            year9name.append((i))
+            year9points.append(((allStudentsTotal[i])[1]))
+        if (allStudentsTotal[i])[0] == 10:
+            year10name.append((i))
+            year10points.append(((allStudentsTotal[i])[1]))
+        if (allStudentsTotal[i])[0] == 11:
+            year11name.append((i))
+            year11points.append(((allStudentsTotal[i])[1]))
+        if (allStudentsTotal[i])[0] == 12:
+            year12name.append((i))
+            year12points.append(((allStudentsTotal[i])[1]))
+
+    for i in allStudentsTotal:
+        p_vbar = figure(x_range=allStudentsTotal[i], plot_height=600, plot_width=(600), title="Standings",
+                    toolbar_location=None, tools="hover")
+                    #tooltips="@year7names: @year7points")  # specifies the formatting of the data
+        #for j in range(len(allStudentsTotal)):
+        p_vbar.vbar(allStudentsTotal[i], top=(allStudentsTotal[i][1]), color="red", width=0.2)  # names are the x points, top of the bar graph creates the column from 0 on the y-axis, width specifies gap between the columns
+    p_vbar.xgrid.grid_line_color = None
+    p_vbar.y_range.start = 0  # ensures that the y-axis begins at 0
+    script, div = components(p_vbar)
+
+    return render_template('comparitive_bar.html', script=script, div=div)
 
 if __name__ == '__main__':
     app.run(debug=True)
