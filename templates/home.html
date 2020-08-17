@@ -2,19 +2,22 @@
 {% set active_page = "home" %}
 {% block page_title %} Home {% endblock %}
 {% block page_content %}
-<section class="text-center">
-   <div class="container">
-
-
-      <h1>Progress Analytics for Rifle Shooters</h1>
-       <p>A SBHS student project</p>
-
-   </div>
-</section>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container justify-content-center text-center">
+    <h1 class="display-4">Progress Analytics for Rifle Shooters</h1>
+    <p class="lead">Progress Analytics for Rifle Shooters</p>
+  </div>
+</div>
 <section class="text-center">
     <div class="container">
              <img src = "{{ url_for('static', filename='images/PARS-transparent.png', width=500) }}"/>
             <h2>Features</h2>
+            <!--
+            <div class="bs-example">
+                <h2>Type your favorite car name</h2>
+                <input type="text" class="typeahead tt-query" autocomplete="off" spellcheck="false">
+            </div>
+            -->
             <br>
             <h5><a href="/locate">Parking Locator</a></h5>
             <p><i>Finds exclusive parking for deliveries depending and filters by opening times</i></p>
