@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% set active_page = "404" %}
+{% block page_title %} 404 {% endblock %}
+{% block page_content %}
+<section class="text-center">
+    <div class="container">
+        <div>
+        <h1>Sorry we couldn't find your page</h1>
+        <p>404 Error</p>
+        <img src="{{ url_for('static', filename='images/404.png')}}" width="200"/>
+        <p>
+            <a href="/" class="btn btn-warning" role="button">Back to Home</a>
+        </p>
+    </div>
+</section>
+{% endblock %}
