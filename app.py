@@ -13,13 +13,17 @@ app = Flask(__name__)
 app.secret_key = "super secret"
 bootstrap = Bootstrap(app)
 array_shots = [[150, 0], [300, 100], [499, 700]]
-
+# code from https://stackoverflow.com/questions/10637352/flask-ioerror-when-saving-uploaded-files/20257725#20257725
+# that creates absolute path with relative path
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/upload')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 @app.route('/home')
 def home():
     jsonID = 1551500850141  # ID of json file
-    filePath = "testJson/string-" + str(jsonID) + ".txt"
+    filePath = os.path.join(APP_ROOT, "testJson/string-" + str(jsonID) + ".txt")
     s = validateShots(filePath)
     for i in range(len(s['validShots'])):
         score = getScore(s['validShots'][i])
@@ -44,7 +48,7 @@ def upload():
         files = request.files.getlist('file')
         for file in files:
             filename = secure_filename(file.filename)
-            file.save(os.path.join('F:\\Pycharm\\Pycharm Projects\\ProAnalytics\\testJson', filename))
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     return render_template('upload.html', form=form)
 
 
