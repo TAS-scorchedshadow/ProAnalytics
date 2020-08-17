@@ -1,11 +1,11 @@
 import math
 import statistics
 import json
-def validateShots(txtfile):
+def validateShots(filePath):
     numValidShot = 0
     newShot = {'id': 0, 'name':"",'validShots':[]}
     validShots = []
-    with open(txtfile) as json_file: #Open txt file as JSON
+    with open(filePath) as json_file: #Open txt file as JSON
         data = json.load(json_file)
         for individualShot in data['shots']:
             x = individualShot['valid']
