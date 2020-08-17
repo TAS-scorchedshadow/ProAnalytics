@@ -34,6 +34,12 @@ def home():
 def about():
     return render_template('about.html')
 
+
+@app.route('/report')
+def report():
+    return render_template('report.html')
+
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     # create form
