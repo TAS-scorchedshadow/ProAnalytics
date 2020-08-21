@@ -6,7 +6,7 @@ from bokeh.models import Range1d
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm
 from werkzeug.utils import secure_filename
-from drawtarget import create_target
+from drawtarget import create_targetx
 import os
 
 app = Flask(__name__)
