@@ -7,6 +7,7 @@ from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm
 from werkzeug.utils import secure_filename
 from drawtarget import create_target
+from models import User
 import os
 
 app = Flask(__name__)
@@ -37,7 +38,7 @@ def about():
 
 @app.route('/report')
 def report():
-    return render_template('report.html')
+    return render_template('signUpForm.html')
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -65,6 +66,11 @@ def upload():
             os.remove(filePath)
             print(filename, "was removed")
     return render_template('upload.html', form=form)
+
+
+@app.route('/user/signup',methods=['POST'])
+def signup():
+    return User().signup()
 
 
 @app.route('/target')

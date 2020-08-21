@@ -4,10 +4,11 @@ from flask import Flask, jsonify
 class User:
 
     def signup(self):
+
         user = {
             "_id": "",
-            "username": "",
+            "name": "",
             "email": "",
             "password": ""
         }
-        return jsonify(), 200
+        return jsonify(user), 200
