@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, send_from_directory, safe_join, abort, url_for
+from flask import Flask, render_template, request, send_file, send_from_directory, safe_join, abort, url_for, session
 from flask_bootstrap import Bootstrap
 from bokeh.plotting import figure
 from bokeh.embed import components
@@ -23,19 +23,17 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/upload')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
 @app.route('/')
 @app.route('/home')
 def home():
-    jsonID = 1551500850141  # ID of json file
-    filePath = os.path.join(APP_ROOT, "testJson/string-" + str(jsonID) + ".txt")
-    s = validateShots(filePath)
-    for i in range(len(s['validShots'])):
-        score = getScore(s['validShots'][i])
+    session['type'] = 'student'
     return render_template('home.html')
 
 
 @app.route('/about')
 def about():
+    session['type'] = 'admin'
     return render_template('about.html')
 
 
