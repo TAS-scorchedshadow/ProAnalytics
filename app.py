@@ -3,8 +3,11 @@ from flask_bootstrap import Bootstrap
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import Range1d
+
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm
+from uploadForms import uploadForm, signUpForm
+from security import pwd_context, check_encrypted_password, encrypt_password
+
 from werkzeug.utils import secure_filename
 from drawtarget import create_target
 from models import User
@@ -68,9 +71,21 @@ def upload():
     return render_template('upload.html', form=form)
 
 
-@app.route('/user/signup',methods=['POST'])
+@app.route('/user/signup',methods=['GET', 'POST'])
 def signup():
-    return User().signup()
+    # create form
+    form = signUpForm()
+    # on submission
+    if request.method == 'POST':
+        name = request.form['name']
+        username = request.form["username"]
+        email = request.form['email']
+        password = request.form['password']
+        studentID = request.form['studentID']
+        hashedPassword = encrypt_password(password)
+        print(hashedPassword)
+        print(name,username,email,password,str(studentID))
+    return render_template('signUpForm.html', form=form)
 
 
 @app.route('/target')

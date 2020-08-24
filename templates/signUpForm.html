@@ -5,20 +5,34 @@
 
         <div class="card">
 
-            <h1 class="center">Create an Account</h1>
-            <form name="signup_form">
-                <label for="name">Name</label>
-                <input type="text" name="name" class ="field" required>
+            <h1 class="center">Link your ID</h1>
 
-                <label for="email">Email</label>
-                <input type="email" name="email" class ="field" required>
+            {{ form.csrf }}
+            <form name="signup_form" role = "form" method="post">
+                <div  class = "form-group" >
+                    <label for="name">Name</label>
+                    <input type="text" name="name" class ="field form-control" required
+                           placeholder="First Name & Last Name">
 
-                <label for="password">Password</label>
-                <input type="password" name="password" class = "field" required>
+                    <label for="email">Email</label>
+                    <input type="email" name="email" class ="field form-control" required
+                           placeholder="example@gmail.com">
 
-                <p class = "error error--hidden"></p> <!-- Displays front end -->
-                <input type="submit" value="Sign Up" class ="btn">
+                    <label for="username">Department of Education ID</label>
+                    <input type="text" name="username" class ="field form-control" required
+                            placeholder="bill.Smith3">
 
+                    <label for="studentID">Student ID</label>
+                    <input name="studentID" class ="field form-control" required
+                           minlength="9" maxlength="9"
+                           placeholder="Enter SBHS School ID"
+                           onkeypress="return isNumberKey(event)">
+
+                    <label for="password">Password</label>
+                    <input type="password" name="password" class = "field form-control" required>
+
+                    <input type="submit" value="Sign Up" class ="btn">
+                </div>
             </form>
 
         </div>

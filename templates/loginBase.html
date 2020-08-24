@@ -14,5 +14,14 @@
 
 </body>
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script src ="../static/scripts/scripts.js"></script>
+    <script>
+        function isNumberKey(evt)
+			{
+				var charCode = (evt.which) ? evt.which : evt.keyCode;
+				if (charCode != 46 && charCode > 31
+				&& (charCode < 48 || charCode > 57))
+				return false;
+				return true;
+			}
+    </script>
 </html>
