@@ -1,16 +1,24 @@
-from flask import Flask, render_template, request, send_file, send_from_directory, safe_join, abort, url_for
+from flask import Flask, render_template, request, send_file, send_from_directory, safe_join, abort, url_for, session
 from flask_bootstrap import Bootstrap
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import Range1d
+from flask_wtf import CSRFProtect
+
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm
+from uploadForms import uploadForm, signUpForm
+from security import registerUser
+from dataAccess import emailExists
+
 from werkzeug.utils import secure_filename
 from drawtarget import create_target
 import os
 
+
 app = Flask(__name__)
 app.secret_key = "super secret"
+csrf = CSRFProtect(app)
+
 bootstrap = Bootstrap(app)
 array_shots = [[150, 0], [300, 100], [499, 700]]
 # code from https://stackoverflow.com/questions/10637352/flask-ioerror-when-saving-uploaded-files/20257725#20257725
@@ -19,25 +27,23 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/upload')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
 @app.route('/')
 @app.route('/home')
 def home():
-    jsonID = 1551500850141  # ID of json file
-    filePath = os.path.join(APP_ROOT, "testJson/string-" + str(jsonID) + ".txt")
-    s = validateShots(filePath)
-    for i in range(len(s['validShots'])):
-        score = getScore(s['validShots'][i])
+    session['type'] = 'student'
     return render_template('home.html')
 
 
 @app.route('/about')
 def about():
+    session['type'] = 'admin'
     return render_template('about.html')
 
 
 @app.route('/report')
 def report():
-    return render_template('report.html')
+    return render_template('signUpForm.html')
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -65,6 +71,21 @@ def upload():
             os.remove(filePath)
             print(filename, "was removed")
     return render_template('upload.html', form=form)
+
+
+@app.route('/user/signup',methods=['GET', 'POST'])
+def signup():
+    # create form
+    form = signUpForm()
+    # on submission
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if emailExists(form.email.data):
+                return render_template('signUpForm.html', form=form,emailError=True)
+            else:
+                registerUser(form)
+                return render_template('home.html')
+    return render_template('signUpForm.html', form=form, emailError=False)
 
 
 @app.route('/target')
