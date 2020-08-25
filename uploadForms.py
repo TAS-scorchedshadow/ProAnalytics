@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, HiddenField, MultipleFileField, IntegerField
+from wtforms import StringField, SubmitField, HiddenField, MultipleFileField, IntegerField, SelectField, PasswordField
 from wtforms.fields.html5 import DateField, TimeField, EmailField
 from wtforms.validators import DataRequired
 
@@ -11,9 +11,11 @@ class uploadForm(FlaskForm):
 
 
 class signUpForm(FlaskForm):
-    name = StringField("Please enter a name:")
+    fName = StringField("Enter First Name:")
+    sName = StringField("Enter Last Name:")
     email = EmailField("Email:")
-    studentID = IntegerField("Student ID")
-    username = StringField("Associated Username:")
-    password = StringField("Password:")
-    submit = SubmitField("Submit:")
+    school = SelectField("Select a school", choices=[('sb','SBHS')])
+    password = PasswordField("Password:")
+    confirmPassword = PasswordField("Password:")
+
+    submit = SubmitField("Sign Up")

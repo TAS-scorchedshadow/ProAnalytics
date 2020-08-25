@@ -3,18 +3,22 @@ from flask_bootstrap import Bootstrap
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import Range1d
+from flask_wtf import CSRFProtect
 
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm
-from security import pwd_context, check_encrypted_password, encrypt_password
+from security import registerUser
+from dataAccess import emailExists
 
 from werkzeug.utils import secure_filename
 from drawtarget import create_target
-from models import User
 import os
+
 
 app = Flask(__name__)
 app.secret_key = "super secret"
+csrf = CSRFProtect(app)
+
 bootstrap = Bootstrap(app)
 array_shots = [[150, 0], [300, 100], [499, 700]]
 # code from https://stackoverflow.com/questions/10637352/flask-ioerror-when-saving-uploaded-files/20257725#20257725
@@ -75,15 +79,13 @@ def signup():
     form = signUpForm()
     # on submission
     if request.method == 'POST':
-        name = request.form['name']
-        username = request.form["username"]
-        email = request.form['email']
-        password = request.form['password']
-        studentID = request.form['studentID']
-        hashedPassword = encrypt_password(password)
-        print(hashedPassword)
-        print(name,username,email,password,str(studentID))
-    return render_template('signUpForm.html', form=form)
+        if form.validate_on_submit():
+            if emailExists(form.email.data):
+                return render_template('signUpForm.html', form=form,emailError=True)
+            else:
+                registerUser(form)
+                return render_template('home.html')
+    return render_template('signUpForm.html', form=form, emailError=False)
 
 
 @app.route('/target')
