@@ -1,0 +1,29 @@
+{% extends "loginBase.html" %}
+
+{% block content %}
+    <div class = "card-wrapper">
+
+        <div class="card">
+
+            <h1 class="center">Sign In</h1>
+
+            <!-- oninput checks if passwords are matching -->
+            <form name="signup_form" role = "form" method="post">
+
+                {{ form.csrf_token }}
+                <div  class = "form-group" >
+                    <label for="username">Username</label>
+                    {{ form.username(class_="field form-control")}}
+
+                    <label for="password">Password</label>
+                    {{ form.password(class_="field form-control", id ="pass1", minlength="5")}}
+
+                    {{ form.submit(class_="btn") }}
+                </div>
+            </form>
+            {% if form.errors %}
+                {{ form.errors }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

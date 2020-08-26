@@ -14,7 +14,7 @@ def get_db():
 def addUser(username,fname,sname,school,email,password):
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    c.execute("INSERT INTO students (username, fName, sName, school, email, password) VALUES (?,?,?,?,?,?)",(username,fname,sname,school,email,password))
+    c.execute("INSERT INTO user (username, fName, sName, school, email, password) VALUES (?,?,?,?,?,?)",(username,fname,sname,school,email,password))
     conn.commit()
     conn.close()
 
@@ -22,7 +22,7 @@ def addUser(username,fname,sname,school,email,password):
 def usernameExists(username): #Checks if username exists in database
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM students WHERE username=?',(username,))
+    c.execute('SELECT * FROM user WHERE username=?',(username,))
     result = c.fetchone()
     if result:
         return True
@@ -30,10 +30,19 @@ def usernameExists(username): #Checks if username exists in database
         return False
 
 
+def findPassword(username):
+    conn = sqlite3.connect('PARS.db')
+    c = conn.cursor()
+    for row in c.execute('SELECT * FROM user WHERE username=?', (username,)):
+        password = row[6]
+    conn.close()
+    return password
+
+
 def emailExists(email): #Checks if email exists in database
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM students WHERE email=?',(email,))
+    c.execute('SELECT * FROM user WHERE email=?',(email,))
     result = c.fetchone()
     if result:
         return True

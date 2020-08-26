@@ -23,7 +23,7 @@
                     <label for="email">Preferred Email</label>
                     {{ form.email(class_="field form-control")}}
                     {% if emailError == true %}
-                        <p>This email is already in use. Please enter a different email.</p>
+                        <p class="text-danger">This email is already in use. Please enter a different email.</p>
                     {% endif %}
 
                     <label for="school">School</label>

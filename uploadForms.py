@@ -14,8 +14,15 @@ class signUpForm(FlaskForm):
     fName = StringField("Enter First Name:")
     sName = StringField("Enter Last Name:")
     email = EmailField("Email:")
-    school = SelectField("Select a school", choices=[('sb','SBHS')])
+    school = SelectField("Select a school", choices=[('sbhs','Sydney Boys High School')])
     password = PasswordField("Password:")
     confirmPassword = PasswordField("Password:")
+
+    submit = SubmitField("Sign Up")
+
+
+class signIn(FlaskForm):
+    username = StringField("Username or password")
+    password = PasswordField("Password:")
 
     submit = SubmitField("Sign Up")
