@@ -43,7 +43,7 @@ def about():
 
 @app.route('/report')
 def report():
-    return render_template('signUpForm.html')
+    return render_template('report.html')
 
 
 @app.route('/upload', methods=['GET', 'POST'])
