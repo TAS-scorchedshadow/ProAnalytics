@@ -43,6 +43,12 @@ def report():
     return render_template('signUpForm.html')
 
 
+@app.route('/accessDenied')
+def accessDenied():
+    return render_template('accessDenied.html')
+
+
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     # create form

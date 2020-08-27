@@ -34,7 +34,7 @@ def usernameExists(username):  # Checks if username exists in database
 def findPassword(username):
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    for row in c.execute('SELECT * FROM user WHERE username=? AND password=?', (username)):
+    for row in c.execute('SELECT * FROM user WHERE username=?', (username,)):
         password = row[6]  # Gets position of password
     conn.close()
     return password
