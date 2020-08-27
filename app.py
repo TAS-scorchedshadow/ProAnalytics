@@ -6,13 +6,14 @@ from bokeh.models import Range1d
 from flask_wtf import CSRFProtect
 
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm, signUpForm, signIn
-from security import registerUser, validateLogin
+from uploadForms import uploadForm, signUpForm
+from security import registerUser
 from dataAccess import emailExists
 
 from werkzeug.utils import secure_filename
 from drawtarget import create_target
 import os
+
 
 app = Flask(__name__)
 app.secret_key = "super secret"
@@ -30,23 +31,19 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/')
 @app.route('/home')
 def home():
+    session['type'] = 'student'
     return render_template('home.html')
 
 
 @app.route('/about')
 def about():
+    session['type'] = 'admin'
     return render_template('about.html')
 
 
 @app.route('/report')
 def report():
     return render_template('signUpForm.html')
-
-
-@app.route('/accessDenied')
-def accessDenied():
-    return render_template('accessDenied.html')
-
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -60,23 +57,23 @@ def upload():
         for file in files:
             filename = secure_filename(file.filename)
             filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filePath)  # Add file to upload folder
-            print(filename, "was uploaded")
+            file.save(filePath) #Add file to upload folder
+            print(filename,"was uploaded")
 
-            # TODO save data to database
-            # Test to see if upload works
-            s = validateShots(filePath)['validShots']  # Get all valid Shots
+            #TODO save data to database
+            #Test to see if upload works
+            s = validateShots(filePath)['validShots'] # Get all valid Shots
             for i in range(len(s)):
                 score = getScore(s[i])
                 print(score)
 
-            # Delete file
+            #Delete file
             os.remove(filePath)
             print(filename, "was removed")
     return render_template('upload.html', form=form)
 
 
-@app.route('/user/signup', methods=['GET', 'POST'])
+@app.route('/user/signup',methods=['GET', 'POST'])
 def signup():
     # create form
     form = signUpForm()
@@ -84,26 +81,11 @@ def signup():
     if request.method == 'POST':
         if form.validate_on_submit():
             if emailExists(form.email.data):
-                return render_template('signUpForm.html', form=form, emailError=True)
+                return render_template('signUpForm.html', form=form,emailError=True)
             else:
                 registerUser(form)
                 return render_template('home.html')
     return render_template('signUpForm.html', form=form, emailError=False)
-
-
-@app.route('/user/signin', methods=['GET', 'POST'])
-def signin():
-    # create form
-    form = signIn()
-    # on submission
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            usernameError, passwordError = validateLogin(form)
-            if usernameError or passwordError:
-                return render_template('signInForm.html', form=form, usernameError=True, passwordError=True)
-            else:
-                return render_template('home.html', form=form)
-    return render_template('signInForm.html', form=form)
 
 
 @app.route('/target')
@@ -111,13 +93,13 @@ def testDrawTarget():
     script, div = drawTarget()
     return render_template('target.html', script=script, div=div)
 
-
 def drawTarget(filePath="testJson/string-1592616479803.txt"):
-    p = create_target("300m")  # Creates a target with the 300m face
+    p = create_target("300m")   # Creates a target with the 300m face
     # todo: Change this to pull from database info instead of directly from json
     # Required: x/y value of shot, shot number
     # Required: shot grouping radius, shot grouping center point
     # Required: target size
+
 
     # add a shot (test)
     s = validateShots(filePath)['validShots']
@@ -139,7 +121,6 @@ def drawTarget(filePath="testJson/string-1592616479803.txt"):
 def plotShot(p, x, y, num):
     p.circle([x], [y], size=30, color="black", line_color="white", line_width=2)
     p.text([x], [y], text=[str(num)], text_baseline="middle", text_align="center", color="white")
-
 
 # Using the
 
