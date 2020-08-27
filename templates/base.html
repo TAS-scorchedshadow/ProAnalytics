@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-
+<!-- Template Adapted from https://bootstrapious.com/p/bootstrap-sidebar -->
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,9 +51,21 @@
                     </a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         <li>
+                            <a href="/report">
+                                <i class="fas fa-book-open"></i>
+                                Report
+                            </a>
+                        </li>
+                        <li>
                             <a href="/target">
                                 <i class="fas fa-bullseye"></i>
                                 Target
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/comparativeBar">
+                                <i class="fas fa-chart-bar"></i>
+                                Comparative Bar Graph
                             </a>
                         </li>
                         <li>
@@ -64,12 +76,14 @@
                         </li>
                     </ul>
                 </li>
+            {% if session['type'] == 'admin' %} <!-- Only show upload page when the user is an admin -->
                 <li>
                     <a href="/upload">
                         <i class="fas fa-upload"></i>
                         Upload
                     </a>
                 </li>
+            {% endif %}
                 <li>
                     <a href="#">Contact</a>
                 </li>
@@ -133,7 +147,7 @@
     </div>
 
     <!-- jQuery CDN - Slim version (=without AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+   <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <!-- Popper.JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
@@ -160,7 +174,7 @@
     <script>
         $(document).ready(function(){
             // Defining the local dataset
-            var cars = ['Audi', 'BMW', 'Bugatti', 'Ferrari', 'Ford', 'Lamborghini', 'Mercedes Benz', 'Porsche', 'Rolls-Royce', 'Volkswagen'];
+            var cars = ['Dylan Dinh An Huynh', 'Henry Guo', 'Victor Zhang', 'Rishi Wig', 'Dylan Marcusia', 'Thomas Nguyen', 'Daniel Wakeford', 'Daniel Comben', 'Daniel Wakeson'];
 
             // Constructing the suggestion engine
             var cars = new Bloodhound({

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% set active_page = "target" %}
+{% block page_title %} Target Test {% endblock %}
+{% block page_content %}
+
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.0.1.min.js"
+        crossorigin="anonymous"></script>
+
+<div class="container">
+    <div class="row">
+        <div class = "col-6">
+             <div class="card shadow border-0 h-100 justify-content-center">
+                 <div class = "card-body">
+                     {{ script | safe }}
+                     {{ div | safe }}
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

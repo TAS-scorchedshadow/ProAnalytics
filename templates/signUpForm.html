@@ -1,0 +1,48 @@
+{% extends "loginBase.html" %}
+
+{% block content %}
+    <div class = "card-wrapper">
+
+        <div class="card">
+
+            <h1 class="center">Link your ID</h1>
+
+            <!-- oninput checks if passwords are matching -->
+            <form name="signup_form" role = "form" method="post"
+                  oninput='pass2.setCustomValidity(pass2.value != pass1.value ? "Passwords do not match." : "")'>
+
+                {{ form.csrf_token }}
+                <div  class = "form-group" >
+                    <label for="fName">First Name</label>
+                    {{ form.fName(class_="field form-control") }}
+                </div>
+                <div  class = "form-group" >
+                    <label for="sName">Surname</label>
+                    {{ form.sName(class_="field form-control")}}
+
+                    <label for="email">Preferred Email</label>
+                    {{ form.email(class_="field form-control")}}
+                    {% if emailError == true %}
+                        <p>This email is already in use. Please enter a different email.</p>
+                    {% endif %}
+
+                    <label for="school">School</label>
+                    {{ form.school(class_="field form-control", placeholder="Sydney Boys High School") }}
+
+                    <label for="password">Password</label>
+                    {{ form.password(class_="field form-control", id ="pass1", minlength="5")}}
+
+                    <label for="password">Confirm Password</label>
+                    {{ form.confirmPassword(class_="field form-control", id = "pass2", minlength = "5")}}
+
+
+                    {{ form.submit(class_="btn") }}
+                </div>
+
+            </form>
+            {% if form.errors %}
+                {{ form.errors }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
