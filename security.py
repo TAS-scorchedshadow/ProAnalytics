@@ -1,5 +1,5 @@
 from passlib.context import CryptContext
-from dataAccess import addUser, usernameExists, emailExists, findPassword
+from dataAccess import addUser, usernameExists, emailExists, findPassword, initialiseSettings
 
 # Password encryption taken from https://blog.tecladocode.com/learn-python-password-encryption-with-flask/
 pwd_context = CryptContext(
@@ -36,6 +36,7 @@ def registerUser(form):
     password = form.password.data
     hashedPassword = encrypt_password(password)
     addUser(assignedID, fName, sName, school, email, hashedPassword)
+    initialiseSettings(assignedID)
 
 
 def validateLogin(form):
@@ -47,8 +48,7 @@ def validateLogin(form):
         password = form.password.data
         hashedPassword = findPassword(form.username.data)
         if check_encrypted_password(password, hashedPassword):
-            #User Sessions
-            pass
+            initialiseSettings(form.username.data)
         else:
             passwordError = True
     return usernameError, passwordError
