@@ -8,8 +8,8 @@ from itertools import cycle
 
 
 # listx is a list containing a list of scores eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
-# Each of the list of shots are one line and should all be the same length
-# listy is a list of dates (do we want dd/mm/yy ? ) ['10/08/2020', '11/08/2020', '12/08/2020', '13/08/2020', '14/08/2020', '15/08/2020']
+# Each of the list of shots are one line and should all be the same lengthdoes
+# listy is a list of dates (dd/mm/yyyy) eg. ['10/08/2020', '11/08/2020', '12/08/2020', '13/08/2020', '14/08/2020', '15/08/2020']
 # listName is a list of names eg. ['Andrew', 'Ryan']
 def compareLine(listx, listy, listName):
     # vars used to set the x-axis range
