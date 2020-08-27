@@ -166,6 +166,7 @@ def comparativeBar():
     script, div = components(p_vbar)
     return render_template('comparativeBar.html', script=script, div=div)
 
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html')
