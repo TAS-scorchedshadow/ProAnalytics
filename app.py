@@ -13,6 +13,7 @@ from dataAccess import emailExists
 from werkzeug.utils import secure_filename
 from drawtarget import create_target
 import os
+import graphProcessing
 
 
 app = Flask(__name__)
@@ -90,39 +91,9 @@ def signup():
 
 @app.route('/target')
 def testDrawTarget():
-    script, div = drawTarget()
+    script, div = graphProcessing.drawTarget()
     return render_template('target.html', script=script, div=div)
 
-def drawTarget(filePath="testJson/string-1592616479803.txt"):
-    p = create_target("300m")   # Creates a target with the 300m face
-    # todo: Change this to pull from database info instead of directly from json
-    # Required: x/y value of shot, shot number
-    # Required: shot grouping radius, shot grouping center point
-    # Required: target size
-
-
-    # add a shot (test)
-    s = validateShots(filePath)['validShots']
-    for i in range(len(s)):
-        plotShot(p, s[i]['x'], s[i]['y'], i + 1)
-    # Uses stats_circle_center and stats_circle_radius in order to perform
-    # Currently hardcoded to json 1592616479803
-    group_center = (12.66, -32.5)
-    group_radius = 228.8
-    p.circle([group_center[0]], [group_center[1]], radius=group_radius, fill_alpha=0, line_color="yellow", line_width=4)
-    script, div = components(p)
-    return script, div
-
-
-# Add a circle with the number of the shot in the middle
-# x and y are the coordinates
-# p is the figure object
-# num is the number of the shot
-def plotShot(p, x, y, num):
-    p.circle([x], [y], size=30, color="black", line_color="white", line_width=2)
-    p.text([x], [y], text=[str(num)], text_baseline="middle", text_align="center", color="white")
-
-# Using the
 
 
 @app.errorhandler(404)

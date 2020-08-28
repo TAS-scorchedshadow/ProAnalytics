@@ -1,10 +1,13 @@
-from bokeh.plotting import figure
+from bokeh.plotting import figure, ColumnDataSource
 from bokeh.embed import components
+from bokeh.models import HoverTool
 from datetime import datetime as dt
-from bokeh.models import DatetimeTickFormatter, Legend
+from bokeh.models import DatetimeTickFormatter, Legend, Range1d
 from bokeh.palettes import Colorblind3 as palette
 from math import pi
 from itertools import cycle
+
+from shotProcessing import validateShots
 
 
 # listx is a list containing a list of scores eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
@@ -44,6 +47,7 @@ def compareLine(listx, listy, listName):
     cLine.xaxis.major_label_orientation = pi / 4
     script, div = components(cLine)
     return script, div
+
 
 def compareBar():
     allStudentsTotal= {"SMITH_John": [7, 12], "JACK_Bob": [8, 6], "LI_Reginald": [9, 33], "VETTEL_Seb": [10,13],"CHILTON_Max": [11,20], "SENNA_Bruno": [12,27] }
@@ -85,3 +89,107 @@ def compareBar():
     p_vbar.y_range.start = 0  # ensures that the y-axis begins at 0
     script, div = components(p_vbar)
     return script, div
+
+
+def create_target(range_type):
+    # Details are as follows: "Range": (Distance, V Ring, 5 Ring, 4 Ring, 3 Ring, 2 Ring)
+    # Distance is in metres, rings are Diameters in mm
+    target_details = {"300m": (300, 70, 140, 280, 420, 600),
+                      "400m": (400, 95, 185, 375, 560, 800),
+                      "500m": (500, 145, 290, 660, 1000, 1320),
+                      "600m": (600, 160, 320, 660, 1000, 1320),
+                      "700m": (700, 255, 510, 815, 1120, 1830),
+                      "800m": (700, 255, 510, 815, 1120, 1830),
+                      "300yds": (274.32, 65, 130, 260, 390, 560),
+                      "400yds": (365.76, 85, 175, 350, 520, 745),
+                      "500yds": (457.20, 130, 260, 600, 915, 1320),
+                      "600yds": (548.64, 145, 290, 600, 915, 1320)}
+    plot_size = 1700
+
+    TOOLTIPS = [
+        ("Shot", "@shotNum"),
+        ("Score", "@score"),
+        ("(x,y)", "(@x, @y)"),
+    ]
+
+    p = figure(plot_width=plot_size, plot_height=plot_size, tools=["hover"], sizing_mode="scale_width",toolbar_location=None, tooltips=TOOLTIPS)
+    p.toolbar.logo = None
+    # Draws the circles of the target from the largest to the smallest
+    p.circle([0], [0], radius=int(target_details[range_type][5]/2), color="black", line_color="white", line_width=4)
+    p.circle([0], [0], radius=int(target_details[range_type][4]/2), color="black", line_color="white", line_width=4)
+    p.circle([0], [0], radius=int(target_details[range_type][3]/2), color="black", line_color="white", line_width=4)
+    p.circle([0], [0], radius=int(target_details[range_type][2]/2), color="black", line_color="white", line_width=4)
+    p.circle([0], [0], radius=int(target_details[range_type][1]/2), color="black", line_color="white", line_width=4)
+
+    # Draws the gridlines of the target, from middle to left/top, then middle to right/bottom
+    x = 0
+    while x > -plot_size:
+        p.line([x, x], [plot_size, -plot_size], line_color="gray", line_width=2)
+        p.line([plot_size, -plot_size], [x, x], line_color="gray", line_width=2)
+        x -= (291 * target_details[range_type][0]) / 1000
+    x = (291 * target_details[range_type][0]) / 1000
+    while x < 1400:
+        p.line([x, x], [plot_size, -plot_size], line_color="gray", line_width=2)
+        p.line([plot_size, -plot_size], [x, x], line_color="gray", line_width=2)
+        x += (291 * target_details[range_type][0]) / 1000
+
+    # Resize viewpoint so origin is at the middle and the entire graph is onscreen
+    axis_limit = target_details[range_type][5]/2  # Height/Width of Graph
+    p.y_range = Range1d(start=-axis_limit, end=axis_limit)
+    p.x_range = Range1d(start=-axis_limit, end=axis_limit)
+
+    # make the rest of the grid invisible so only the target is seen
+    p.axis.visible = False
+    p.xgrid.visible = False
+    p.ygrid.visible = False
+
+    # Make border
+    p.border_fill_color = "slategray"
+    return p
+
+
+def drawTarget(filePath="testJson/string-1592616479803.txt"):
+    p = create_target("300m")   # Creates a target with the 300m face
+    # todo: Change this to pull from database info instead of directly from json
+    # Required: x/y value of shot, shot number
+    # Required: shot grouping radius, shot grouping center point
+    # Required: target size
+
+
+    # add a shot (test)
+    s = validateShots(filePath)['validShots']
+    print(s)
+    # Tooltips code from https://docs.bokeh.org/en/latest/docs/user_guide/tools.html
+    # ColumnDataSource is used instead to allow for tooltips
+    shotX = []
+    shotY = []
+    score = []
+    for i in range(len(s)):
+        shotX.append(s[i]['x'])
+        shotY.append(s[i]['y'])
+        score.append(s[i]['score'])
+    source = ColumnDataSource(data=dict(
+        x=shotX,
+        y=shotY,
+        score=score,
+        shotNum=range(1, len(s)+1)
+    ))
+    p.select(type=HoverTool).names = ['shot']
+    p.circle('x', 'y', size=30, color="black", line_color="white", line_width=2, source=source, name='shot')
+    p.text('x', 'y', text='shotNum', text_baseline="middle", text_align="center", color="white", source=source)
+    # Uses stats_circle_center and stats_circle_radius in order to perform
+    # Currently hardcoded to json 1592616479803
+    group_center = (12.66, -32.5)
+    group_radius = 228.8
+    p.circle([group_center[0]], [group_center[1]], radius=group_radius, fill_alpha=0, line_color="yellow", line_width=4)
+    script, div = components(p)
+    return script, div
+
+
+# Add a circle with the number of the shot in the middle
+# x and y are the coordinates
+# p is the figure object
+# num is the number of the shot
+def plotShot(p, x, y, num):
+    p.circle([x], [y], size=30, color="black", line_color="white", line_width=2)
+    p.text([x], [y], text=[str(num)], text_baseline="middle", text_align="center", color="white")
