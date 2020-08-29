@@ -94,6 +94,10 @@ def testDrawTarget():
     script, div = graphProcessing.drawTarget()
     return render_template('target.html', script=script, div=div)
 
+@app.route('/comparativeBar')
+def comparitiveBar():
+    script, div = graphProcessing.compareBar()
+    return render_template('comparativeBar.html', script=script, div=div)
 
 
 @app.errorhandler(404)
