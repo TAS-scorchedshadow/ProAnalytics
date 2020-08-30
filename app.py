@@ -32,13 +32,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/')
 @app.route('/home')
 def home():
-    session['type'] = 'student'
     return render_template('home.html')
 
 
 @app.route('/about')
 def about():
-    session['type'] = 'admin'
     return render_template('about.html')
 
 
