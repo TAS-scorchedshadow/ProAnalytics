@@ -54,7 +54,7 @@ def report():
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
     # search through shoots database to get a tuple of shoots
-    c.execute('SELECT * FROM shoots WHERE username=?', (username,))
+    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY date desc;', (username,))
     shoots = c.fetchall()
     # search through each shoot to collect a list of shots
     for shoot in shoots:
