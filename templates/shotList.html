@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% set active_page = "opgg" %}
+{% block page_title %} opgg {% endblock %}
+{% block page_content %}
+<div class="jumbotron jumbotron-fluid">
+  <div class="container justify-content-center text-center">
+            <h2>Students Name</h2>
+            <input type="text" class="typeahead tt-query" autocomplete="off" spellcheck="false">
+    </div>
+</div>
+
+<!-- create dropdown for each shoot in target_list-->
+{% for shoot in target_list %}
+<div class="row">
+    <div class = "col-12">
+        <div class="card shadow border-0 h-100">
+            <div class = "card-title">
+                <p> 13.December 2020 - Shoot 3
+                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target={{ "#" + shoot[0] }} aria-expanded="false" aria-controls="collapseExample">
+                    V
+                  </button>
+                </p>
+            </div>
+             <div class="card-body">
+                 <div class="collapse" id={{ shoot[0] }}>
+                     <div class="row">
+                         <div class = "col-3">
+                             <!--Create target-->
+                            {{ shoot[1] | safe }}
+                            {{ shoot[2] | safe }}
+                         </div>
+                         <!-- Create table -->
+                         <div class = "col-9" >
+                             <table class="table table-sm table-bordered">
+                                  <thead>
+                                    <tr>
+                                        <th>Range</th>
+                                        <th width="30px">A</th>
+                                        <th width="30px">B</th>
+                                        <th width="30px">1</th>
+                                        <th width="30px">2</th>
+                                        <th width="30px">3</th>
+                                        <th width="30px">4</th>
+                                        <th width="30px">5</th>
+                                        <th width="30px">6</th>
+                                        <th width="30px">7</th>
+                                        <th width="30px">8</th>
+                                        <th width="30px">9</th>
+                                        <th width="30px">10</th>
+                                        <th>Final Score</th>
+                                        <th>Group Size</th>
+                                    </tr>
+                                    <tr>
+                                        <td>500m</td>
+                                        <td>5</td>
+                                        <td>4</td>
+                                        <td>5</td>
+                                        <td>5</td>
+                                        <td>V</td>
+                                        <td>V</td>
+                                        <td>4</td>
+                                        <td>5</td>
+                                        <td>5</td>
+                                        <td>5</td>
+                                        <td>V</td>
+                                        <td>5</td>
+                                        <td>43.3</td>
+                                        <td>142.1</td>
+                                    </tr>
+                            </table>
+                        </div>
+                     </div>
+                 </div>
+             </div>
+        </div>
+    </div>
+</div>
+{%- endfor %}
+<br>
+
+{% endblock %}

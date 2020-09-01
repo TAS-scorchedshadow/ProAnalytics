@@ -48,25 +48,30 @@ def profile():
 
 @app.route('/report')
 def report():
+    # create targets based on user
     target_list = []
     username = request.args.get('username')
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM shoots WHERE username=?', ('dylan.huynh1',))
+    # search through shoots database to get a tuple of shoots
+    c.execute('SELECT * FROM shoots WHERE username=?', (username,))
     shoots = c.fetchall()
-    print(shoots)
+    # search through each shoot to collect a list of shots
     for shoot in shoots:
         c.execute('SELECT * FROM shots WHERE shootID=?', (shoot[0], ))
         range = shoot[3]
         shots_tuple = c.fetchall()
         shots = {}
         for row in shots_tuple:
-            print(row[-1])
             shots[row[-1]] = [row[5], row[3], row[6]]
+            # row[-1] is shotNum
+            # row[5] is x
+            # row[3] is y
+            # row[6] is score
+        # create graph and put the data into target_list (along with shotNum
         script, div = graphProcessing.drawTarget(shots, range, 228.8, (12.66, -32.5))
         target_list.append([('a' + str(shoot[0])), script, div])
-    print(target_list)
-    return render_template('OPGG.html', target_list=target_list)
+    return render_template('shotList.html', target_list=target_list)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
