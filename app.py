@@ -15,6 +15,7 @@ from drawtarget import create_target
 import os
 import graphProcessing
 
+import sqlite3
 
 app = Flask(__name__)
 app.secret_key = "super secret"
@@ -47,9 +48,23 @@ def profile():
 
 @app.route('/report')
 def report():
-    script, div = graphProcessing.drawTarget()
-    script2, div2 = graphProcessing.drawTarget()
-    return render_template('OPGG.html', script=script,div=div,script2=script2,div2=div2)
+    target_list = []
+    username = request.args.get('username')
+    conn = sqlite3.connect('PARS.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM shoots WHERE username=?', (username,))
+    shoots = c.fetchall()
+    for shoot in shoots:
+        c.execute('SELECT * FROM shots WHERE shootID=?', (shoot[0], ))
+        range = shoot[3]
+        shots_tuple = c.fetchall()
+        shots = {}
+        for row in shots_tuple:
+            print(row[-1])
+            shots[row[-1]] = [row[5], row[3], row[6]]
+        script, div = graphProcessing.drawTarget(shots, range, 228.8, (12.66, -32.5))
+        target_list.append([('a' + str(shoot[0])), script, div])
+    return render_template('OPGG.html', target_list=target_list, script=script, div=div)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
