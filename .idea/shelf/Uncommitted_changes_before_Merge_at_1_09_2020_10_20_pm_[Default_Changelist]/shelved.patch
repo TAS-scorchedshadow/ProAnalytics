@@ -1,0 +1,107 @@
+Index: app.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from flask import Flask, render_template, request, send_file, send_from_directory, safe_join, abort, url_for, session\r\nfrom flask_bootstrap import Bootstrap\r\nfrom bokeh.plotting import figure\r\nfrom bokeh.embed import components\r\nfrom bokeh.models import Range1d\r\nfrom flask_wtf import CSRFProtect\r\n\r\nfrom shotProcessing import validateShots, getScore\r\nfrom uploadForms import uploadForm, signUpForm, signIn\r\nfrom security import registerUser, validateLogin\r\nfrom dataAccess import emailExists\r\n\r\nfrom werkzeug.utils import secure_filename\r\nfrom drawtarget import create_target\r\nimport os\r\nimport graphProcessing\r\n\r\n\r\napp = Flask(__name__)\r\napp.secret_key = \"super secret\"\r\ncsrf = CSRFProtect(app)\r\n\r\nbootstrap = Bootstrap(app)\r\narray_shots = [[150, 0], [300, 100], [499, 700]]\r\n# code from https://stackoverflow.com/questions/10637352/flask-ioerror-when-saving-uploaded-files/20257725#20257725\r\n# that creates absolute path with relative path\r\nAPP_ROOT = os.path.dirname(os.path.abspath(__file__))\r\nUPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/upload')\r\napp.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER\r\n\r\n\r\n@app.route('/')\r\n@app.route('/home')\r\ndef home():\r\n    return render_template('home.html')\r\n\r\n\r\n@app.route('/about')\r\ndef about():\r\n    return render_template('about.html')\r\n\r\n\r\n@app.route('/profile')\r\ndef profile():\r\n    return render_template('profile.html')\r\n\r\n\r\n@app.route('/report')\r\ndef report():\r\n    script, div = graphProcessing.drawTarget()\r\n    script2, div2 = graphProcessing.drawTarget()\r\n    return render_template('OPGG.html', script=script,div=div,script2=script2,div2=div2)\r\n\r\n\r\n@app.route('/upload', methods=['GET', 'POST'])\r\ndef upload():\r\n    # create form\r\n    form = uploadForm()\r\n\r\n    # on submission\r\n    if request.method == 'POST':\r\n        files = request.files.getlist('file')\r\n        for file in files:\r\n            filename = secure_filename(file.filename)\r\n            filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)\r\n            file.save(filePath) #Add file to upload folder\r\n            print(filename,\"was uploaded\")\r\n\r\n            #TODO save data to database\r\n            #Test to see if upload works\r\n            s = validateShots(filePath)['validShots'] # Get all valid Shots\r\n            for i in range(len(s)):\r\n                score = getScore(s[i])\r\n                print(score)\r\n\r\n            #Delete file\r\n            os.remove(filePath)\r\n            print(filename, \"was removed\")\r\n    return render_template('upload.html', form=form)\r\n\r\n\r\n@app.route('/user/signup',methods=['GET', 'POST'])\r\ndef signup():\r\n    # create form\r\n    form = signUpForm()\r\n    # on submission\r\n    if request.method == 'POST':\r\n        if form.validate_on_submit():\r\n            if emailExists(form.email.data):\r\n                return render_template('signUpForm.html', form=form,emailError=True)\r\n            else:\r\n                registerUser(form)\r\n                return render_template('home.html')\r\n    return render_template('signUpForm.html', form=form, emailError=False)\r\n\r\n\r\n\r\n@app.route('/user/signin', methods=['GET', 'POST'])\r\ndef signin():\r\n    # create form\r\n    form = signIn()\r\n    # on submission\r\n    if request.method == 'POST':\r\n        if form.validate_on_submit():\r\n            usernameError, passwordError = validateLogin(form)\r\n            if usernameError or passwordError:\r\n                return render_template('signInForm.html', form=form, usernameError=True, passwordError=True)\r\n            else:\r\n                return render_template('home.html', form=form)\r\n    return render_template('signInForm.html', form=form)\r\n\r\n\r\n\r\n@app.route('/target')\r\ndef testDrawTarget():\r\n    script, div = graphProcessing.drawTarget()\r\n    return render_template('target.html', script=script, div=div)\r\n\r\n\r\n@app.route('/comparativeBar')\r\ndef comparitiveBar():\r\n    script, div = graphProcessing.compareBar()\r\n    return render_template('comparativeBar.html', script=script, div=div)\r\n\r\n\r\n@app.errorhandler(404)\r\ndef page_not_found(e):\r\n    return render_template('404.html')\r\n\r\n@app.route('/comparitiveBar')\r\ndef comparitiveBar():\r\n\r\n    allStudentsTotal= {\"SMITH_John\": [7, 12], \"JACK_Bob\": [8, 6], \"LI_Reginald\": [9, 33], \"VETTEL_Seb\": [10,13],\"CHILTON_Max\": [11,20], \"SENNA_Bruno\": [12,27] }\r\n    names = []\r\n    scores = []\r\n    year = []\r\n    colour_list = []\r\n\r\n    for i in allStudentsTotal:\r\n        names.append(i)\r\n        scores.append(int(allStudentsTotal[i][1]))\r\n        year.append(int(allStudentsTotal[i][0]))\r\n\r\n    for years in year:\r\n        if years == 7:\r\n            colour_list.append(\"blue\")\r\n        if years == 8:\r\n            colour_list.append(\"red\")\r\n        if years == 9:\r\n            colour_list.append(\"yellow\")\r\n        if years == 10:\r\n            colour_list.append(\"green\")\r\n        if years == 11:\r\n            colour_list.append(\"black\")\r\n        if years == 12:\r\n            colour_list.append(\"orange\")\r\n\r\n    p_vbar = figure(x_range=names, plot_height=600, plot_width=(1000), title=\"Standings\",\r\n                    toolbar_location=None, tools=\"hover\")\r\n    p_vbar.hover.tooltips = [(\"Name\", \"@names\"),(\"Score\", \"@scores\")]\r\n    p_vbar.vbar(names, top=(scores), color=colour_list, width=0.2)  # names are the x points, top of the bar graph creates the column from 0 on the y-axis, width specifies gap between the columns\r\n    p_vbar.xgrid.grid_line_color = None\r\n    p_vbar.vbar(names, scores, legend_label=\"Year 7\", color=\"blue\")\r\n    p_vbar.vbar(names, scores, legend_label=\"Year 8\", color = \"red\")\r\n    p_vbar.vbar(names, scores, legend_label=\"Year 9\", color=\"yellow\")\r\n    p_vbar.vbar(names, scores, legend_label=\"Year 10\", color=\"green\")\r\n    p_vbar.vbar(names, scores, legend_label=\"Year 11\", color=\"black\")\r\n    p_vbar.vbar(names, scores, legend_label=\"Year 12\", color=\"orange\")\r\n    p_vbar.legend.title = 'Year Groups'\r\n    p_vbar.y_range.start = 0  # ensures that the y-axis begins at 0\r\n    script, div = components(p_vbar)\r\n\r\n    return render_template('comparitive_bar.html', script=script, div=div)\r\n\r\nif __name__ == '__main__':\r\n    app.run(debug=True)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app.py	(revision 3d550857db39560a050736a275df8fdefa0d53e9)
++++ app.py	(date 1598962667390)
+@@ -49,7 +49,7 @@
+ def report():
+     script, div = graphProcessing.drawTarget()
+     script2, div2 = graphProcessing.drawTarget()
+-    return render_template('OPGG.html', script=script,div=div,script2=script2,div2=div2)
++    return render_template('shotList.html', script=script,div=div,script2=script2,div2=div2)
+ 
+ 
+ @app.route('/upload', methods=['GET', 'POST'])
+@@ -127,50 +127,6 @@
+ def page_not_found(e):
+     return render_template('404.html')
+ 
+-@app.route('/comparitiveBar')
+-def comparitiveBar():
+-
+-    allStudentsTotal= {"SMITH_John": [7, 12], "JACK_Bob": [8, 6], "LI_Reginald": [9, 33], "VETTEL_Seb": [10,13],"CHILTON_Max": [11,20], "SENNA_Bruno": [12,27] }
+-    names = []
+-    scores = []
+-    year = []
+-    colour_list = []
+-
+-    for i in allStudentsTotal:
+-        names.append(i)
+-        scores.append(int(allStudentsTotal[i][1]))
+-        year.append(int(allStudentsTotal[i][0]))
+-
+-    for years in year:
+-        if years == 7:
+-            colour_list.append("blue")
+-        if years == 8:
+-            colour_list.append("red")
+-        if years == 9:
+-            colour_list.append("yellow")
+-        if years == 10:
+-            colour_list.append("green")
+-        if years == 11:
+-            colour_list.append("black")
+-        if years == 12:
+-            colour_list.append("orange")
+-
+-    p_vbar = figure(x_range=names, plot_height=600, plot_width=(1000), title="Standings",
+-                    toolbar_location=None, tools="hover")
+-    p_vbar.hover.tooltips = [("Name", "@names"),("Score", "@scores")]
+-    p_vbar.vbar(names, top=(scores), color=colour_list, width=0.2)  # names are the x points, top of the bar graph creates the column from 0 on the y-axis, width specifies gap between the columns
+-    p_vbar.xgrid.grid_line_color = None
+-    p_vbar.vbar(names, scores, legend_label="Year 7", color="blue")
+-    p_vbar.vbar(names, scores, legend_label="Year 8", color = "red")
+-    p_vbar.vbar(names, scores, legend_label="Year 9", color="yellow")
+-    p_vbar.vbar(names, scores, legend_label="Year 10", color="green")
+-    p_vbar.vbar(names, scores, legend_label="Year 11", color="black")
+-    p_vbar.vbar(names, scores, legend_label="Year 12", color="orange")
+-    p_vbar.legend.title = 'Year Groups'
+-    p_vbar.y_range.start = 0  # ensures that the y-axis begins at 0
+-    script, div = components(p_vbar)
+-
+-    return render_template('comparitive_bar.html', script=script, div=div)
+ 
+ if __name__ == '__main__':
+     app.run(debug=True)
+Index: .idea/dataSources.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"DataSourceManagerImpl\" format=\"xml\" multifile-model=\"true\">\r\n    <data-source source=\"LOCAL\" name=\"PARS\" uuid=\"abf4399c-5053-4689-835f-3503c95e44d6\">\r\n      <driver-ref>sqlite.xerial</driver-ref>\r\n      <synchronize>true</synchronize>\r\n      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>\r\n      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/PARS.db</jdbc-url>\r\n      <libraries>\r\n        <library>\r\n          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>\r\n        </library>\r\n        <library>\r\n          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/license.txt</url>\r\n        </library>\r\n      </libraries>\r\n    </data-source>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/dataSources.xml	(revision 3d550857db39560a050736a275df8fdefa0d53e9)
++++ .idea/dataSources.xml	(date 1598962748064)
+@@ -1,17 +1,23 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+-    <data-source source="LOCAL" name="PARS" uuid="abf4399c-5053-4689-835f-3503c95e44d6">
++    <data-source source="LOCAL" name="PARS" uuid="e7ffd276-3570-4eeb-a7ef-f83ae1b9408b">
+       <driver-ref>sqlite.xerial</driver-ref>
+       <synchronize>true</synchronize>
+       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/PARS.db</jdbc-url>
++      <jdbc-url>jdbc:sqlite:F:\Pycharm\Pycharm Projects\ProAnalytics\PARS.db</jdbc-url>
+       <libraries>
++        <library>
++          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/license.txt</url>
++        </library>
+         <library>
+           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
+         </library>
+         <library>
+           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/license.txt</url>
++        </library>
++        <library>
++          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
+         </library>
+       </libraries>
+     </data-source>
+diff --git templates/OPGG.html templates/shotList.html
+rename from templates/OPGG.html
+rename to templates/shotList.html

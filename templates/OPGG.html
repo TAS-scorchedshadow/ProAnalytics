@@ -10,22 +10,22 @@
 </div>
 
 
-
+{% for shoot in target_list %}
 <div class="row">
     <div class = "col-12">
         <div class="card shadow border-0 h-100">
             <div class = "card-title">
                 <p> 13.December 2020 - Shoot 3
-                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target={{ "#" + shoot[0] }} aria-expanded="false" aria-controls="collapseExample">
                     V
                   </button>
                 </p>
             </div>
-             <div class = "card-body">
-                 <div class="row" id="collapseExample">
+             <div class="card-body" id={{ shoot[0] }}>
+                 <div class="row">
                      <div class = "col-3">
-                        {{ script | safe }}
-                        {{ div | safe }}
+                        {{ shoot[1] | safe }}
+                        {{ shoot[2] | safe }}
                      </div>
                      <div class = "col-9" >
                          <table class="table table-sm table-bordered">
@@ -71,6 +71,7 @@
         </div>
     </div>
 </div>
+{%- endfor %}
 <br>
 
 {% endblock %}
