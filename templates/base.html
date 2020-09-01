@@ -83,6 +83,7 @@
         });
     </script>
 
+
 </head>
 
 <body>
@@ -91,11 +92,16 @@
         <!-- Sidebar  -->
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3>P.A.R.S</h3>
+                <h1>PARS</h1>
+                {% if session['type'] == 'admin' %}
+                    <h5>Admin</h5>
+                {% else %}
+                    <h5>Student</h5>
+                {% endif %}
             </div>
 
             <ul class="list-unstyled components">
-                <li class="active">
+                <li>
                     <a href="/home">
                         <i class="fas fa-home"></i>
                         Home
