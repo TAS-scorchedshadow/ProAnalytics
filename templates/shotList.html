@@ -2,7 +2,15 @@
 {% set active_page = "opgg" %}
 {% block page_title %} opgg {% endblock %}
 {% block page_content %}
-<div class="jumbotron jumbotron-fluid">
+<style>
+    .jumbotron{
+        background-image: url("https://i.redd.it/6mi6bj3bmyz41.png");
+        background-size: cover;
+        margin-bottom: 20px;
+        margin-top: 0px;
+    }
+</style>
+<div class="jumbotron jumbotron-fluid bg-transparent" style="background-size: cover;">
   <div class="container justify-content-center text-center">
             <h2>Students Name</h2>
             <input type="text" class="typeahead tt-query" autocomplete="off" spellcheck="false">
