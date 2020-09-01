@@ -11,7 +11,7 @@ def get_db():
         return db
 
 
-def addUser(username, fname, sname, school, email, password):
+def addUser(username, fname, sname, school, email, password): #Adds a row to the users table of PARS.db with the indicated information
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
     c.execute("INSERT INTO users (username, fName, sName, school, email, password) VALUES (?,?,?,?,?,?)",
@@ -31,7 +31,7 @@ def usernameExists(username):  # Checks if username exists in database
         return False
 
 
-def findPassword(username):
+def findPassword(username): #Finds an encrypted password in the database given a username
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
     for row in c.execute('SELECT * FROM users WHERE username=?', (username,)):
