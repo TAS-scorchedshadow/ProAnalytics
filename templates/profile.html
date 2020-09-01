@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-8">
             <div class="card shadow border-0 justify-content-center">
-                <div class = "card-title">
+                <div class = "card-title text-center">
                     <h2>Graphs</h2>
                 </div>
                  <div class = "card-body">
@@ -30,17 +30,12 @@
          </div>
         <div class="col-4">
             <div class="card shadow border-0 justify-content-center">
-                <div class = "card-title">
-                    <h2>Stats</h2>
+                <div class = "card-title text-center">
+                    <h2>Account</h2>
                 </div>
                  <div class = "card-body">
-                     <img
-                             src="https://cdn.kastatic.org/ka-perseus-graphie/6fc87b09f1fd082b8939b6425bef6a1d5397e532.svg"
-                             class="img-fluid" alt="target" style="height: 175px;width: 190px">
-                     <a class="btn btn-primary btn-sm float-right"
-                        id="left" style="color:white" href="/comparativeBar" type="button">
-                         Go To
-                     </a>
+                     <p> Email: {{ session['email'] }}</p>
+                    <p>Year: 7</p>
                  </div>
             </div>
         </div>
