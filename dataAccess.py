@@ -14,7 +14,7 @@ def get_db():
 def addUser(username, fname, sname, school, email, password):
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    c.execute("INSERT INTO user (username, fName, sName, school, email, password) VALUES (?,?,?,?,?,?)",
+    c.execute("INSERT INTO users (username, fName, sName, school, email, password) VALUES (?,?,?,?,?,?)",
               (username, fname, sname, school, email, password))
     conn.commit()
     conn.close()
@@ -23,7 +23,7 @@ def addUser(username, fname, sname, school, email, password):
 def usernameExists(username):  # Checks if username exists in database
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM user WHERE username=?', (username,))
+    c.execute('SELECT * FROM users WHERE username=?', (username,))
     result = c.fetchone()
     if result:
         return True
@@ -34,7 +34,7 @@ def usernameExists(username):  # Checks if username exists in database
 def findPassword(username):
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    for row in c.execute('SELECT * FROM user WHERE username=?', (username,)):
+    for row in c.execute('SELECT * FROM users WHERE username=?', (username,)):
         password = row[6]  # Gets position of password
     conn.close()
     return password
@@ -43,7 +43,7 @@ def findPassword(username):
 def emailExists(email):  # Checks if email exists in database
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM user WHERE email=?', (email,))
+    c.execute('SELECT * FROM users WHERE email=?', (email,))
     result = c.fetchone()
     if result:
         return True
@@ -54,17 +54,17 @@ def emailExists(email):  # Checks if email exists in database
 def initialiseSettings(username):  # initialise user settings from database
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    for row in c.execute('SELECT * FROM user WHERE username=?', (username,)):
+    for row in c.execute('SELECT * FROM users WHERE username=?', (username,)):
         print(row)
         session['fName'] = row[2]
         session['sName'] = row[3]
         session['school'] = row[4]
         session['email'] = row[5]
-        if row[7] == 1:  # If user is an admin
+        if row[8] == 1:  # If user is an admin
             session['type'] = 'admin'
         else:
             session['type'] = 'student'
-        session['rifleSerial'] = row[8]
+        session['rifleSerial'] = row[7]
     conn.close()
 
 

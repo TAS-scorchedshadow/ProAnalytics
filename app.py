@@ -82,7 +82,6 @@ def upload():
 @app.route('/user/signup',methods=['GET', 'POST'])
 def signup():
     # create form
-    session['type'] = "student"
     form = signUpForm()
     # on submission
     if request.method == 'POST':
@@ -98,7 +97,6 @@ def signup():
 
 @app.route('/user/signin', methods=['GET', 'POST'])
 def signin():
-    session['type'] = "admin"
     # create form
     form = signIn()
     # on submission
@@ -117,6 +115,7 @@ def signin():
 def testDrawTarget():
     script, div = graphProcessing.drawTarget()
     return render_template('target.html', script=script, div=div)
+
 
 @app.route('/comparativeBar')
 def comparitiveBar():
