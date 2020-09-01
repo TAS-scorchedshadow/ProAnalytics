@@ -39,16 +39,18 @@ def registerUser(form):
     initialiseSettings(assignedID)
 
 
-def validateLogin(form):
+def validateLogin(form): #takes a submitted form and checks if the username exsists in the database that has a matching password.
+    #Settings defaults
     usernameError = False
     passwordError = False
+    #Check if input is a username or email that exists in the database
     if not usernameExists(form.username.data) and not emailExists(form.username.data):
         usernameError = True
     else:
         password = form.password.data
-        hashedPassword = findPassword(form.username.data)
+        hashedPassword = findPassword(form.username.data) #Check if password matches
         if check_encrypted_password(password, hashedPassword):
-            initialiseSettings(form.username.data)
+            initialiseSettings(form.username.data) #Intialise the user sessions
         else:
             passwordError = True
     return usernameError, passwordError

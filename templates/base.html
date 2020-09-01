@@ -10,14 +10,78 @@
 
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-    <!-- Our Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="../static/style2.css">
+    <!-- Template-->
+    <link rel="stylesheet" type="text/css" href="../static/css/template.css">
+    <!--Themes--->
+    {% if session['type'] == 'admin' %} <!-- Only show upload page when the user is an admin -->
+        <link rel="stylesheet" type="text/css" href="../static/css/adminSidebar.css">
+    {% else %}
+        <link rel="stylesheet" type="text/css" href="../static/css/studentSidebar.css">
+    {% endif %}
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+    <!-- Bokeh -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/2.2.0/bokeh.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/2.2.0/bokeh-tables.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/2.2.0/bokeh-widgets.min.js"
+            crossorigin="anonymous"></script>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+   <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- Defining aria collapse movement -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar, #content').toggleClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+    </script>
+
+    <!-- Twitter TypeAhead -->
+    <script type="text/javascript" src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+    <!-- Defining Local Dataset -->
+    <script>
+        $(document).ready(function(){
+            // Defining the local dataset
+            var cars = ['Dylan Dinh An Huynh', 'Henry Guo', 'Victor Zhang', 'Rishi Wig', 'Dylan Marcusia', 'Thomas Nguyen', 'Daniel Wakeford', 'Daniel Comben', 'Daniel Wakeson'];
+
+            // Constructing the suggestion engine
+            var cars = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: cars
+            });
+
+            // Initializing the typeahead
+            $('.typeahead').typeahead({
+                hint: true,
+                highlight: true, /* Enable substring highlighting */
+                minLength: 1 /* Specify minimum characters required for showing result */
+            },
+            {
+                name: 'cars',
+                source: cars
+            });
+        });
+    </script>
 
 </head>
 
@@ -31,7 +95,6 @@
             </div>
 
             <ul class="list-unstyled components">
-                <p>Dummy Heading</p>
                 <li class="active">
                     <a href="/home">
                         <i class="fas fa-home"></i>
@@ -66,6 +129,12 @@
                             <a href="/comparativeBar">
                                 <i class="fas fa-chart-bar"></i>
                                 Comparative Bar Graph
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/rawDataTable">
+                                <i class="fas fa-table"></i>
+                                Raw Data Table
                             </a>
                         </li>
                         <li>
@@ -113,7 +182,7 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
 
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <button type="button" id="sidebarCollapse" class="btn">
                         <i class="fas fa-align-left"></i>
                         <span>Menu</span>
                     </button>
@@ -152,55 +221,7 @@
         </div>
     </div>
 
-    <!-- jQuery CDN - Slim version (=without AJAX) -->
-   <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-    <!-- jQuery Custom Scroller CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#sidebar").mCustomScrollbar({
-                theme: "minimal"
-            });
-
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar, #content').toggleClass('active');
-                $('.collapse.in').toggleClass('in');
-                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-            });
-        });
-    </script>
-
-    <!-- Twitter TypeAhead -->
-    <script type="text/javascript" src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
-    <script>
-        $(document).ready(function(){
-            // Defining the local dataset
-            var cars = ['Dylan Dinh An Huynh', 'Henry Guo', 'Victor Zhang', 'Rishi Wig', 'Dylan Marcusia', 'Thomas Nguyen', 'Daniel Wakeford', 'Daniel Comben', 'Daniel Wakeson'];
-
-            // Constructing the suggestion engine
-            var cars = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.whitespace,
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                local: cars
-            });
-
-            // Initializing the typeahead
-            $('.typeahead').typeahead({
-                hint: true,
-                highlight: true, /* Enable substring highlighting */
-                minLength: 1 /* Specify minimum characters required for showing result */
-            },
-            {
-                name: 'cars',
-                source: cars
-            });
-        });
-    </script>
 </body>
 
 </html>

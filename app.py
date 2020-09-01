@@ -6,8 +6,8 @@ from bokeh.models import Range1d
 from flask_wtf import CSRFProtect
 
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm, signUpForm
-from security import registerUser
+from uploadForms import uploadForm, signUpForm, signIn
+from security import registerUser, validateLogin
 from dataAccess import emailExists
 
 from werkzeug.utils import secure_filename
@@ -40,9 +40,16 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
+
 @app.route('/report')
 def report():
-    return render_template('report.html')
+    script, div = graphProcessing.drawTarget()
+    script2, div2 = graphProcessing.drawTarget()
+    return render_template('OPGG.html', script=script,div=div,script2=script2,div2=div2)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -87,10 +94,28 @@ def signup():
     return render_template('signUpForm.html', form=form, emailError=False)
 
 
+
+@app.route('/user/signin', methods=['GET', 'POST'])
+def signin():
+    # create form
+    form = signIn()
+    # on submission
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            usernameError, passwordError = validateLogin(form)
+            if usernameError or passwordError:
+                return render_template('signInForm.html', form=form, usernameError=True, passwordError=True)
+            else:
+                return render_template('home.html', form=form)
+    return render_template('signInForm.html', form=form)
+
+
+
 @app.route('/target')
 def testDrawTarget():
     script, div = graphProcessing.drawTarget()
     return render_template('target.html', script=script, div=div)
+
 
 @app.route('/comparativeBar')
 def comparitiveBar():
