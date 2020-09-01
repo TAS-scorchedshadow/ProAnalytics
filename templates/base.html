@@ -10,8 +10,14 @@
 
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-    <!-- Our Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="../static/style2.css">
+    <!-- Template-->
+    <link rel="stylesheet" type="text/css" href="../static/css/template.css">
+    <!--Themes--->
+    {% if session['type'] == 'admin' %} <!-- Only show upload page when the user is an admin -->
+        <link rel="stylesheet" type="text/css" href="../static/css/adminSidebar.css">
+    {% else %}
+        <link rel="stylesheet" type="text/css" href="../static/css/studentSidebar.css">
+    {% endif %}
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
@@ -89,7 +95,6 @@
             </div>
 
             <ul class="list-unstyled components">
-                <p>Dummy Heading</p>
                 <li class="active">
                     <a href="/home">
                         <i class="fas fa-home"></i>
@@ -165,7 +170,7 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
 
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <button type="button" id="sidebarCollapse" class="btn">
                         <i class="fas fa-align-left"></i>
                         <span>Menu</span>
                     </button>

@@ -4,32 +4,11 @@
 {% block page_content %}
 <div class="jumbotron jumbotron-fluid">
   <div class="container justify-content-center text-center">
-            <div class="bs-example">
-                <h2>Students Name</h2>
-                <input type="text" class="typeahead tt-query" autocomplete="off" spellcheck="false">
-            </div>
+            <h2>Students Name</h2>
+            <input type="text" class="typeahead tt-query" autocomplete="off" spellcheck="false">
     </div>
 </div>
 
-
-
-<div id="demo"></div>
-
-<script>
-   var path = "projelerimiz/otel/balsamo/img/";
-    var ext = ".jpg";
-    var i = 1;
-    var img, item, figure;
-    for (i; i<=11;i++){
-        item = '<div class="item"></div>';
-        $(item).appendTo(".demo");
-        figure = '<figure class="frame"></figure>';
-        $(item).append(figure);
-        img = $('<img>'); //Equivalent: $(document.createElement('img'))
-        img.attr('src', path + i + ext);
-        $(figure).append(img);
-}
-</script>
 
 
 <div class="row">
