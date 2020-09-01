@@ -48,7 +48,8 @@ def compareLine(listx, listy, listName):
     script, div = components(cLine)
     return script, div
 
-
+#Designed to provide a comparison between shooters
+#allStudentsTotal is a dictionnary with the 
 def compareBar():
     allStudentsTotal= {"SMITH_John": [7, 12], "JACK_Bob": [8, 6], "LI_Reginald": [9, 33], "VETTEL_Seb": [10,13],"CHILTON_Max": [11,20], "SENNA_Bruno": [12,27] }
     # init vars
