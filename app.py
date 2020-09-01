@@ -35,6 +35,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def home():
     return render_template('home.html')
 
+@app.route('/comparativeHomePage')
+def comparativeHomePage():
+    return render_template('comparativeHomePage.html')
 
 @app.route('/about')
 def about():
