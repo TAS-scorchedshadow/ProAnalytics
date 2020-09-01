@@ -49,7 +49,8 @@ def profile():
 def report():
     script, div = graphProcessing.drawTarget()
     script2, div2 = graphProcessing.drawTarget()
-    return render_template('OPGG.html', script=script,div=div,script2=script2,div2=div2)
+    list = ['a','b','c','d']
+    return render_template('OPGG.html', script=script, div=div, script2=script2, div2=div2, list=list)
 
 
 @app.route('/upload', methods=['GET', 'POST'])

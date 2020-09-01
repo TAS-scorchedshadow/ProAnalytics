@@ -10,59 +10,63 @@
 </div>
 
 
-
+{% for i in list %}
 <div class="row">
     <div class = "col-12">
         <div class="card shadow border-0 h-100">
             <div class = "card-title">
                 <p> 13.December 2020 - Shoot 3
-                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target={{ "#" + i }} aria-expanded="true" aria-controls="collapseExample">
                     V
                   </button>
                 </p>
             </div>
              <div class = "card-body">
-                 <div class="row" id="collapseExample">
-                     <div class = "col-3">
-                        {{ script | safe }}
-                        {{ div | safe }}
+                 <div class="collapse" id={{ i }}>
+                     <div class="row">
+                         <div class = "col-3">
+                            {{ script | safe }}
+                            {{ div | safe }}
+                         </div>
+                         <div class = "col-9" >
+                             <table class="table table-sm table-bordered">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">#</th>
+                                      <th scope="col">First</th>
+                                      <th scope="col">Last</th>
+                                      <th scope="col">Handle</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <th scope="row">1</th>
+                                      <td>Mark</td>
+                                      <td>Otto</td>
+                                      <td>@mdo</td>
+                                    </tr>
+                                    <tr>
+                                      <th scope="row">2</th>
+                                      <td>Jacob</td>
+                                      <td>Thornton</td>
+                                      <td>@fat</td>
+                                    </tr>
+                                    <tr>
+                                      <th scope="row">3</th>
+                                      <td colspan="2">Larry the Bird</td>
+                                      <td>@twitter</td>
+                                    </tr>
+                                  </tbody>
+                            </table>
+                        </div>
                      </div>
-                     <div class = "col-9" >
-                         <table class="table table-sm table-bordered">
-                              <thead>
-                                <tr>
-                                  <th scope="col">#</th>
-                                  <th scope="col">First</th>
-                                  <th scope="col">Last</th>
-                                  <th scope="col">Handle</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <th scope="row">1</th>
-                                  <td>Mark</td>
-                                  <td>Otto</td>
-                                  <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">2</th>
-                                  <td>Jacob</td>
-                                  <td>Thornton</td>
-                                  <td>@fat</td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">3</th>
-                                  <td colspan="2">Larry the Bird</td>
-                                  <td>@twitter</td>
-                                </tr>
-                              </tbody>
-                        </table>
-                    </div>
+
                  </div>
              </div>
         </div>
     </div>
 </div>
+{%- endfor %}
 <br>
 
 {% endblock %}
