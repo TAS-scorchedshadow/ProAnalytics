@@ -1,11 +1,13 @@
 import math
 import statistics
 import json
-def validateShots(filePath):
+import numpy as np
+
+def validateShots(txtfile):
     numValidShot = 0
     newShot = {'id': 0, 'name':"",'validShots':[]}
     validShots = []
-    with open(filePath) as json_file: #Open txt file as JSON
+    with open(txtfile) as json_file: #Open txt file as JSON
         data = json.load(json_file)
         for individualShot in data['shots']:
             x = individualShot['valid']
@@ -31,8 +33,8 @@ def getScore(shot):
         score['score'] = shot['score']
     return score
 
-#general calculations for the mean, median and range of the dataset. The information is returned at the bottom
-#data brought in from the json, and the shot score statistical information is created
+#general calculations for the mean, median, range & standard deviation of the dataset. The information is returned
+# at the bottom data brought in from the json, and the shot score statistical information is created
 def statisticsScore():
     jsonID = 1551500850141  # ID of json file
     filePath = "testJson/string-" + str(jsonID) + ".txt"
@@ -52,7 +54,9 @@ def statisticsScore():
     else:
         median = ((score[math.ceil(len(score)/2)]))
     scoreRange = score[-1] - score[0]
-    return mean,median,scoreRange
+    stdDev = np.std(score)
+
+    return mean, median, scoreRange, stdDev
 
 if __name__ == "__main__":
     statisticsScore()
