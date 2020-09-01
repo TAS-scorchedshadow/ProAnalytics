@@ -160,40 +160,40 @@ def create_target(range_type):
     return p
 
 
-def drawTarget(filePath="testJson/string-1592616479803.txt"):
-    p = create_target("300m")   # Creates a target with the 300m face
+def drawTarget(shots, targetSize, groupRadius, groupCenter):
+    # shots (dictionary of shots with their number and x,y positions {shotNum: [x, y, score] ...}
+    # targetSize (str)
+    # groupRadius (float)
+    # groupCenter (tuple with 2 floats eg. (12.66, -32.5) )
+    p = create_target(targetSize)   # Creates a target with the appropriate face
     # todo: Change this to pull from database info instead of directly from json
     # Required: x/y value of shot, shot number
     # Required: shot grouping radius, shot grouping center point
     # Required: target size
 
-
-    # add a shot (test)
-    s = validateShots(filePath)['validShots']
-    print(s)
     # Tooltips code from https://docs.bokeh.org/en/latest/docs/user_guide/tools.html
     # ColumnDataSource is used instead to allow for tooltips
     shotX = []
     shotY = []
     score = []
-    for i in range(len(s)):
-        shotX.append(s[i]['x'])
-        shotY.append(s[i]['y'])
-        score.append(s[i]['score'])
+    print(shots)
+    for i in range(1, len(shots)+1):
+        shotX.append(shots[i][0])
+        shotY.append(shots[i][1])
+        score.append(shots[i][2])
     source = ColumnDataSource(data=dict(
         x=shotX,
         y=shotY,
         score=score,
-        shotNum=range(1, len(s)+1)
+        shotNum=range(1, len(shots)+1)
     ))
     p.select(type=HoverTool).names = ['shot']
     p.circle('x', 'y', size=30, color="black", line_color="white", line_width=2, source=source, name='shot')
     p.text('x', 'y', text='shotNum', text_baseline="middle", text_align="center", color="white", source=source)
     # Uses stats_circle_center and stats_circle_radius in order to perform
-    # Currently hardcoded to json 1592616479803
     group_center = (12.66, -32.5)
     group_radius = 228.8
-    p.circle([group_center[0]], [group_center[1]], radius=group_radius, fill_alpha=0, line_color="yellow", line_width=4)
+    p.circle([groupCenter[0]], [groupCenter[1]], radius=groupRadius, fill_alpha=0, line_color="yellow", line_width=4)
     script, div = components(p)
     return script, div
 
