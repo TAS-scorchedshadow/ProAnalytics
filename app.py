@@ -42,7 +42,9 @@ def about():
 
 @app.route('/report')
 def report():
-    return render_template('report.html')
+    script, div = graphProcessing.drawTarget()
+    script2, div2 = graphProcessing.drawTarget()
+    return render_template('OPGG.html', script=script,div=div,script2=script2,div2=div2)
 
 
 @app.route('/upload', methods=['GET', 'POST'])

@@ -23,9 +23,8 @@
     <orderEntry type="jdk" jdkName="Python 3.7 (venv)" jdkType="Python SDK" />
     <orderEntry type="jdk" jdkName="Python 3.8 (venv)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="solid" level="application" />
-    <orderEntry type="library" name="fontawesome" level="application" />
     <orderEntry type="library" name="typeahead.bundle" level="application" />
+    <orderEntry type="library" name="jquery-3.5.1" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />

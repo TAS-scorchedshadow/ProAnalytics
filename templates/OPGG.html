@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% set active_page = "opgg" %}
+{% block page_title %} opgg {% endblock %}
+{% block page_content %}
+<div class="jumbotron jumbotron-fluid">
+  <div class="container justify-content-center text-center">
+            <div class="bs-example">
+                <h2>Students Name</h2>
+                <input type="text" class="typeahead tt-query" autocomplete="off" spellcheck="false">
+            </div>
+    </div>
+</div>
+
+
+
+<div id="demo"></div>
+
+<script>
+   var path = "projelerimiz/otel/balsamo/img/";
+    var ext = ".jpg";
+    var i = 1;
+    var img, item, figure;
+    for (i; i<=11;i++){
+        item = '<div class="item"></div>';
+        $(item).appendTo(".demo");
+        figure = '<figure class="frame"></figure>';
+        $(item).append(figure);
+        img = $('<img>'); //Equivalent: $(document.createElement('img'))
+        img.attr('src', path + i + ext);
+        $(figure).append(img);
+}
+</script>
+
+
+<div class="row">
+    <div class = "col-12">
+        <div class="card shadow border-0 h-100">
+            <div class = "card-title">
+                <p> 13.December 2020 - Shoot 3
+                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    V
+                  </button>
+                </p>
+            </div>
+             <div class = "card-body">
+                 <div class="row" id="collapseExample">
+                     <div class = "col-3">
+                        {{ script | safe }}
+                        {{ div | safe }}
+                     </div>
+                     <div class = "col-9" >
+                         <table class="table table-sm table-bordered">
+                              <thead>
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">First</th>
+                                  <th scope="col">Last</th>
+                                  <th scope="col">Handle</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <th scope="row">1</th>
+                                  <td>Mark</td>
+                                  <td>Otto</td>
+                                  <td>@mdo</td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">2</th>
+                                  <td>Jacob</td>
+                                  <td>Thornton</td>
+                                  <td>@fat</td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">3</th>
+                                  <td colspan="2">Larry the Bird</td>
+                                  <td>@twitter</td>
+                                </tr>
+                              </tbody>
+                        </table>
+                    </div>
+                 </div>
+             </div>
+        </div>
+    </div>
+</div>
+<br>
+
+{% endblock %}
