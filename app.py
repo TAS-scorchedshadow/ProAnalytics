@@ -82,6 +82,7 @@ def upload():
 @app.route('/user/signup',methods=['GET', 'POST'])
 def signup():
     # create form
+    session['type'] = "student"
     form = signUpForm()
     # on submission
     if request.method == 'POST':
