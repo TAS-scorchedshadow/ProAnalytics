@@ -54,6 +54,7 @@ def profile():
 def report():
     # for sorting the second element of a tuple in a list of tuples
     def getKey(item):
+        print(item[1])
         return item[1]
 
     # create targets based on user
@@ -76,16 +77,15 @@ def report():
             shots[row[-1]] = [row[5], row[3], row[6]]
             # create list of shots
             shot_table[str(shoot[0])].append((row[6], row[9]))
-            # row[-1] is shotNum
+            # row[9] is shotNum
             # row[5] is x
             # row[3] is y
             # row[6] is score
         # create graph and put the data into target_list (along with shotNum
-        shot_table[str(shoot[0])] = sorted(shot_table[str(shoot[0])], key=getKey)
-        script, div = graphProcessing.drawTarget(shots, range, 228.8, (12.66, -32.5))
+        script, div = graphProcessing.drawTarget(shots, range, (shoot[6]/2), (shoot[7], shoot[8]))
         # find the date
         date = datetime.utcfromtimestamp(int(shoot[1])/1000).strftime('%d-%m-%y')
-        target_list.append([(str(shoot[0])), script, div, date])
+        target_list.append([(str(shoot[0])), script, div, date, shoot[9], round(shoot[6]/2, 2)])
     print(shot_table)
 
 

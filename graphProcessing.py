@@ -177,16 +177,18 @@ def drawTarget(shots, targetSize, groupRadius, groupCenter):
     shotX = []
     shotY = []
     score = []
+    shotNum = []
     print(shots)
-    for i in range(1, len(shots)+1):
+    for i in shots:
         shotX.append(shots[i][0])
         shotY.append(shots[i][1])
         score.append(shots[i][2])
+        shotNum.append(i)
     source = ColumnDataSource(data=dict(
         x=shotX,
         y=shotY,
         score=score,
-        shotNum=range(1, len(shots)+1)
+        shotNum=shotNum
     ))
     p.select(type=HoverTool).names = ['shot']
     p.circle('x', 'y', size=30, color="black", line_color="white", line_width=2, source=source, name='shot')

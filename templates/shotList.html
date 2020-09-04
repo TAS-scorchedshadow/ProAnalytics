@@ -23,7 +23,7 @@
     <div class = "col-12">
         <div class="card shadow border-0 h-100">
             <div class = "card-title">
-                <p> {{ shoot[-1] }} - Shoot 3
+                <p> {{ shoot[3] }}
                   <button class="btn btn-primary" type="button" data-toggle="collapse" id={{ 'button' + shoot[0] }} data-target={{ "#" + shoot[0] }} aria-expanded="false" aria-controls="collapseExample" onclick=buttonChange(this) >
                     +
                   </button>
@@ -54,8 +54,8 @@
                                         {% for shot in shot_table[shoot[0]] %}
                                             <td>{{ shot[0] }}</td>
                                         {%- endfor %}
-                                        <td>43.3</td>
-                                        <td>142.1</td>
+                                        <td>{{ shoot[4] }}</td>
+                                        <td>{{ shoot[5] }}</td>
                                     </tr>
                             </table>
                         </div>
