@@ -12,6 +12,7 @@ from dataAccess import emailExists
 
 from werkzeug.utils import secure_filename
 from drawtarget import create_target
+from datetime import datetime
 import os
 import graphProcessing
 
@@ -51,8 +52,13 @@ def profile():
 
 @app.route('/report')
 def report():
+    # for sorting the second element of a tuple in a list of tuples
+    def getKey(item):
+        return item[1]
+
     # create targets based on user
     target_list = []
+    shot_table = {}
     username = request.args.get('username')
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
@@ -61,20 +67,29 @@ def report():
     shoots = c.fetchall()
     # search through each shoot to collect a list of shots
     for shoot in shoots:
+        shot_table[str(shoot[0])] = []
         c.execute('SELECT * FROM shots WHERE shootID=?', (shoot[0], ))
         range = shoot[3]
         shots_tuple = c.fetchall()
         shots = {}
         for row in shots_tuple:
             shots[row[-1]] = [row[5], row[3], row[6]]
+            # create list of shots
+            shot_table[str(shoot[0])].append((row[6], row[9]))
             # row[-1] is shotNum
             # row[5] is x
             # row[3] is y
             # row[6] is score
         # create graph and put the data into target_list (along with shotNum
+        shot_table[str(shoot[0])] = sorted(shot_table[str(shoot[0])], key=getKey)
         script, div = graphProcessing.drawTarget(shots, range, 228.8, (12.66, -32.5))
-        target_list.append([('a' + str(shoot[0])), script, div])
-    return render_template('shotList.html', target_list=target_list)
+        # find the date
+        date = datetime.utcfromtimestamp(int(shoot[1])/1000).strftime('%d-%m-%y')
+        target_list.append([(str(shoot[0])), script, div, date])
+    print(shot_table)
+
+
+    return render_template('shotList.html', target_list=target_list, shot_table=shot_table)
 
 
 @app.route('/upload', methods=['GET', 'POST'])

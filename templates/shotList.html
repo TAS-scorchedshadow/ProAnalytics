@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% set active_page = "opgg" %}
-{% block page_title %} opgg {% endblock %}
+{% set active_page = "shotList" %}
+{% block page_title %} Shot List {% endblock %}
 {% block page_content %}
 <style>
     .jumbotron{
@@ -23,55 +23,37 @@
     <div class = "col-12">
         <div class="card shadow border-0 h-100">
             <div class = "card-title">
-                <p> 13.December 2020 - Shoot 3
-                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target={{ "#" + shoot[0] }} aria-expanded="false" aria-controls="collapseExample">
-                    V
+                <p> {{ shoot[-1] }} - Shoot 3
+                  <button class="btn btn-primary" type="button" data-toggle="collapse" id={{ 'button' + shoot[0] }} data-target={{ "#" + shoot[0] }} aria-expanded="false" aria-controls="collapseExample" onclick=buttonChange(this) >
+                    +
                   </button>
                 </p>
             </div>
              <div class="card-body">
                  <div class="collapse" id={{ shoot[0] }}>
                      <div class="row">
-                         <div class = "col-3">
+                         <div class = "col-5">
                              <!--Create target-->
                             {{ shoot[1] | safe }}
                             {{ shoot[2] | safe }}
                          </div>
                          <!-- Create table -->
-                         <div class = "col-9" >
+                         <div class = "col-7" >
                              <table class="table table-sm table-bordered">
                                   <thead>
                                     <tr>
                                         <th>Range</th>
-                                        <th width="30px">A</th>
-                                        <th width="30px">B</th>
-                                        <th width="30px">1</th>
-                                        <th width="30px">2</th>
-                                        <th width="30px">3</th>
-                                        <th width="30px">4</th>
-                                        <th width="30px">5</th>
-                                        <th width="30px">6</th>
-                                        <th width="30px">7</th>
-                                        <th width="30px">8</th>
-                                        <th width="30px">9</th>
-                                        <th width="30px">10</th>
+                                        {% for shot in shot_table[shoot[0]] %}
+                                            <th width="30px">{{ shot[1] }}</th>
+                                        {%- endfor %}
                                         <th>Final Score</th>
                                         <th>Group Size</th>
                                     </tr>
                                     <tr>
-                                        <td>500m</td>
-                                        <td>5</td>
-                                        <td>4</td>
-                                        <td>5</td>
-                                        <td>5</td>
-                                        <td>V</td>
-                                        <td>V</td>
-                                        <td>4</td>
-                                        <td>5</td>
-                                        <td>5</td>
-                                        <td>5</td>
-                                        <td>V</td>
-                                        <td>5</td>
+                                        <td>300m</td>
+                                        {% for shot in shot_table[shoot[0]] %}
+                                            <td>{{ shot[0] }}</td>
+                                        {%- endfor %}
                                         <td>43.3</td>
                                         <td>142.1</td>
                                     </tr>
@@ -83,7 +65,18 @@
         </div>
     </div>
 </div>
-{%- endfor %}
 <br>
+{%- endfor %}
+{# toggle button between + and - when pressed #}
+<script>
+    function buttonChange(button) {
+        if (button.getAttribute('aria-expanded') == 'true') {
+            button.innerHTML = '+'
+        }
+        else {
+            button.innerHTML = '-'
+        }
+    }
+</script>
 
 {% endblock %}
