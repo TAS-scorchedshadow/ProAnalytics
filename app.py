@@ -8,7 +8,7 @@ from flask_wtf import CSRFProtect
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn
 from security import registerUser, validateLogin
-from dataAccess import emailExists
+from dataAccess import emailExists, addShoot
 
 from werkzeug.utils import secure_filename
 from drawtarget import create_target
@@ -57,7 +57,7 @@ def report():
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
     # search through shoots database to get a tuple of shoots
-    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY date desc;', (username,))
+    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time desc;', (username,))
     shoots = c.fetchall()
     # search through each shoot to collect a list of shots
     for shoot in shoots:
@@ -88,19 +88,18 @@ def upload():
         for file in files:
             filename = secure_filename(file.filename)
             filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filePath) #Add file to upload folder
-            print(filename,"was uploaded")
+            file.save(filePath)                 # Add file to upload folder
+            print(filename, "was uploaded")     # Debug
+            shoot = validateShots(filePath)     # Fixes up file to obtain relevant data and valid shots
 
-            #TODO save data to database
-            #Test to see if upload works
-            s = validateShots(filePath)['validShots'] # Get all valid Shots
-            for i in range(len(s)):
-                score = getScore(s[i])
-                print(score)
+            # todo: Handle missing values. 'username' may be a missing value.
+            # Adds missing values temporarily
+            shoot['rifleRange'] = "Malabar"
+            shoot['distance'] = "300m"
+            addShoot(shoot)                     # Import the shoot to the database
 
-            #Delete file
-            os.remove(filePath)
-            print(filename, "was removed")
+            os.remove(filePath)                 # Delete file
+            print(filename, "was removed")      # Debug
     return render_template('upload.html', form=form)
 
 
