@@ -13,5 +13,8 @@
     <p>
         Proudly created by Andrew T, Dylan H, Henry G, Ryan T & Rishi W
     </p>
+    {% if current_user.is_authenticated %}
+      Hi {{ current_user.fName }}!
+    {% endif %}
 
 {% endblock %}

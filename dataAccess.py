@@ -1,5 +1,6 @@
 import sqlite3
 from flask import g, session
+from flask_login._compat import unicode
 
 DATABASE = 'PARS.db'
 
@@ -31,12 +32,19 @@ def usernameExists(username):  # Checks if username exists in database
         return False
 
 
+def findID(username):  # Checks if username exists in database
+    conn = sqlite3.connect('PARS.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM users WHERE username=?', (username,))
+    userid = c.fetchone()[0]
+    return userid
+
+
 def findPassword(username): #Finds an encrypted password in the database given a username
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    for row in c.execute('SELECT * FROM users WHERE username=?', (username,)):
-        password = row[6]  # Gets position of password
-    conn.close()
+    c.execute('SELECT * FROM users WHERE username=?', (username,))
+    password = c.fetchone()[6]  # Gets position of password
     return password
 
 
@@ -60,16 +68,5 @@ def initialiseSettings(username):  # initialise user settings from database
         session['sName'] = row[3]
         session['school'] = row[4]
         session['email'] = row[5]
-        if row[8] == 1:  # If user is an admin
-            session['type'] = 'admin'
-        else:
-            session['type'] = 'student'
-        session['rifleSerial'] = row[7]
     conn.close()
 
-
-def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
-    rv = cur.fetchall()
-    cur.close()
-    return (rv[0] if rv else None) if one else rv

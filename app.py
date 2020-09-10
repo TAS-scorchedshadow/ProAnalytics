@@ -1,25 +1,36 @@
-from flask import Flask, render_template, request, send_file, send_from_directory, safe_join, abort, url_for, session
+from urllib.parse import urlparse, urljoin
+
+import flask
+from flask import Flask, render_template, request, send_file, send_from_directory, safe_join, abort, url_for, session, \
+    flash
 from flask_bootstrap import Bootstrap
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import Range1d
+from flask_login import logout_user, login_user, current_user
+from flask_login._compat import unicode
 from flask_wtf import CSRFProtect
+import flask_login
 
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn
-from security import registerUser, validateLogin
+from security import registerUser, validateLogin, User
 from dataAccess import emailExists
 
-from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
 import os
 import graphProcessing
 
 import sqlite3
+from flask import g, session
 
 app = Flask(__name__)
 app.secret_key = "super secret"
-csrf = CSRFProtect(app)
+csrf = CSRFProtect(app) #Initalising secret key
+#Intialising flask-login
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
 
 bootstrap = Bootstrap(app)
 array_shots = [[150, 0], [300, 100], [499, 700]]
@@ -38,7 +49,7 @@ def home():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about.html',variable="variable")
 
 
 @app.route('/profile')
@@ -116,6 +127,13 @@ def signup():
     return render_template('signUpForm.html', form=form, emailError=False)
 
 
+def is_safe_url(target):
+    # See https://stackoverflow.com/questions/60532973/how-do-i-get-a-is-safe-url-function-to-use-with-flask-and-how-does-it-work.
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+        ref_url.netloc == test_url.netloc
+
 
 @app.route('/user/signin', methods=['GET', 'POST'])
 def signin():
@@ -124,11 +142,20 @@ def signin():
     # on submission
     if request.method == 'POST':
         if form.validate_on_submit():
+            # Authenticate User. Also initialises sessions.
             usernameError, passwordError = validateLogin(form)
             if usernameError or passwordError:
                 return render_template('signInForm.html', form=form, usernameError=True, passwordError=True)
             else:
-                return render_template('home.html', form=form)
+                user = User(form.username.data)
+                login_user(user)
+                next = flask.request.args.get('next')
+                # is_safe_url should check if the url is safe for redirects.
+                # See https://stackoverflow.com/questions/60532973/how-do-i-get-a-is-safe-url-function-to-use-with-flask-and-how-does-it-work for an example.
+                if not is_safe_url(next):
+                    return flask.abort(400)
+
+                return flask.redirect(next or flask.url_for('home'))
     return render_template('signInForm.html', form=form)
 
 
@@ -148,6 +175,18 @@ def comparitiveBar():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html')
+
+
+@login_manager.user_loader
+def load_user(username):
+    #Loads a user based off a given username
+    return User(username)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':

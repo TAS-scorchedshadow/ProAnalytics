@@ -1,5 +1,10 @@
+import sqlite3
+
+from flask import flash, redirect, url_for, g
+from flask_login import login_user
+from flask_login._compat import unicode
 from passlib.context import CryptContext
-from dataAccess import addUser, usernameExists, emailExists, findPassword, initialiseSettings
+from dataAccess import addUser, usernameExists, emailExists, findPassword, initialiseSettings, findID
 
 # Password encryption taken from https://blog.tecladocode.com/learn-python-password-encryption-with-flask/
 pwd_context = CryptContext(
@@ -49,8 +54,41 @@ def validateLogin(form): #takes a submitted form and checks if the username exsi
     else:
         password = form.password.data
         hashedPassword = findPassword(form.username.data) #Check if password matches
-        if check_encrypted_password(password, hashedPassword):
-            initialiseSettings(form.username.data) #Intialise the user sessions
-        else:
+        if not check_encrypted_password(password, hashedPassword):
             passwordError = True
     return usernameError, passwordError
+
+
+class User():
+    def __init__(self,username, active = True):
+        self.username = username
+        self.active = active
+
+        conn = sqlite3.connect('PARS.db')
+        c = conn.cursor()
+        c.execute('SELECT * FROM users WHERE username=?', (username,))
+        result = c.fetchone()
+        self.id = result[0]
+        self.fName = result[2]
+        self.sName = result[3]
+        self.school = result[4]
+        self.email = result[5]
+
+    def is_authenticated(self):
+        return True
+        #return true if user is authenticated, provided credentials
+
+    def is_active(self):
+        return True
+    #return true if user is activte and authenticated
+
+    def is_annonymous(self):
+        return False
+        #return true if annon, actual user return false
+
+    def get_id(self):
+        return unicode(self.username)
+        # we are using the username as the ID for this project.
+        # get_id defines an id for a user and is used by the user_loader function in app.py
+        # to load a user based off their username.
+
