@@ -14,12 +14,13 @@ def get_db():
 
 
 # Adds a row to the users table of PARS.db with the indicated information
-def addUser(username, fname, sname, school, email, password, rifleSerial, notes):
+# Only used to add essential information
+def addUser(username, fname, sname, school, email, password):
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    c.execute("INSERT INTO users (username, fName, sName, school, email, password, rifleSerial, notes)"
-              "VALUES (?,?,?,?,?,?,?,?)",
-              (username, fname, sname, school, email, password, rifleSerial, notes))
+    c.execute("INSERT INTO users (username, fName, sName, school, email, password)"
+              "VALUES (?,?,?,?,?,?)",
+              (username, fname, sname, school, email, password))
     conn.commit()
     conn.close()
 

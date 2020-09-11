@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="PARS" uuid="0962ada1-d571-4e66-8560-95e3c5f9794a">
+    <data-source source="LOCAL" name="PARS" uuid="8acc055e-294a-4751-98a1-bc0da7e639c6">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
