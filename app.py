@@ -14,11 +14,12 @@ import flask_login
 
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn
-from security import registerUser, validateLogin, User
-from dataAccess import emailExists
+from security import registerUser, validateLogin
+from dataAccess import emailExists, addShoot
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
+from datetime import datetime
 import os
 import graphProcessing
 
@@ -46,6 +47,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def home():
     return render_template('home.html')
 
+@app.route('/comparativeHomePage')
+def comparativeHomePage():
+    return render_template('comparativeHomePage.html')
 
 @app.route('/about')
 @login_required
@@ -60,30 +64,44 @@ def profile():
 
 @app.route('/report')
 def report():
+    # for sorting the second element of a tuple in a list of tuples
+    def getKey(item):
+        print(item[1])
+        return item[1]
+
     # create targets based on user
     target_list = []
+    shot_table = {}
     username = request.args.get('username')
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
     # search through shoots database to get a tuple of shoots
-    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY date desc;', (username,))
+    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time desc;', (username,))
     shoots = c.fetchall()
     # search through each shoot to collect a list of shots
     for shoot in shoots:
+        shot_table[str(shoot[0])] = []
         c.execute('SELECT * FROM shots WHERE shootID=?', (shoot[0], ))
         range = shoot[3]
         shots_tuple = c.fetchall()
         shots = {}
         for row in shots_tuple:
             shots[row[-1]] = [row[5], row[3], row[6]]
-            # row[-1] is shotNum
+            # create list of shots
+            shot_table[str(shoot[0])].append((row[6], row[9]))
+            # row[9] is shotNum
             # row[5] is x
             # row[3] is y
             # row[6] is score
         # create graph and put the data into target_list (along with shotNum
-        script, div = graphProcessing.drawTarget(shots, range, 228.8, (12.66, -32.5))
-        target_list.append([('a' + str(shoot[0])), script, div])
-    return render_template('shotList.html', target_list=target_list)
+        script, div = graphProcessing.drawTarget(shots, range, (shoot[6]/2), (shoot[7], shoot[8]))
+        # find the date
+        date = datetime.utcfromtimestamp(int(shoot[1])/1000).strftime('%d-%m-%y')
+        target_list.append([(str(shoot[0])), script, div, date, shoot[9], round(shoot[6]/2, 2)])
+    print(shot_table)
+
+
+    return render_template('shotList.html', target_list=target_list, shot_table=shot_table)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -97,19 +115,18 @@ def upload():
         for file in files:
             filename = secure_filename(file.filename)
             filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filePath) #Add file to upload folder
-            print(filename,"was uploaded")
+            file.save(filePath)                 # Add file to upload folder
+            print(filename, "was uploaded")     # Debug
+            shoot = validateShots(filePath)     # Fixes up file to obtain relevant data and valid shots
 
-            #TODO save data to database
-            #Test to see if upload works
-            s = validateShots(filePath)['validShots'] # Get all valid Shots
-            for i in range(len(s)):
-                score = getScore(s[i])
-                print(score)
+            # todo: Handle missing values. 'username' may be a missing value.
+            # Adds missing values temporarily
+            shoot['rifleRange'] = "Malabar"
+            shoot['distance'] = "300m"
+            addShoot(shoot)                     # Import the shoot to the database
 
-            #Delete file
-            os.remove(filePath)
-            print(filename, "was removed")
+            os.remove(filePath)                 # Delete file
+            print(filename, "was removed")      # Debug
     return render_template('upload.html', form=form)
 
 
