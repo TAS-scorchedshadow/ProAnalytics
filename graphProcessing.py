@@ -162,12 +162,11 @@ def create_target(range_type):
 
 
 def drawTarget(shots, targetSize, groupRadius, groupCenter):
-    # shots (dictionary of shots with their number and x,y positions {shotNum: [x, y, score] ...}
+    # shots (dictionary of shots with their number and x,y positions {shotNum: [x, y, score], ...}
     # targetSize (str)
     # groupRadius (float)
     # groupCenter (tuple with 2 floats eg. (12.66, -32.5) )
     p = create_target(targetSize)   # Creates a target with the appropriate face
-    # todo: Change this to pull from database info instead of directly from json
     # Required: x/y value of shot, shot number
     # Required: shot grouping radius, shot grouping center point
     # Required: target size

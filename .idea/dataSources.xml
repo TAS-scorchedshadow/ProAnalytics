@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="PARS" uuid="8acc055e-294a-4751-98a1-bc0da7e639c6">
+    <data-source source="LOCAL" name="PARS" uuid="4db5620b-af19-46e0-86b7-3b565ebbbb0f">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/PARS.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:F:\Pycharm\Pycharm Projects\ProAnalytics\PARS.db</jdbc-url>
       <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/license.txt</url>
+        </library>
         <library>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
         </library>
         <library>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/license.txt</url>
+        </library>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
         </library>
       </libraries>
     </data-source>

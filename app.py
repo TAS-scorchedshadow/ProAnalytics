@@ -12,13 +12,14 @@ from flask_wtf import CSRFProtect
 import flask_login
 
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm, signUpForm, signIn
+from uploadForms import uploadForm, signUpForm, signIn, selectDate
 from security import registerUser, validateLogin, User
 from dataAccess import emailExists, addShoot
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
 from datetime import datetime
+import time
 import os
 import graphProcessing
 
@@ -46,9 +47,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def home():
     return render_template('home.html')
 
+
 @app.route('/comparativeHomePage')
 def comparativeHomePage():
     return render_template('comparativeHomePage.html')
+
 
 @app.route('/about')
 @login_required
@@ -61,21 +64,33 @@ def profile():
     return render_template('profile.html')
 
 
-@app.route('/report')
+@app.route('/report', methods=['GET', 'POST'])
 def report():
-    # for sorting the second element of a tuple in a list of tuples
-    def getKey(item):
-        print(item[1])
-        return item[1]
-
-    # create targets based on user
+    form = selectDate()
     target_list = []
     shot_table = {}
     username = request.args.get('username')
+    if username is None:
+        # TODO create a custom error page
+        return render_template('404.html')
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
+    if request.method == 'POST':
+        date = request.form['date']
+        # change date so its in dd/mm/yyyy format
+        date = '-'.join(reversed(date.split('-')))
+        date1 = time.mktime(datetime.strptime(date, "%d-%m-%Y").timetuple()) * 1000
+    else:
+        # collect latest date (as default)
+        c.execute('SELECT time FROM shoots WHERE username=? ORDER BY time desc;', (username,))
+        date1 = c.fetchone()[0]
+        # convert date1 to the start of the day at 12:00:00 a.m.
+        date1 = datetime.fromtimestamp(int(date1) / 1000).strftime('%d-%m-%y')
+        date1 = time.mktime(datetime.strptime(date1, "%d-%m-%y").timetuple()) * 1000
+    date2 = date1 + 86399000
+    print(date1, date2)
     # search through shoots database to get a tuple of shoots
-    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time desc;', (username,))
+    c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;', (username, date1, date2))
     shoots = c.fetchall()
     # search through each shoot to collect a list of shots
     for shoot in shoots:
@@ -94,13 +109,10 @@ def report():
             # row[6] is score
         # create graph and put the data into target_list (along with shotNum
         script, div = graphProcessing.drawTarget(shots, range, (shoot[6]/2), (shoot[7], shoot[8]))
-        # find the date
-        date = datetime.utcfromtimestamp(int(shoot[1])/1000).strftime('%d-%m-%y')
+        date = datetime.fromtimestamp(int(shoot[1])/1000).strftime('%d-%m-%y')
         target_list.append([(str(shoot[0])), script, div, date, shoot[9], round(shoot[6]/2, 2)])
-    print(shot_table)
 
-
-    return render_template('shotList.html', target_list=target_list, shot_table=shot_table)
+    return render_template('shotList.html', target_list=target_list, shot_table=shot_table, form=form)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -196,7 +208,7 @@ def page_not_found(e):
 
 @login_manager.user_loader
 def load_user(username):
-    #Loads a user based off a given username
+    # Loads a user based off a given username
     return User(username)
 
 @login_manager.unauthorized_handler

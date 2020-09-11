@@ -9,7 +9,7 @@ class uploadForm(FlaskForm):
     file = MultipleFileField(u'Submit File')
     submit = SubmitField("Submit: ")
 
-
+# form for registering
 class signUpForm(FlaskForm):
     fName = StringField("Enter First Name:")
     sName = StringField("Enter Last Name:")
@@ -20,9 +20,14 @@ class signUpForm(FlaskForm):
 
     submit = SubmitField("Sign Up")
 
-
+# form for logging in
 class signIn(FlaskForm):
     username = StringField("Username or password")
     password = PasswordField("Password:")
 
     submit = SubmitField("Sign Up")
+
+# form for selecting date
+class selectDate(FlaskForm):
+    date = DateField("Date: ")
+    submit = SubmitField("Select")
