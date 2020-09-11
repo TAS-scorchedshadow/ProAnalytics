@@ -4,17 +4,16 @@ import flask
 from flask import Flask, render_template, request, send_file, send_from_directory, safe_join, abort, url_for, session, \
     flash
 from flask_bootstrap import Bootstrap
-from bokeh.plotting import figure
-from bokeh.embed import components
-from bokeh.models import Range1d
-from flask_login import logout_user, login_user, current_user, login_required
-from flask_login._compat import unicode
+# from bokeh.plotting import figure
+# from bokeh.embed import components
+# from bokeh.models import Range1d
+from flask_login import logout_user, login_user, login_required
 from flask_wtf import CSRFProtect
 import flask_login
 
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn
-from security import registerUser, validateLogin
+from security import registerUser, validateLogin, User
 from dataAccess import emailExists, addShoot
 
 from werkzeug.utils import secure_filename, redirect

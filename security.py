@@ -68,12 +68,11 @@ class User():
         c = conn.cursor()
         c.execute('SELECT * FROM users WHERE username=?', (username,))
         result = c.fetchone()
-        self.fName = result[2][0].upper() + result[2][1:]
-        self.sName = result[3][0].upper() + result[3][1:]
+        self.fName = result[2][0].upper() + result[2][1:] #Adds capitalisation to each name
+        self.sName = result[3][0].upper() + result[3][1:] #Adds capitalisation to each name
         self.school = result[4]
         self.email = result[5]
-        self.admin = result[8]
-        print(self.admin)
+        self.admin = result[9]
 
     def is_authenticated(self):
         return True
