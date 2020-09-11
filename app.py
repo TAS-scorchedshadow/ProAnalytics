@@ -7,7 +7,7 @@ from flask_bootstrap import Bootstrap
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import Range1d
-from flask_login import logout_user, login_user, current_user
+from flask_login import logout_user, login_user, current_user, login_required
 from flask_login._compat import unicode
 from flask_wtf import CSRFProtect
 import flask_login
@@ -48,6 +48,7 @@ def home():
 
 
 @app.route('/about')
+@login_required
 def about():
     return render_template('about.html',variable="variable")
 
@@ -182,6 +183,9 @@ def load_user(username):
     #Loads a user based off a given username
     return User(username)
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    return render_template('accessDenied.html')
 
 @app.route('/logout')
 def logout():
