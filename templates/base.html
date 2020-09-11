@@ -13,14 +13,13 @@
     <!-- Template-->
     <link rel="stylesheet" type="text/css" href="../static/css/template.css">
     <!--Themes--->
-    {% if session['type'] == 'admin' %} <!-- Only show upload page when the user is an admin -->
+    {% if current_user.admin == 1 %}
         <link rel="stylesheet" type="text/css" href="../static/css/adminSidebar.css">
     {% else %}
-        <link rel="stylesheet" type="text/css" href="../static/css/studentSidebar.css">
+         <link rel="stylesheet" type="text/css" href="../static/css/studentSidebar.css">
     {% endif %}
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
@@ -93,10 +92,11 @@
         <nav id="sidebar">
             <div class="sidebar-header">
                 <h1>PARS</h1>
-                {% if session['type'] == 'admin' %}
+                {% if current_user.admin == 1 %}
                     <h5>Admin</h5>
-                {% else %}
-                    <h5>Student</h5>
+                {% endif %}
+                {% if current_user.admin == 0 %}
+                    <h5>For Students</h5>
                 {% endif %}
             </div>
 
@@ -157,7 +157,7 @@
                         </li>
                     </ul>
                 </li>
-            {% if session['type'] == 'admin' %} <!-- Only show upload page when the user is an admin -->
+            {% if current_user.admin == 1 %} <!-- Only show upload page when the user is an admin -->
                 <li>
                     <a href="/upload">
                         <i class="fas fa-upload"></i>
@@ -165,9 +165,6 @@
                     </a>
                 </li>
             {% endif %}
-                <li>
-                    <a href="/user/signin">Sign In</a>
-                </li>
             </ul>
 
             <ul class="list-unstyled CTAs">
@@ -176,9 +173,15 @@
                     <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Download source</a>
                 </li>
                  -->
-                <li>
-                    <a href="https://www.reddit.com/r/xqcow/comments/gngemw/here_is_a_8k_widepeepohappy_if_you_need_it/" class="article">Back to article</a>
-                </li>
+                {% if current_user.is_authenticated %}
+                    <li>
+                        <a href="/logout" class="article">Sign Out <i class="fas fa-sign-out-alt"></i></a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="/user/signin" class="article">Sign In <i class="fas fa-sign-in-alt"></i></a>
+                    </li>
+                {% endif %}
             </ul>
         </nav>
 
@@ -198,21 +201,26 @@
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
-                            <li class="nav-item active">
+                            {% if current_user.is_authenticated %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/profile"><i class="fas fa-user"></i> {{ current_user.fName }} {{ current_user.sName }}</a>
+                                </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/user/signin">Sign In <i class="fas fa-sign-in-alt"></i></a>
+                            </li>
+                            {% endif %}
+                            <!--
+                             <li class="nav-item">
+                                <a class="nav-link" href="/upload">Upload</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="/">
                                     <i class="fas fa-home"></i>
                                     Home
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/upload">Upload</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page</a>
-                            </li>
+                            -->
                         </ul>
                     </div>
                 </div>

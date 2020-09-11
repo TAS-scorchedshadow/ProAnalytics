@@ -187,6 +187,7 @@ def load_user(username):
 def unauthorized():
     return render_template('accessDenied.html')
 
+
 @app.route('/logout')
 def logout():
     logout_user()

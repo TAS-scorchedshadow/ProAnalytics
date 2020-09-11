@@ -8,9 +8,7 @@
     <p class="lead">Progress Analytics for Rifle Shooters</p>
   </div>
 </div>
-{% if current_user.is_authenticated %}
-  Hi {{ current_user.fName }}!
-{% endif %}
+
 <section class="text-center">
     <div class="container">
              <img src = "{{ url_for('static', filename='images/PARS-transparent.png', width=500) }}"/>
