@@ -7,7 +7,7 @@ from flask_bootstrap import Bootstrap
 # from bokeh.plotting import figure
 # from bokeh.embed import components
 # from bokeh.models import Range1d
-from flask_login import logout_user, login_user, login_required
+from flask_login import logout_user, login_user, login_required, current_user
 from flask_wtf import CSRFProtect
 import flask_login
 
@@ -184,7 +184,7 @@ def signin():
                 if not is_safe_url(next):
                     return flask.abort(400)
 
-                return flask.redirect(next or flask.url_for('home'))
+                return flask.redirect(next or flask.url_for('report',username=current_user.username))
     return render_template('signInForm.html', form=form)
 
 
