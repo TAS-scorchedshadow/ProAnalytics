@@ -63,7 +63,7 @@ def checkSighter(shot):
         return False
 
 
-#general calculations for the mean, median, range & standard deviation of the dataset. The information is returned
+# general calculations for the mean, median, range & standard deviation of the dataset. The information is returned
 # at the bottom data brought in from the json, and the shot score statistical information is created
 def statisticsScore():
     jsonID = 1551500850141  # ID of json file

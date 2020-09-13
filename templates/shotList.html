@@ -3,27 +3,6 @@
 {% block page_title %} Shot List {% endblock %}
 {% block page_content %}
 
-<style type="text/css">
-th, td { border: 1px solid #aaa; }
-@media print {
-  table, tr, td, th {
-    page-break-inside: avoid;
-  }
-  tr {
-    display: block;
-    page-break-before: auto;
-  }
-  td:nth-child(1), th:nth-child(1) {
-    width: 4cm;
-  }
-  td:nth-child(2), th:nth-child(2) {
-    width: 2cm;
-  }
-  td:nth-child(3), th:nth-child(3) {
-    width: 3cm;
-  }
-}
-</style>
 
 <form action="" method="post" role="form">
  <!--TODO replace with a dropdown of dates-->
@@ -35,89 +14,111 @@ th, td { border: 1px solid #aaa; }
 
 <!-- create dropdown for each shoot in target_list-->
 <!-- TODO create a table in the card header and time taken-->
-{% for shoot in target_list %}
-<div class="row">
-    <div class="col-12">
-        <div class="card shadow border-0 h-100">
-            <div class="card-title">
-                <div class="row">
-                    <div class="col-12 px-3 mx-2">
-                        <p> {{ shoot[3] }}
-                          <button class="btn btn-primary" type="button" data-toggle="collapse" id="{{ 'button' + shoot[0] }}" data-target="{{ ".multi-" + shoot[0] }}" aria-expanded="false" aria-controls="{{ shoot[0] + 'title ' + shoot[0] + 'body'}}" onclick=buttonChange(this) >
-                            +
-                          </button>
-                        </p>
-                    </div>
-                </div>
-                <div class="{{"collapse " +  "multi-" + shoot[0] + ' show'}}" id="{{ shoot[0] + 'title'}}">
-                    <div class="row">
-                        <div class="col-12 px-3 mx-2">
-                            <div class="table-responsive">
-                                 <table class="table table-sm table-bordered">
-                                      <thead>
-                                        <tr>
-                                            <th>Range</th>
-                                            {% for shot in shot_table[shoot[0]] %}
-                                                <th width="30px">{{ shot[1] }}</th>
-                                            {%- endfor %}
-                                            <th>Final Score</th>
-                                            <th>Group Size</th>
-                                        </tr>
-                                        <tr>
-                                            <td>300m</td>
-                                            {% for shot in shot_table[shoot[0]] %}
-                                                <td>{{ shot[0] }}</td>
-                                            {%- endfor %}
-                                            <td>{{ shoot[4] }}</td>
-                                            <td>{{ shoot[5] }}</td>
-                                        </tr>
-                                </table>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8">
+        {% for shoot in target_list %}
+            <div class="row">
+                <div class="col-12 pb-5">
+                    <div class="card shadow border-0 h-100">
+                        <div class="card-title">
+                            <div class="row">
+                                <div class="col-12 px-4 mx-1">
+                                    <p> {{ shoot[3] }}
+                                      <button class="btn btn-primary" type="button" data-toggle="collapse" id="{{ 'button' + shoot[0] }}" data-target="{{ ".multi-" + shoot[0] }}" aria-expanded="false" aria-controls="{{ shoot[0] + 'title ' + shoot[0] + 'body'}}" onclick=buttonChange(this) >
+                                        +
+                                      </button>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 px-4 mx-1">
+                                    <p>Duration: {{ shoot[6] }}</p>
+                                </div>
+                            </div>
+                            <div class="{{"collapse " +  "multi-" + shoot[0] + ' show'}}" id="{{ shoot[0] + 'title'}}">
+                                <div class="row">
+                                    <div class="col-12 px-4 mx-1">
+                                        <div class="table-responsive">
+                                             <table class="table table-sm table-bordered">
+                                                  <thead>
+                                                    <tr>
+                                                        <th>Range</th>
+                                                        {% for shot in shot_table[shoot[0]] %}
+                                                            <th width="30px">{{ shot[1] }}</th>
+                                                        {%- endfor %}
+                                                        <th>Final Score</th>
+                                                        <th>Group Size</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>300m</td>
+                                                        {% for shot in shot_table[shoot[0]] %}
+                                                            <td>{{ shot[0] }}</td>
+                                                        {%- endfor %}
+                                                        <td>{{ shoot[4] }}</td>
+                                                        <td>{{ shoot[5] }}</td>
+                                                    </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-            </div>
-             <div class="card-body">
-                 <div class="{{"collapse " +  "multi-" + shoot[0]}}" id={{ shoot[0] + 'body'}}>
-                     <div class="row">
-                         <div class = "col-5">
-                             <!--Create target-->
-                            {{ shoot[1] | safe }}
-                            {{ shoot[2] | safe }}
+                         <div class="card-body">
+                             <div class="{{"collapse " +  "multi-" + shoot[0]}}" id={{ shoot[0] + 'body'}}>
+                                 <div class="row">
+                                     <div class = "col-5">
+                                         <!--Create target-->
+                                        {{ shoot[1] | safe }}
+                                        {{ shoot[2] | safe }}
+                                     </div>
+                                     <!-- Create table -->
+                                     <div class = "col-7" >
+                                        <div class="table-responsive">
+                                             <table class="table table-sm table-bordered">
+                                                  <thead>
+                                                    <tr>
+                                                        <th>Range</th>
+                                                        {% for shot in shot_table[shoot[0]] %}
+                                                            <th width="30px">{{ shot[1] }}</th>
+                                                        {%- endfor %}
+                                                        <th>Final Score</th>
+                                                        <th>Group Size</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>300m</td>
+                                                        {% for shot in shot_table[shoot[0]] %}
+                                                            <td>{{ shot[0] }}</td>
+                                                        {%- endfor %}
+                                                        <td>{{ shoot[4] }}</td>
+                                                        <td>{{ shoot[5] }}</td>
+                                                    </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                 </div>
+                             </div>
                          </div>
-                         <!-- Create table -->
-                         <div class = "col-7" >
-                            <div class="table-responsive">
-                                 <table class="table table-sm table-bordered">
-                                      <thead>
-                                        <tr>
-                                            <th>Range</th>
-                                            {% for shot in shot_table[shoot[0]] %}
-                                                <th width="30px">{{ shot[1] }}</th>
-                                            {%- endfor %}
-                                            <th>Final Score</th>
-                                            <th>Group Size</th>
-                                        </tr>
-                                        <tr>
-                                            <td>300m</td>
-                                            {% for shot in shot_table[shoot[0]] %}
-                                                <td>{{ shot[0] }}</td>
-                                            {%- endfor %}
-                                            <td>{{ shoot[4] }}</td>
-                                            <td>{{ shoot[5] }}</td>
-                                        </tr>
-                                </table>
-                            </div>
-                        </div>
-                     </div>
-                 </div>
-             </div>
+                    </div>
+                </div>
+            </div>
+        {%- endfor %}
+        </div>
+        <div class="col-4 pb-5">
+            <div class="card shadow bprder-0 h-100">
+                <div class="card-header py-2 pl-2">
+                    <h4>Stats</h4>
+                </div>
+                <div class="card-body">
+                    <p>Avg. Accuracy: {{ stat_dict['percentage'] }}</p>
+                    <p>Standard Deviation: {{ stat_dict['sd'] }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 <br>
-{%- endfor %}
 {# toggle button between + and - when pressed #}
 <script>
     function buttonChange(button) {
