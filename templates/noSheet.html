@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% set active_page = "No sheet" %}
+{% block page_title %} Awww man {% endblock %}
+{% block page_content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-secondary">
+                {% if current_user.admin == 1 %}
+                    <h4>Looks like this shooter hasn't had any shoots yet!</h4>
+                    <p>To add shoots, go to the
+                        <span style="color: #4286f4">
+                            <u><a href="/upload">upload page</a></u>
+                        </span>
+                    </p>
+                {% else %}
+                    <h4>Looks like you haven't had any shoots uploaded yet!</h4>
+                    <p>Please contact your coach if there's a mistake</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

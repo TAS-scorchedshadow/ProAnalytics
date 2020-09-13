@@ -22,6 +22,7 @@ from datetime import datetime
 import time
 import os
 import graphProcessing
+import numpy
 
 import sqlite3
 from flask import g, session
@@ -89,12 +90,14 @@ def report():
     else:
         # collect latest date (as default)
         c.execute('SELECT time FROM shoots WHERE username=? ORDER BY time desc;', (username,))
-        date1 = c.fetchone()[0]
+        shootTime = c.fetchone()
+        if shootTime is None:
+            return render_template('noSheet.html', current_user=current_user)
+        date1 = shootTime[0]
         # convert date1 to the start of the day at 12:00:00 a.m.
         date1 = datetime.fromtimestamp(int(date1) / 1000).strftime('%d-%m-%y')
         date1 = time.mktime(datetime.strptime(date1, "%d-%m-%y").timetuple()) * 1000
     date2 = date1 + 86399000
-    print(date1, date2)
     # search through shoots database to get a tuple of shoots
     c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;', (username, date1, date2))
     shoots = c.fetchall()
@@ -105,6 +108,7 @@ def report():
         range = shoot[3]
         shots_tuple = c.fetchall()
         shots = {}
+        duration = str(int((shoot[4]) / 60000)) + ' mins ' + str(int((shoot[4]) / 1000) % 60) + ' secs'
         for row in shots_tuple:
             shots[row[-1]] = [row[5], row[3], row[6]]
             # create list of shots
@@ -114,11 +118,30 @@ def report():
             # row[3] is y
             # row[6] is score
         # create graph and put the data into target_list (along with shotNum
-        script, div = graphProcessing.drawTarget(shots, range, (shoot[6]/2), (shoot[7], shoot[8]))
-        date = datetime.fromtimestamp(int(shoot[1])/1000).strftime('%d-%m-%y')
-        target_list.append([(str(shoot[0])), script, div, date, shoot[9], round(shoot[6]/2, 2)])
+        script, div = graphProcessing.drawTarget(shots, range, (shoot[6] / 2), (shoot[7], shoot[8]))
+        date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d-%m-%y')
 
-    return render_template('shotList.html', target_list=target_list, shot_table=shot_table, form=form)
+        # TODO change target_list to a dictionary
+        target_list.append([(str(shoot[0])), script, div, date, shoot[9], round(shoot[6] / 2, 2), duration])
+
+    # collect general stats
+
+    # find the previous year
+    prevYear = date1 - 31622400000
+    # collect and calculate stats from just the past year
+    c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;', (username, prevYear, date2))
+    shoots = c.fetchall()
+    shot_list = []
+    percentage_list = []
+    for shoot in shoots:
+        percentage_list.append((float(shoot[9]) / (int(shoot[10])*5))*100)
+        shot_list.append(float(shoot[9]))
+    # TODO currently the calculation of sd is incorrect
+    standard_dev = numpy.std(percentage_list)
+    # calculate average percentage accuracy
+    mean_percentage = numpy.mean(percentage_list)
+    stat_dict = {'percentage': mean_percentage, 'sd': standard_dev}
+    return render_template('shotList.html', target_list=target_list, shot_table=shot_table, form=form, stat_dict=stat_dict)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
