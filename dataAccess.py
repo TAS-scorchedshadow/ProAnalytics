@@ -112,3 +112,5 @@ def initialiseSettings(username):  # initialise user settings from database
         session['email'] = row[5]
     conn.close()
 
+
+

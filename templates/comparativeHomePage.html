@@ -5,24 +5,55 @@
 <div class="jumbotron jumbotron-fluid">
   <div class="container justify-content-center text-center">
             <div class="bs-example">
-                <h2>Analytics Comparison Graphs</h2>
+                <h2>Shooter Comparison</h2>
             </div>
     </div>
 </div>
-<section>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.0.1.min.js"
+        crossorigin="anonymous"></script>
+
+<div class="container">
+    <div class="row">
+        <div class = "col-6">
+             <div class="card shadow border-0 h-100 justify-content-center">
+                 <div class = "card-body" style="size: 15px">
+                     {{ first_script | safe }} 
+                     {{ first_div | safe }}
+                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "col-12">
+             <div class="card shadow border-0 h-100 justify-content-center">
+                 <div class = "card-body">
+                     {{ second_script | safe }}
+                     {{ second_div | safe }}
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <section>
     <div class="row">
         <div class="col-lg-6 col-md-12">
             <div class="card shadow border-0 h-100 justify-content-center" style="width: 14rem">
                 <div class = "card-title">
-                    <h2> Target </h2>
+                    <h2> Line Graph </h2>
                 </div>
                  <div class = "card-body">
                      <img
-                             src="https://image.made-in-china.com/43f34j00vQAGMeCypwoB/Shoot-and-See-Bright-Fluorescent-Yellow-Bullseye-Splatter-Paper-Target.webp"
+                             src="https://lh3.googleusercontent.com/proxy/pWbLibC62KWabSaKEfGMcH0iRfIfMIaRA0AkUOoG-tSLXBICSbBJfEqQ4Tb06YzB5LhO1fRwGq1sqZQd48RveYClGRZ13EUpN-HuetMVbGolDK3tdiVsw1053MlxXCPd9RD5945Ne0ey"
                              class="img-fluid" alt="target" style="height: 175px;width: 190px">
                  </div>
             </div>
-            <a class="btn btn-primary btn-sm float-md-left"
+            <a class="btn btn-primary btn-sm float-md-none"
                         id="left" style="color:white" href="/target" type="button">
                          Go
             </a>
@@ -31,7 +62,7 @@
         <div class="col-lg-6 col-md-12" >
             <div class="card shadow border-0 h-100 justify-content-center" style="width: 14rem">
                 <div class = "card-title">
-                    <h2> Comparative Bar Graph</h2>
+                    <h2> Bar Graph</h2>
                 </div>
                  <div class = "card-body">
                      <img
@@ -39,7 +70,7 @@
                              class="img-fluid" alt="target" style="height: 175px;width: 190px">
                  </div>
             </div>
-            <a class="btn btn-primary btn-sm float-md-left"
+            <a class="btn btn-primary btn-sm float-md-none"
                         id="left" style="color:white" href="/comparativeBar" type="button">
                          Go
             </a>
@@ -49,16 +80,18 @@
         <br>
         <div class="break"></div>
     </div>
+<br>
+<br>
     <div class="row">
         <div class="col-lg-6 col-md-12">
             <div class="card shadow border-0 h-100 justify-content-center" style="width: 14rem">
                 <div class = "card-title">
-                    <h2> Target </h2>
+                    <h2> Pie Chart </h2>
                 </div>
                  <div class = "card-body">
                      <img
-                             src="https://image.made-in-china.com/43f34j00vQAGMeCypwoB/Shoot-and-See-Bright-Fluorescent-Yellow-Bullseye-Splatter-Paper-Target.webp"
-                             class="img-fluid" alt="target" style="height: 175px;width: 190px">
+                             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQUAAADBCAMAAADxRlW1AAABLFBMVEX///9BmNfYtlV6YbpxbsBBm9nXtE85ldY3lNb7+/vXtVL29vZ1W7h4X7r5+fnZt1GlpaWdnZ3b29vj4+OSkpK7u7urq6vPz8/w8PBzWLeMjIyCgoKwsLDh4eHr6+vWskn29PrT09PE3vKy0u3v9/x6enq/v79QoduCuOPi7/ny5smuoNSUweZhqN1ur+CZh8rf2e7o5PNuUbWJc8HS5vUkjtSCa7/iyIGym6b59Ofewnb17damzevp1qHv4sLUzejJwOK7sdq0p9ejks9iYmJtbW3cvmiRfMWci8pHR0fl4PHXzNTNsH26oZidiLzXu3fm0JTVtWeqkJ3t3bHIrIepkaqIb7SdlbFkpc6Bq8CPqrC0tpGquajItG50qMfHvYSVtLbNwIOxspm3sYVy0pTfAAAK5ElEQVR4nO2dCVfbSBaFS6axFhtrtWW8SDYE2SHgQAghNqtDEOlMFjruWXoyPZme+f//YUoOCYs3qfReSaR1Tx/ch5wT219u3ffqaSMkU6ZMmTJlypQpU6ZMmTJlypRyyXLSnyA5tXZ3Ts/Ohq+eUHW7W1tbR+tra48fJf2xeElu7Z4Ozy9fvFhaKRZXi1Q/CaIoSZIoCMvLne2t9cePfnAYrZ3h+V5xdbW4srL0XT8tCzcKeCz3KAq0z1C1iVFxiKFptuMRo0CIrbXR3u2+WrvDp0tLxeKt7z+FwjUKUeh012At8bjXWQte65ppVaknS3ZDs9sa/Y1m6ma1XW0Sp9o0iNkugL7vbe0ML4urEwBmULhG0emuA4LoSqJI/7qyV/Zq1AuE1Ije2NBtQvSK7uhlrUZqXsWyN+wq3Jvekrw73FuZ9MACCgEIUeiBOaIrCdIj4tQrdc9ulgldFkRueBo1g+5ZhdcNu11rlK2K2bZMoHe8o9PzpRkuWERh7IjtLZiMeN4Rj+i/iGlbpm4Zmqwb9PtX6zr96VQ8jZritdnUdbNh2SDvd1u7wxfF4hwEiygEhpC2nwNXDZmU7v+qIDd1+ssCKYH3L61XL+baIAyFMYjeGvRHm5DsoawEsvtkdXYaRKEwjkrgksFJgQ8WIwhJIfDD9vOkv1Jktc5mFUZGCpTD/jZeL4Wymdl5uiASGShQDstbMT5T/5D+kMuWYVoNmoNWzWw2SDtooBo1uwz1zW/UOn8W0gfRKAiCtLzO+qFGrjuQiVwo1Aq0dSLVoES2vQr9E71MCvWyUTCIAQjhdC+8ESJSoH7oMqbkIJ9z+4SYFxVSuXBItW45WmXD8mgTWSDyha0blZIOtjBaT8IGAhMFQRLYquax6/rjL1mXyXgBVC1Stiu0d6w3iayTilGRLSgKby/DVQZmClRM6SCPjqkVCrpVsS2rqbWtmkG0Qo1SsC9qbUrBrNWBKMjDiEZgoiClu2jK55ESgZUCLRYpxrAbeTUwUqAc4tRMVO28iLwamCkIEmutQNbZEhMERgo0HNgwtEvEDvbOtkccm5h0E0n7hFK1aRhN24w9YDlbYYPASkEQozXUrSdvduiLt+EYDc8mjm57Fc+gJUKukZ9Nz242PM2pVg25YJpVkxSaLIO3IUMuxqMgiJ0oGM5Xi0st+qo5dqPcIGTjwtHLG8HgVbfr5YqhlW3NM4xKxatbdc2uNxgaySFLLsakQDFEKBV0Z/PsKwVi0565qXmNQqOh0Ua6fOHUteqYQruh69QWnlluWtEH06+YnRCHQiQ37CytvgpedadQtpyyYTUaRKvWKIX2a6JrJb3saZ5d06xgLGmW7YYWFUIMJ8SiEAlDqzV+oZsGGokOcZzg/6t09cs0IUukUJLpf1WH/pBLcqnqRO0jh4y5GJ8Cjci0FMyzOE6ISSE1GE4Z+wQYCoLYSwOG3ej7J1AKtItM/th/6zImhNgUhP2jpCGQCANGLAoC49wFTrFqJBQFcRlvOB1Gp3GXA4wXxF6S0dBi20uDUxDEBKOBabSEQkHYTy4azgCcAEQhueZpN34yglGgXUNCFJ5ArAcoCoKYzEA25vYBnEIiawKkPgBSSKZOxBmsoFAQRP690y6UFeAoJBCQIK0CLAVB4B2Qb6EYQFIQOZsBpmuEpiDs8zXDWzgIkBTEHlcKb9JJge+kATAVYClwTQawXgGagrDPr2cAaxvhKUj8zmsAGLNhURAiHcGNpT1IKwBTkJhPiIyoU0gG0BTEbU4UgOYKOBR45SNsNoJT4JSPf1l49UuiFDhNWw7evf9QXE3lPuKreGwmZF9Vcx/ff9gLcx1MEhS4LInDHJXi5qgjVkEcAe6FDgcKx/ncWKqqDKgj4h63R6DAoUrIAyX3TYrrv3v/5llMEOAUODRO/RsIXx2hfozpCHAKHDaWJ27unhSVOuLpM+aMgKeAXyuv8vcpBBxUlzoixBWkXChwqJUDZZLCN0e8vGRxBDwF9GDo52ZQuHbEy+iOgKeAHgybMyFch+Uv1BGrkVpshBWB3TGMJsJx0hHqu5cf5t9sAJvCPjKF4ynhON0Re8WQjsCggNs3yQdhKASOcNV3n8I5AoECcjzK/vxcmHTEykJHYFDAPYhfCmeFu46Yc08WJArIRaK/KBxnOGJpjiMwKOCe/3gYmcJXR/z66cPM+zFgUMDtoSd3EREc8belqUsDgQLyUYlRpFy454jcr5+eTrlTCwYF3BOjQ7ULcx3x1wlHYFDA3U9N21FGd8TlHUdgUJBSTWHsCOWuIx4ehZCt4wJRR/g3jkChgHo2x0H41nERCMW/dsTDozBrxsKksSP2nqFQQN1IgFK4dsTfO39yCoFU/x9iRiHn//bQKMDUiLtS/ynBU8CtERgUPoNDeIAU8h8RKKS+d5wUQpFApRBvNzVD7r/B4xF3T8m+s55H4V/g8Yg7X2CdssyV+nkfmgLurIll4rZQ+d+3gZcE8p0pok9fQ0jxoYMBeQZdQugdqX4DDgbkE7xkjBY6p0LHI/ahe5SGQf0CCwG5aQpxzJpFig9MYR/5lJ4F5y8wyoUuErgQvp7zCU/hP6DBgH8pXYSD1hEo/BeUAvIha4IUj/kvoCsCd18dCKWHVn4BnbrhXzuF0j3CTt043Lcoytks4QU6deNxaQDKiEH9DEmBw2UiKB2DMoCkgA+B9HGWBBwEPtdaY0xgcy5cPOLXyUAoWwnAqRufa4z7CBAAp268bj6A0T7CTd34LAicKgE4deN0q0eUxkkFikd+N2DAaJyg4pHfU0Yw8jH/BwgFnjdmQchHxQehwCsbAx0iBAPI1E3kcXXxdyEM5EGmbiKv+5GMtQm/JFSAqRvnO10iHJ3J/y++FfAHjncFbwbl9/hTN66pEGgAvyZi9018UyEQ/IEJN+7UTexNPJkYXeA9Q+ypWxL3B59zxTWbFD/e5jqZ+2KD7ybceBSSeU5h2Otsw1OIFY+8q+Q3HUJTiLOtTO52+VewE8h8rHhM7LmdfdgOMv+F/STYpNZDINgT/2JM3bjdz3CqYOsE+9QtysMJ4QVbJ5g31zxnK9PUVwCjQf2DrWNI/lG+J3AQqJgoJPucpWsMgAnpdhiCIR1PJTyGw8AUDCl5wjdc88Q0dUv6IXTfNIDCwDB143b/54WSoWYN0adu/MdLsyX7UG6I2D0m2ThPqn8Ag8GNeKVEqiCAYYh2KnC6nDAWSKWINnVLUSZ8FwgGNTyF9FSHOxrl4+8pQk/dIj3jnqtO4m+twl5CJfF7WkZkHfpxG4eQByXS8Azr2aKlIp4dQk3dRHErzRCoRvEO1oSZuqU3Em4Uc1UsvgBf6qY3Em5EdxUx7LBocy110lkgJ7Xps3NQv8zrGEQJ9zpyUMnHOfZlMYeC1EnLMCGc+gd5Rg7qzCIhikcPxwjXOhmwFU11RjDQ8vgQUvG+5BFTPEyfuolCL/3lcbooh+h+yE+5fZModh8qg0DyaKBEzIfJqZu43H2e8l5xoTYP1IiGuNM3iVLn6CHmwYT6Iz8XISFuba5Fcbm3xv/ENSTJh8cDNx9y3/1t6iZKYm/9h7DBjQIQfj6MJZSP+5SA0OmuP3roaTBV/ZPjQd6lKGa7QlHyrrsv9I7WHlyDFEXy4ehq4Ps5CiOgodz6+vm8m/P9g+OR+UMT+K5+f/NkdHx1QGkoquu6wULxD65GJ5uH/aQ/W1L6IVd/pkyZMmXK9GfR/wH84I8Ffzi0zgAAAABJRU5ErkJggg=="
+                             class="img-fluid" alt="target" style="height: 150px;width: 250px">
                  </div>
             </div>
             <a class="btn btn-primary btn-sm float-right"
@@ -68,5 +101,5 @@
         </div>
     </div>
 </section>
-
+--!>
 {% endblock %}
