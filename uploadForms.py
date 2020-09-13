@@ -25,7 +25,7 @@ class signIn(FlaskForm):
     username = StringField("Username or password")
     password = PasswordField("Password:")
 
-    submit = SubmitField("Sign Up")
+    submit = SubmitField("Sign In")
 
 # form for selecting date
 class selectDate(FlaskForm):

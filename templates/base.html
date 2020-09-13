@@ -99,79 +99,103 @@
                     <h5>For Students</h5>
                 {% endif %}
             </div>
+            <!-- Coaches View -->
+            {% if current_user.admin == 1 %}
+                <!-- Todo Align icons-->
+                <ul class="list-unstyled components">
+                    <li>
+                        <a href="/home">
+                            <i class="fas fa-home"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/about"> <!--Todo actually put the href here-->
+                             <i class="fas fa-portrait"></i>
+                            Student List
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/comparativeHomePage">
+                            <i class="fas fa-chart-line"></i>
+                            Comparative Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/upload">
+                            <i class="fas fa-upload"></i>
+                            Upload
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <i class="fas fa-eye"></i>
+                            Visualisations (dev)
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu">
+                            <li>
+                                <a href="/report">
+                                    <i class="fas fa-book-open"></i>
+                                    Report
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/target">
+                                    <i class="fas fa-bullseye"></i>
+                                    Target
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/comparativeBar">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Comparative Bar Graph
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/rawDataTable">
+                                    <i class="fas fa-table"></i>
+                                    Raw Data Table
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fas fa-chart-line"></i>
+                                    Comparison Graph
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/comparitiveBar">
+                                    <i class="fas fa-chart-bar"></i>
+                                    All Students Bar Graph
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
-            <ul class="list-unstyled components">
-                <li>
-                    <a href="/home">
-                        <i class="fas fa-home"></i>
-                        Home
-                    </a>
-                </li>
-                <li>
-                    <a href="/about">
-                         <i class="fas fa-briefcase"></i>
-                        About
-                    </a>
-                </li>
-                <li>
-                    <a href="/comparativeHomePage">
-                         <i class="fas fa-briefcase"></i>
-                        Comparative Home
-                    </a>
-                </li>
-                <li>
-                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <i class="fas fa-eye"></i>
-                        Visualisations
-                    </a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu">
-                        <li>
-                            <a href="/report">
-                                <i class="fas fa-book-open"></i>
-                                Report
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/target">
-                                <i class="fas fa-bullseye"></i>
-                                Target
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/comparativeBar">
-                                <i class="fas fa-chart-bar"></i>
-                                Comparative Bar Graph
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/rawDataTable">
-                                <i class="fas fa-table"></i>
-                                Raw Data Table
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-chart-line"></i>
-                                Comparison Graph
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/comparitiveBar">
-                                <i class="fas fa-chart-bar"></i>
-                                All Students Bar Graph
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            {% if current_user.admin == 1 %} <!-- Only show upload page when the user is an admin -->
-                <li>
-                    <a href="/upload">
-                        <i class="fas fa-upload"></i>
-                        Upload
-                    </a>
-                </li>
+
+                </ul>
+            {% else %}
+            <!-- Shooter's /  Default user view-->
+                <ul class="list-unstyled components">
+                    <li>
+                        <a href="/home">
+                            <i class="fas fa-home"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/about">
+                             <i class="fas fa-briefcase"></i>
+                            About
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/report?username={{ current_user.username }}">
+                            <i class="fas fa-user"></i>
+                            Profile
+                        </a>
+                    </li>
             {% endif %}
-            </ul>
 
             <ul class="list-unstyled CTAs">
                 <!--
