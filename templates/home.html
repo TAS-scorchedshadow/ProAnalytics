@@ -1,30 +1,57 @@
 {% extends "base.html" %}
-{% set active_page = "home" %}
-{% block page_title %} Home {% endblock %}
+{% set active_page = "about" %}
+{% block page_title %} About {% endblock %}
 {% block page_content %}
-<div class="jumbotron jumbotron-fluid">
+<style>
+    .jumbotron{
+        background-image: url('../static/images/home.jpg');
+        background-size: cover;
+        margin-bottom: 20px;
+        margin-top: 0px;
+        background-position: center;
+    }
+</style>
+<div class="jumbotron jumbotron-fluid  bg-transparent" style="background-size: cover;">
   <div class="container justify-content-center text-center">
     <h1 class="display-4">Progress Analytics for Rifle Shooters</h1>
-    <p class="lead">Progress Analytics for Rifle Shooters</p>
   </div>
-</div>
 
-<section class="text-center">
-    <div class="container">
-             <img src = "{{ url_for('static', filename='images/PARS-transparent.png', width=500) }}"/>
-            <h2>Features</h2>
-            <br>
-            <h5><a href="/locate">Parking Locator</a></h5>
-            <p><i>Finds exclusive parking for deliveries depending and filters by opening times</i></p>
-            <h5><a href="/histogram">Route Comparison</a></h5>
-            <p><i>Compares two deliveries to routes and suggests an optimal departure time</i></p>
-            <h5><a href="/stats">Parking Stats</a></h5>
-            <p><i>Trivial display of data for the Sydney's CBD, for developers or any interested individuals</i></p>
-            <h2>Data</h2>
-            <p>This website uses <a href="https://opendata.transport.nsw.gov.au/dataset/loading-zones-kerbside">Government Data</a>
-                provided by Open Data. It includes the location and opening times for street side parking.</p>
+
+<h2 class="text-center">Features</h2>
+<br>
+<br>
+<div class = "row text-center justify-content-center">
+    <div class="col-3 my-auto">
+        <a href="/about" class="custom-card">
+          <div class="card linked-card">
+              <img class="card-img-top" src="../static/images/upload.png" alt="Upload">
+              <div class="card-title">
+                  <h4>Upload</h4>
+              </div>
+              <p>Upload data from your latest shoot</p>
+          </div>
+        </a>
     </div>
-</section>
-
-
+    <div class="col-4 my-auto">
+        <a href="/about" class="custom-card">
+          <div class="card linked-card">
+              <img class="card-img-top" src="../static/images/upload.png" alt="Find A Student">
+              <div class="card-title">
+                  <h4>Find A Student</h4>
+              </div>
+          </div>
+        </a>
+    </div>
+    <div class="col-3 my-auto">
+         <a href="/about" class="custom-card">
+          <div class="card linked-card">
+              <img class="card-img-top" src="../static/images/upload.png" alt="Comparisons">
+              <div class="card-title">
+                  <h4>Comparisons</h4>
+              </div>
+          </div>
+        </a>
+    </div>
+</div>
+</div>
 {% endblock %}

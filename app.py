@@ -44,6 +44,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')
+def landingPage():
+    if current_user.is_authenticated:
+        if current_user.admin == 1:
+            return render_template('home.html')
+    return render_template('landingPage.html')
+
+
 @app.route('/home')
 def home():
     return render_template('home.html')
@@ -61,7 +68,6 @@ def comparativeHomePage():
 
 
 @app.route('/about')
-@login_required
 def about():
     return render_template('about.html',variable="variable", )
 
@@ -72,6 +78,7 @@ def profile():
 
 
 @app.route('/report', methods=['GET', 'POST'])
+@login_required
 def report():
     form = selectDate()
     target_list = []
@@ -145,29 +152,33 @@ def report():
 
 
 @app.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload():
-    # create form
-    form = uploadForm()
+    if current_user.admin == 1:
+        # create form
+        form = uploadForm()
 
-    # on submission
-    if request.method == 'POST':
-        files = request.files.getlist('file')
-        for file in files:
-            filename = secure_filename(file.filename)
-            filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filePath)                 # Add file to upload folder
-            print(filename, "was uploaded")     # Debug
-            shoot = validateShots(filePath)     # Fixes up file to obtain relevant data and valid shots
+        # on submission
+        if request.method == 'POST':
+            files = request.files.getlist('file')
+            for file in files:
+                filename = secure_filename(file.filename)
+                filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filePath)                 # Add file to upload folder
+                print(filename, "was uploaded")     # Debug
+                shoot = validateShots(filePath)     # Fixes up file to obtain relevant data and valid shots
 
-            # todo: Handle missing values. 'username' may be a missing value.
-            # Adds missing values temporarily
-            shoot['rifleRange'] = "Malabar"
-            shoot['distance'] = "300m"
-            addShoot(shoot)                     # Import the shoot to the database
+                # todo: Handle missing values. 'username' may be a missing value.
+                # Adds missing values temporarily
+                shoot['rifleRange'] = "Malabar"
+                shoot['distance'] = "300m"
+                addShoot(shoot)                     # Import the shoot to the database
 
-            os.remove(filePath)                 # Delete file
-            print(filename, "was removed")      # Debug
-    return render_template('upload.html', form=form)
+                os.remove(filePath)                 # Delete file
+                print(filename, "was removed")      # Debug
+        return render_template('upload.html', form=form)
+    else:
+        return render_template('accessDenied.html', form=form)
 
 
 @app.route('/user/signup',methods=['GET', 'POST'])
@@ -212,7 +223,8 @@ def signin():
                 # See https://stackoverflow.com/questions/60532973/how-do-i-get-a-is-safe-url-function-to-use-with-flask-and-how-does-it-work for an example.
                 if not is_safe_url(next):
                     return flask.abort(400)
-
+                if current_user.admin == 1:
+                    return render_template('home.html')
                 return flask.redirect(next or flask.url_for('report',username=current_user.username))
     return render_template('signInForm.html', form=form)
 
@@ -248,7 +260,7 @@ def unauthorized():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('landingPage'))
 
 
 if __name__ == '__main__':
