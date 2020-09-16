@@ -84,28 +84,48 @@ def report():
     target_list = []
     shot_table = {}
     username = request.args.get('username')
+    getDefault = True
     if username is None:
         # TODO create a custom error page
         return render_template('404.html')
+
+    # connect to database
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
+
+    # on submit, get the data from the select field
     if request.method == 'POST':
+        print(request.form)
         date = request.form['date']
-        # change date so its in dd/mm/yyyy format
-        date = '-'.join(reversed(date.split('-')))
-        date1 = time.mktime(datetime.strptime(date, "%d-%m-%Y").timetuple()) * 1000
-    else:
-        # collect latest date (as default)
+        print(date)
+        if date:
+            date1 = time.mktime(datetime.strptime(date, "%d-%m-%y").timetuple()) * 1000
+            getDefault = False
+
+    # collect latest date (as default)
+    if getDefault:
         c.execute('SELECT time FROM shoots WHERE username=? ORDER BY time desc;', (username,))
-        shootTime = c.fetchone()
-        if shootTime is None:
+        shootTimes = c.fetchall()
+        if not shootTimes:
             return render_template('noSheet.html', current_user=current_user)
-        date1 = shootTime[0]
+        print(shootTimes)
+        date1 = shootTimes[0][0]
         # convert date1 to the start of the day at 12:00:00 a.m.
         date1 = datetime.fromtimestamp(int(date1) / 1000).strftime('%d-%m-%y')
         date1 = time.mktime(datetime.strptime(date1, "%d-%m-%y").timetuple()) * 1000
+
+    # store all dates into a list (for the user to select from)
+    c.execute('SELECT time FROM shoots WHERE username=? ORDER BY time desc;', (username,))
+    shootTimes = c.fetchall()
+    timeList = []
+    for shoot in shootTimes:
+        stringDate = datetime.fromtimestamp(int(shoot[0]) / 1000).strftime('%d-%m-%y')
+        if stringDate not in timeList:
+            timeList.append(stringDate)
+
+    # date 2 is the same day as day 1 but at 11:59:59 p.m.
     date2 = date1 + 86399000
-    # search through shoots database to get a tuple of shoots
+    # search through shoots database to get a tuple of shoots during the selected date
     c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;', (username, date1, date2))
     shoots = c.fetchall()
     # search through each shoot to collect a list of shots
@@ -148,7 +168,7 @@ def report():
     # calculate average percentage accuracy
     mean_percentage = numpy.mean(percentage_list)
     stat_dict = {'percentage': mean_percentage, 'sd': standard_dev}
-    return render_template('shotList.html', target_list=target_list, shot_table=shot_table, form=form, stat_dict=stat_dict)
+    return render_template('shotList.html', target_list=target_list, shot_table=shot_table, form=form, stat_dict=stat_dict, timeList=timeList)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
