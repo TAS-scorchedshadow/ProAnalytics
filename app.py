@@ -172,13 +172,14 @@ def upload():
                 # Adds missing values temporarily
                 shoot['rifleRange'] = "Malabar"
                 shoot['distance'] = "300m"
+                # todo: re-enable this
                 addShoot(shoot)                     # Import the shoot to the database
 
                 os.remove(filePath)                 # Delete file
                 print(filename, "was removed")      # Debug
         return render_template('upload.html', form=form)
     else:
-        return render_template('accessDenied.html', form=form)
+        return render_template('accessDenied.html')
 
 
 @app.route('/user/signup',methods=['GET', 'POST'])

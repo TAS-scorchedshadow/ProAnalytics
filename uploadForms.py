@@ -7,6 +7,7 @@ from wtforms.validators import DataRequired
 
 # form for uploading files
 class uploadForm(FlaskForm):
+    #todo: This doesn't work as expected yet
     file = MultipleFileField(u'Submit File', validators=[
         FileRequired(), FileAllowed(["html", "txt"], message="Must be a html file")])
     submit = SubmitField("Submit: ")
