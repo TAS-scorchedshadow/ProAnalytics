@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% set active_page = "about" %}
-{% block page_title %} About {% endblock %}
+{% set active_page = "home" %}
+{% block page_title %} Dashboard {% endblock %}
 {% block page_content %}
 <style>
     .jumbotron{
@@ -17,45 +17,45 @@
   </div>
 </div>
 
-<h2 class="text-center">Admin Home</h2>
+<h2 class="text-center">Student Home</h2>
 <hr>
 <div class = "row text-center justify-content-center">
-    <div class="col-4">
-        <a href="/upload" class="custom-card">
+    <div class="col-10-xs col-lg-4">
+        <a href="/#" class="custom-card">
           <div class="card linked-card">
               <div class="inner">
-                  <img class="card-img-top" src="../static/images/upload.png" alt="Upload">
+                  <img class="card-img-top" src="../static/images/performance.png" alt="Performance">
               </div>
               <div class="card-title">
-                  <h4>Upload</h4>
+                  <h4>Performance</h4>
               </div>
-              <p>Upload data from your latest shoot.</p>
+              <p>Review your improvements</p>
           </div>
         </a>
     </div>
-    <div class="col-4">
-        <a href="/about" class="custom-card">
+    <div class="col-10-xs col-lg-4">
+        <a href="/report?username={{ current_user.username }}" class="custom-card">
           <div class="card linked-card">
               <div class="inner">
-                <img class="card-img-top" src="../static/images/findastudent.png" alt="Find A Student">
+                <img class="card-img-top" src="../static/images/shotList.png" alt="Shot List">
               </div>
               <div class="card-title">
-                  <h4>Find A Shooter</h4>
+                  <h4>Shot List</h4>
               </div>
-               <p>Investigate the performance of a specific shooter.</p>
+              <p>Close look at your last shoots</p>
           </div>
         </a>
     </div>
-    <div class="col-4">
+    <div class="col-10-xs col-lg-4">
          <a href="/#" class="custom-card">
           <div class="card linked-card">
               <div class="inner">
-                <img class="card-img-top" src="../static/images/comparisons.png" alt="Comparisons">
+                <img class="card-img-top" src="../static/images/leaderboard.png" alt="Leaderboard">
               </div>
               <div class="card-title">
-                  <h4>Comparisons</h4>
+                  <h4>Leaderboards</h4>
               </div>
-              <p>Line graphs, pie charts and other interesting visualisations!</p>
+              <p>Leaderboards are WIP!</p>
           </div>
         </a>
     </div>

@@ -47,13 +47,22 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def landingPage():
     if current_user.is_authenticated:
         if current_user.admin == 1:
-            return render_template('home.html')
+            return render_template('adminHome.html')
+        else:
+            return render_template('shooterHome.html')
     return render_template('landingPage.html')
 
 
-@app.route('/home')
-def home():
-    return render_template('home.html')
+@app.route('/adminHome')
+@login_required
+def adminHome():
+    return render_template('adminHome.html')
+
+
+@app.route('/shooterHome')
+@login_required
+def shooterHome():
+    return render_template('shooterHome.html')
 
 
 @app.route('/comparativeHomePage')
@@ -69,7 +78,7 @@ def comparativeHomePage():
 
 @app.route('/about')
 def about():
-    return render_template('about.html',variable="variable", )
+    return render_template('about.html')
 
 
 @app.route('/profile')
@@ -213,7 +222,7 @@ def signup():
                 return render_template('signUpForm.html', form=form,emailError=True)
             else:
                 registerUser(form)
-                return render_template('home.html')
+                return render_template('adminHome.html')
     return render_template('signUpForm.html', form=form, emailError=False)
 
 
@@ -245,7 +254,7 @@ def signin():
                 if not is_safe_url(next):
                     return flask.abort(400)
                 if current_user.admin == 1:
-                    return render_template('home.html')
+                    return render_template('adminHome.html')
                 return flask.redirect(next or flask.url_for('report',username=current_user.username))
     return render_template('signInForm.html', form=form)
 
