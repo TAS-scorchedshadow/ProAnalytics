@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% set active_page = "home" %}
+{% block page_title %} Dashboard {% endblock %}
+{% block page_content %}
+<style>
+    .jumbotron{
+        background-image: url('../static/images/home.jpg');
+        background-size: cover;
+        margin-bottom: 20px;
+        margin-top: 0px;
+        background-position: center;
+    }
+</style>
+<div class="jumbotron jumbotron-fluid  bg-transparent" style="background-size: cover;">
+  <div class="container justify-content-center text-center">
+    <h1 class="display-4">Progress Analytics for Rifle Shooters</h1>
+  </div>
+</div>
+
+<h2 class="text-center">Student Home</h2>
+<hr>
+<div class = "row text-center justify-content-center">
+    <div class="col-10-xs col-lg-4">
+        <a href="/#" class="custom-card">
+          <div class="card linked-card">
+              <div class="inner">
+                  <img class="card-img-top" src="../static/images/performance.png" alt="Performance">
+              </div>
+              <div class="card-title">
+                  <h4>Performance</h4>
+              </div>
+              <p>Review your improvements</p>
+          </div>
+        </a>
+    </div>
+    <div class="col-10-xs col-lg-4">
+        <a href="/report?username={{ current_user.username }}" class="custom-card">
+          <div class="card linked-card">
+              <div class="inner">
+                <img class="card-img-top" src="../static/images/shotList.png" alt="Shot List">
+              </div>
+              <div class="card-title">
+                  <h4>Shot List</h4>
+              </div>
+              <p>Close look at your last shoots</p>
+          </div>
+        </a>
+    </div>
+    <div class="col-10-xs col-lg-4">
+         <a href="/#" class="custom-card">
+          <div class="card linked-card">
+              <div class="inner">
+                <img class="card-img-top" src="../static/images/leaderboard.png" alt="Leaderboard">
+              </div>
+              <div class="card-title">
+                  <h4>Leaderboards</h4>
+              </div>
+              <p>Leaderboards are WIP!</p>
+          </div>
+        </a>
+    </div>
+</div>
+<hr>
+{% endblock %}
