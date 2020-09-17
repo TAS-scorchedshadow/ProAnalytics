@@ -30,8 +30,8 @@ from flask import g, session
 
 app = Flask(__name__)
 app.secret_key = "super secret"
-csrf = CSRFProtect(app) #Initalising secret key
-#Intialising flask-login
+csrf = CSRFProtect(app)  # Initalising secret key
+# Intialising flask-login
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
@@ -113,6 +113,12 @@ def report():
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
 
+    # collect the users name
+    c.execute('SELECT * FROM users WHERE username=?', (username,))
+    get_name = c.fetchone()
+    if not get_name:
+        return render_template('noSheet.html', current_user=current_user)
+    shooter_name = get_name[2][0].upper() + get_name[2][1:] + ' ' + get_name[3][0].upper() + get_name[3][1:]
     # on submit, get the data from the select field
     if request.method == 'POST':
         print(request.form)
@@ -146,12 +152,13 @@ def report():
     # date 2 is the same day as day 1 but at 11:59:59 p.m.
     date2 = date1 + 86399000
     # search through shoots database to get a tuple of shoots during the selected date
-    c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;', (username, date1, date2))
+    c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;',
+              (username, date1, date2))
     shoots = c.fetchall()
     # search through each shoot to collect a list of shots
     for shoot in shoots:
         shot_table[str(shoot[0])] = []
-        c.execute('SELECT * FROM shots WHERE shootID=?', (shoot[0], ))
+        c.execute('SELECT * FROM shots WHERE shootID=?', (shoot[0],))
         range = shoot[3]
         shots_tuple = c.fetchall()
         shots = {}
@@ -164,31 +171,62 @@ def report():
             # row[5] is x
             # row[3] is y
             # row[6] is score
-        # create graph and put the data into target_list (along with shotNum
+        # create graph and put the data into target_list (along with shotNum)
         script, div = graphProcessing.drawTarget(shots, range, (shoot[6] / 2), (shoot[7], shoot[8]))
         date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d-%m-%y')
-
+        standard_dev = round(shoot[13], 2)
+        mean = shoot[12]
         # TODO change target_list to a dictionary
-        target_list.append([(str(shoot[0])), script, div, date, shoot[9], round(shoot[6] / 2, 2), duration])
+        target_list.append(
+            [(str(shoot[0])), script, div, date, shoot[9], round(shoot[6] / 2, 2), duration, mean, standard_dev])
 
     # collect general stats
 
-    # find the previous year
-    prevYear = date1 - 31622400000
-    # collect and calculate stats from just the past year
-    c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;', (username, prevYear, date2))
+    # TODO have the stats only apply to the current season
+    # # find the previous year
+    # prevYear = date1 - 31622400000
+
+    # collect and calculate stats for the table
+    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time desc;', (username,))
     shoots = c.fetchall()
-    shot_list = []
-    percentage_list = []
+    num_of_shots = 0
+    quick_table = {}
     for shoot in shoots:
-        percentage_list.append((float(shoot[9]) / (int(shoot[10])*5))*100)
-        shot_list.append(float(shoot[9]))
-    # TODO currently the calculation of sd is incorrect
-    standard_dev = numpy.std(percentage_list)
-    # calculate average percentage accuracy
-    mean_percentage = numpy.mean(percentage_list)
-    stat_dict = {'percentage': mean_percentage, 'sd': standard_dev}
-    return render_template('shotList.html', target_list=target_list, shot_table=shot_table, form=form, stat_dict=stat_dict, timeList=timeList)
+        if shoot[3] not in quick_table:
+            quick_table[shoot[3]] = {'percentage': list([(float(shoot[9]) / (int(shoot[10]) * 5)) * 100]),
+                                     'sd': list([float(shoot[13])])}
+        else:
+            quick_table[shoot[3]]['percentage'].append((float(shoot[9]) / (int(shoot[10]) * 5)) * 100)
+            quick_table[shoot[3]]['sd'].append(float(shoot[13]))
+        num_of_shots += shoot[10]
+    for distance in quick_table:
+        quick_table[distance]['percentage'] = numpy.mean(quick_table[distance]['percentage'])
+        quick_table[distance]['sd'] = round(numpy.mean(quick_table[distance]['sd']), 2)
+    # https://www.geeksforgeeks.org/python-convert-dictionary-to-list-of-tuples/
+    sorted_table = [(k, v) for k, v in quick_table.items()]
+    sorted_table = sorted(sorted_table, key=lambda t: t[0])
+    print(sorted_table)
+    stages_shot = len(shoots)
+    stat_dict = {'sorted_table': sorted_table, 'num_of_shots': num_of_shots, 'stages_shot': stages_shot}
+
+    # create line graph
+    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time asc;', (username,))
+    shoots = c.fetchall()
+    listx = [[], ]
+    listy = []
+    listName = [shooter_name, ]
+    # TODO make the graph account for days with multiple shoots
+    # TODO add a line for each range
+    # TODO rather use total score, use a percentage of maximum possible score
+    for shoot in shoots:
+        listy.append(datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y'))
+        listx[0].append(shoot[9])
+    print(listx, listy)
+    line_script, line_div = graphProcessing.compareLine(listx, listy, listName)
+
+    return render_template('shotList.html', target_list=target_list, shot_table=shot_table,
+                           form=form, stat_dict=stat_dict, timeList=timeList, line_script=line_script,
+                           line_div=line_div, shooter_name=shooter_name)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -204,25 +242,25 @@ def upload():
             for file in files:
                 filename = secure_filename(file.filename)
                 filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(filePath)                 # Add file to upload folder
-                print(filename, "was uploaded")     # Debug
-                shoot = validateShots(filePath)     # Fixes up file to obtain relevant data and valid shots
+                file.save(filePath)  # Add file to upload folder
+                print(filename, "was uploaded")  # Debug
+                shoot = validateShots(filePath)  # Fixes up file to obtain relevant data and valid shots
 
                 # todo: Handle missing values. 'username' may be a missing value.
                 # Adds missing values temporarily
                 shoot['rifleRange'] = "Malabar"
                 shoot['distance'] = "300m"
                 # todo: re-enable this
-                addShoot(shoot)                     # Import the shoot to the database
+                addShoot(shoot)  # Import the shoot to the database
 
-                os.remove(filePath)                 # Delete file
-                print(filename, "was removed")      # Debug
+                os.remove(filePath)  # Delete file
+                print(filename, "was removed")  # Debug
         return render_template('upload.html', form=form)
     else:
         return render_template('accessDenied.html')
 
 
-@app.route('/user/signup',methods=['GET', 'POST'])
+@app.route('/user/signup', methods=['GET', 'POST'])
 def signup():
     # create form
     form = signUpForm()
@@ -230,7 +268,7 @@ def signup():
     if request.method == 'POST':
         if form.validate_on_submit():
             if emailExists(form.email.data):
-                return render_template('signUpForm.html', form=form,emailError=True)
+                return render_template('signUpForm.html', form=form, emailError=True)
             else:
                 registerUser(form)
                 return render_template('adminHome.html')
@@ -242,7 +280,7 @@ def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and \
-        ref_url.netloc == test_url.netloc
+           ref_url.netloc == test_url.netloc
 
 
 @app.route('/user/signin', methods=['GET', 'POST'])
@@ -266,9 +304,8 @@ def signin():
                     return flask.abort(400)
                 if current_user.admin == 1:
                     return render_template('adminHome.html')
-                return flask.redirect(next or flask.url_for('report',username=current_user.username))
+                return flask.redirect(next or flask.url_for('report', username=current_user.username))
     return render_template('signInForm.html', form=form)
-
 
 
 @app.route('/target')
@@ -292,6 +329,7 @@ def page_not_found(e):
 def load_user(username):
     # Loads a user based off a given username
     return User(username)
+
 
 @login_manager.unauthorized_handler
 def unauthorized():

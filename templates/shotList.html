@@ -2,16 +2,12 @@
 {% set active_page = "shotList" %}
 {% block page_title %} Shot List {% endblock %}
 {% block page_content %}
-
-
-
-
-
 <!-- create dropdown for each shoot in target_list-->
-<!-- TODO create a table in the card header and time taken-->
 <div class="container-fluid">
+    <h2>{{ shooter_name }}</h2>
     <div class="row">
         <div class="col-8">
+            <!--Select the date form-->
             <form action="" method="post" role="form">
                 {{ form.hidden_tag() }}
                 {{ form.date(type='hidden', id='Getdate', style="padding: 5x 100px;") }}
@@ -31,11 +27,12 @@
             <div class="row">
                 <div class="col-12 pb-5">
                     <div class="card shadow border-0 h-100">
+                        <!--Section of the card that the user always sees-->
                         <div class="card-title">
                             <div class="row">
                                 <div class="col-12 px-4 mx-1">
                                     <p> {{ shoot[3] }}
-                                      <button class="btn btn-primary" type="button" data-toggle="collapse" id="{{ 'button' + shoot[0] }}" data-target="{{ ".multi-" + shoot[0] }}" aria-expanded="false" aria-controls="{{ shoot[0] + 'title ' + shoot[0] + 'body'}}" onclick=buttonChange(this) >
+                                      <button class="btn btn-primary" type="button" data-toggle="collapse" id="{{ 'button' + shoot[0] }}" data-target="{{ "#" + shoot[0] }}" aria-expanded="false" aria-controls="{{ shoot[0] }}" onclick=buttonChange(this) >
                                         +
                                       </button>
                                     </p>
@@ -46,9 +43,9 @@
                                     <p>Duration: {{ shoot[6] }}</p>
                                 </div>
                             </div>
-                            <div class="{{"collapse " +  "multi-" + shoot[0] + ' show'}}" id="{{ shoot[0] + 'title'}}">
                                 <div class="row">
                                     <div class="col-12 px-4 mx-1">
+                                        <!--Table of shots-->
                                         <div class="table-responsive">
                                              <table class="table table-sm table-bordered">
                                                   <thead>
@@ -58,7 +55,9 @@
                                                             <th width="30px">{{ shot[1] }}</th>
                                                         {%- endfor %}
                                                         <th>Final Score</th>
+                                                        <th>S.d.</th>
                                                         <th>Group Size</th>
+                                                        <th>Mean</th>
                                                     </tr>
                                                     <tr>
                                                         <td>300m</td>
@@ -66,47 +65,29 @@
                                                             <td>{{ shot[0] }}</td>
                                                         {%- endfor %}
                                                         <td>{{ shoot[4] }}</td>
+                                                        <td>{{ shoot[8] }}</td>
                                                         <td>{{ shoot[5] }}</td>
+                                                        <td>{{ shoot[7] }}</td>
                                                     </tr>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                         </div>
+                        <!--Collapsible section of the card-->
                          <div class="card-body">
-                             <div class="{{"collapse " +  "multi-" + shoot[0]}}" id={{ shoot[0] + 'body'}}>
+                             <div class="collapse" id="{{ shoot[0] }}">
                                  <div class="row">
-                                     <div class = "col-5">
+                                     <div class="col-3">
+                                     </div>
+                                     <div class = "col-6">
                                          <!--Create target-->
                                         {{ shoot[1] | safe }}
                                         {{ shoot[2] | safe }}
                                      </div>
-                                     <!-- Create table -->
-                                     <div class = "col-7" >
-                                        <div class="table-responsive">
-                                             <table class="table table-sm table-bordered">
-                                                  <thead>
-                                                    <tr>
-                                                        <th>Range</th>
-                                                        {% for shot in shot_table[shoot[0]] %}
-                                                            <th width="30px">{{ shot[1] }}</th>
-                                                        {%- endfor %}
-                                                        <th>Final Score</th>
-                                                        <th>Group Size</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>300m</td>
-                                                        {% for shot in shot_table[shoot[0]] %}
-                                                            <td>{{ shot[0] }}</td>
-                                                        {%- endfor %}
-                                                        <td>{{ shoot[4] }}</td>
-                                                        <td>{{ shoot[5] }}</td>
-                                                    </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                 </div>
+                                     <div class="col-3">
+                                     </div>
+                                </div>
                              </div>
                          </div>
                     </div>
@@ -115,13 +96,35 @@
         {%- endfor %}
         </div>
         <div class="col-4 pb-5">
+            <!--The stats card-->
             <div class="card shadow bprder-0 h-100">
                 <div class="card-header py-2 pl-2">
                     <h4>Stats</h4>
                 </div>
                 <div class="card-body">
-                    <p>Avg. Accuracy: {{ stat_dict['percentage'] }}</p>
-                    <p>Standard Deviation: {{ stat_dict['sd'] }}</p>
+                    <div class="table-responsive">
+                        <!--Table of values for each range-->
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Range</th>
+                                    <th>Avg. Accuracy</th>
+                                    <th>Standard Deviation</th>
+                                </tr>
+                                {% for range in stat_dict['sorted_table'] %}
+                                    <tr>
+                                        <td>{{ range[0] }}</td>
+                                        <td>{{ range[1]['percentage'] }}</td>
+                                        <td>{{ range[1]['sd'] }}</td>
+                                    </tr>
+                                {%-endfor %}
+                            </thead>
+                        </table>
+                    </div>
+                    <p>Stages Shot: {{ stat_dict['stages_shot'] }}</p>
+                    <p>Amount of Shots: {{ stat_dict['num_of_shots'] }}</p>
+                    <!-- Popup graph button -->
+                    <button id="graphButton"><i class="fas fa-chart-line"></i></button>
                 </div>
             </div>
         </div>
@@ -141,4 +144,25 @@
     }
 </script>
 
+
+<!--Html of the popup graph-->
+<div id='lineGraph' title='Line Graph' hidden>
+    {{ line_script | safe }}
+    {{ line_div | safe }}
+</div>
+
+
+    <!--Script to create popup dialog with graph-->
+{#https://stackoverflow.com/questions/10689556/show-html-in-alert-window-same-like-iframe#}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script>
+    $(document).ready(() => {
+        $("#graphButton").click(() => {
+            $("#lineGraph").removeAttr("hidden");
+            $("#lineGraph").dialog({height: 550, width: 1000});
+        });
+    });
+</script>
 {% endblock %}

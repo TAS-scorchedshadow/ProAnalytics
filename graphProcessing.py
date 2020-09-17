@@ -11,16 +11,17 @@ from shotProcessing import validateShots
 
 
 # listx is a list containing a list of scores eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
-# Each of the list of shots are one line and should all be the same lengthdoes
+# Each of the list of shots are one line and should all be the same length does
 # listy is a list of dates (dd/mm/yyyy) eg. ['10/08/2020', '11/08/2020', '12/08/2020', '13/08/2020', '14/08/2020', '15/08/2020']
 # listName is a list of names eg. ['Andrew', 'Ryan']
 def compareLine(listx, listy, listName):
     # vars used to set the x-axis range
     startRange = listy[0].split('/')
     endRange = listy[-1].split('/')
-    cLine = figure(plot_height=1000, plot_width=1000, sizing_mode='scale_width', title='Compare Graph',
-                   x_axis_label='Date', y_axis_label='Score', x_axis_type='datetime',
+    cLine = figure(plot_height=500, plot_width=1000, sizing_mode='scale_width', title='Compare Graph',
+                   toolbar_location=None, x_axis_label='Date', y_axis_label='Score', x_axis_type='datetime',
                    x_range=(dt(int(startRange[2]), int(startRange[1]), int(startRange[0])), dt(int(endRange[2]), int(endRange[1]), int(endRange[0]))))
+    cLine.toolbar.logo = None
     # convert dates into a format we can use
     dates = []
     colours = cycle(palette)
@@ -45,6 +46,7 @@ def compareLine(listx, listy, listName):
     )
     # Rotate labels on the x-axis
     cLine.xaxis.major_label_orientation = pi / 4
+    cLine.xaxis.visible = True
     script, div = components(cLine)
     return script, div
 
