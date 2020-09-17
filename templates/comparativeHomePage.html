@@ -36,12 +36,17 @@
             </div>
         </div>
     <form name="myForm" action="" method="post" onsubmit="">
-        <p>
-            <input type="radio" name="options" id="option1" value="option1"> Option1 </input><br>
-            <input type="radio" name="options" id="option2" value="option2"> Option2 </input><br>
-            <input type="radio" name="options" id="option3" value="option3"> Option3 </input><br>
-        </p>
-        <p><input type=submit value=Next></p>
+        <div>
+        <form action ="" method="post" onsubmit="">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.graphType.label }}<br>
+                {{ form.graphType(size = 20)  }}
+            </p>
+            <p>
+                {{ form.submit }}
+            </p>
+    </div>
     </form>
     </div>
 

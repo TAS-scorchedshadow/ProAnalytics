@@ -15,6 +15,7 @@ from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn, selectDate
 from security import registerUser, validateLogin, User
 from dataAccess import emailExists, addShoot
+from flaskForm import graphSelect
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -67,15 +68,24 @@ def shooterHome():
 
 @app.route('/comparativeHomePage')
 def comparativeHomePage():
-    shots = {1: [10, 10, 5]}
-    targetSize= "300m"
-    groupRadius = 228.8
-    group_center = (12.66, -32.5)
-    first_script, first_div = graphProcessing.drawTarget(shots,targetSize,groupRadius,group_center)
-    second_script, second_div = graphProcessing.drawTarget(shots,targetSize,groupRadius,group_center)
-    option = request.form['options']
-    return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div)
+    form = graphSelect()
+    if request.method == "POST":
+        details = request.form
+        print(details)
+        shots = {1: [10, 10, 5]}
+        targetSize= "300m"
+        groupRadius = 228.8
+        group_center = (12.66, -32.5)
+        first_script, first_div = graphProcessing.drawTarget(shots,targetSize,groupRadius,group_center)
+        second_script, second_div = graphProcessing.drawTarget(shots,targetSize,groupRadius,group_center)
+        return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div)
+    return render_template('comparativeHomePage.html', form=form)
 
+@app.route('/renderedComparativeHomePage')
+def renderedComparativeHomePage():
+    option = request.form['options']
+    print(option)
+    return render_template('about.html')
 
 @app.route('/about')
 def about():
