@@ -73,6 +73,7 @@ def comparativeHomePage():
     group_center = (12.66, -32.5)
     first_script, first_div = graphProcessing.drawTarget(shots,targetSize,groupRadius,group_center)
     second_script, second_div = graphProcessing.drawTarget(shots,targetSize,groupRadius,group_center)
+    option = request.form['options']
     return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div)
 
 
