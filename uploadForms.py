@@ -34,3 +34,7 @@ class signIn(FlaskForm):
 class selectDate(FlaskForm):
     date = StringField('Date', validators=[InputRequired()])
     submit = SubmitField("Select")
+
+class graphSelect(FlaskForm):
+    graphType = RadioField('Label', choices=[('value','Line'),('value_two','Bar')])
+    submit = SubmitField('ENTER')

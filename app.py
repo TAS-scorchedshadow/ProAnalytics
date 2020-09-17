@@ -12,10 +12,9 @@ from flask_wtf import CSRFProtect
 import flask_login
 
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm, signUpForm, signIn, selectDate
+from uploadForms import uploadForm, signUpForm, signIn, selectDate, graphSelect
 from security import registerUser, validateLogin, User
 from dataAccess import emailExists, addShoot
-from flaskForm import graphSelect
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -81,11 +80,6 @@ def comparativeHomePage():
         return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div)
     return render_template('comparativeHomePage.html', form=form)
 
-@app.route('/renderedComparativeHomePage')
-def renderedComparativeHomePage():
-    option = request.form['options']
-    print(option)
-    return render_template('about.html')
 
 @app.route('/about')
 def about():
