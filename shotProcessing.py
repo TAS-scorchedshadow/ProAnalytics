@@ -1,10 +1,10 @@
 import math
-import statistics
 import json
-import numpy as np
+import numpy
 
+
+# Reformats the shots to filter for relevant data
 def validateShots(txtfile):
-    # Reformats the shots to filter for relevant data
     totalShots = 0      # Total number of shots
     countingShots = 0   # Total, excluding sighters
     newShoot = {'id': 0, 'username': "", 'time': 0, 'duration': 0, 'validShots': [],
@@ -16,12 +16,15 @@ def validateShots(txtfile):
         for individualShot in data['shots']:
             x = individualShot['valid']
             if x:
+                score = getScore(individualShot)
+                individualShot['score'] = score['score']
+                individualShot['Vscore'] = score['Vscore']
+                sighter = checkSighter(individualShot)
+                individualShot['sighter'] = sighter
                 validShotList.append(individualShot)
                 totalShots += 1
-                sighter = checkSighter(individualShot)
                 if not sighter:
                     countingShots += 1
-                    score = getScore(individualShot)
                     runningScore['score'] += score['score']
                     runningScore['Vscore'] += score['Vscore']
         # Check to see if number of validated shots met expected value
@@ -41,11 +44,27 @@ def validateShots(txtfile):
         newShoot['validShots'] = validShotList
         newShoot['totalShots'] = countingShots
         newShoot['totalScore'] = str(runningScore['score']) + "." + str(runningScore['Vscore'])
+        newShoot['stats'] = shotStats(validShotList)
     return newShoot
 
 
+# Gets shot statistics
+def shotStats(shoot):
+    stats = {}
+    shots = []
+    for i in shoot:
+        if not i['sighter']:
+            shots.append(i['score'])
+    print(shots)
+    stats['median'] = numpy.median(shots)
+    stats['mean'] = numpy.mean(shots)
+    stats['std'] = numpy.std(shots)
+    print(stats)
+    return stats
+
+
+# Reformats score into a dictionary of score and Vscore
 def getScore(shot):
-    # Reformats score into a dictionary of score and Vscore
     score = {'score': 0, 'Vscore': 0}  # Vscore = 0 if none was given
     if shot['value'] == "V":                # JSON includes array if shot included a Vscore
         score['score'] = shot['score'][0]
@@ -55,14 +74,15 @@ def getScore(shot):
     return score
 
 
+# Checks if the shot is a sighter
 def checkSighter(shot):
-    # Checks if the shot is a sighter
     try:
         return shot['sighter']
     except KeyError:
         return False
 
 
+# todo: not necessary anymore, shotStats exists now. Pending removal.
 # general calculations for the mean, median, range & standard deviation of the dataset. The information is returned
 # at the bottom data brought in from the json, and the shot score statistical information is created
 def statisticsScore():
@@ -84,7 +104,7 @@ def statisticsScore():
     else:
         median = ((score[math.ceil(len(score)/2)]))
     scoreRange = score[-1] - score[0]
-    stdDev = np.std(score)
+    stdDev = numpy.std(score)
 
     return mean, median, scoreRange, stdDev
 

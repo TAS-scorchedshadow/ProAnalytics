@@ -1,6 +1,5 @@
 import sqlite3
 from flask import g, session
-from shotProcessing import getScore, checkSighter
 from flask_login._compat import unicode
 
 DATABASE = 'PARS.db'
@@ -32,11 +31,13 @@ def addShoot(shoot):
     c = conn.cursor()
     # Add data to shoots table
     c.execute("INSERT INTO shoots (username, rifleRange, distance, time, duration,"
-              "groupSize, groupCentreX, groupCentreY, totalScore, totalShots)"
-              "VALUES (?,?,?,?,?,?,?,?,?,?)",
+              "groupSize, groupCentreX, groupCentreY,"
+              "totalScore, totalShots, median, mean, std)"
+              "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
               (shoot['username'], shoot['rifleRange'], shoot['distance'], shoot['time'], shoot['duration'],
                shoot['groupSize'], shoot['groupCentreX'], shoot['groupCentreY'],
-               shoot['totalScore'], shoot['totalShots']))
+               shoot['totalScore'], shoot['totalShots'],
+               shoot['stats']['median'], shoot['stats']['mean'], shoot['stats']['std']))
     conn.commit()
     # Get ID of the added shoot
     c.execute('SELECT * FROM shoots ORDER BY shootID desc;')
@@ -48,8 +49,7 @@ def addShoot(shoot):
                    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     # Add data to shots table
     for i in range(len(shots)):
-        score = getScore(shots[i])
-        sighter = checkSighter(shots[i])
+        sighter = shots[i]['sighter']
         if sighter:
             shotNum = sighterList[sighterCount]
             sighterCount += 1
@@ -57,7 +57,7 @@ def addShoot(shoot):
             shotNum = i + 1 - sighterCount
         c.execute("INSERT INTO shots (shootID, username, shotNum, sighter, score, scoreV, x, y, velocity)"
                   "VALUES (?,?,?,?,?,?,?,?,?)",
-                  (shootID, shoot['username'], shotNum, sighter, score['score'], score['Vscore'],
+                  (shootID, shoot['username'], shotNum, sighter, shots[i]['score'], shots[i]['Vscore'],
                    shots[i]['x'], shots[i]['y'], shots[i]['v']))
     conn.commit()
     conn.close()

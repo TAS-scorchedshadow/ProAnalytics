@@ -1,12 +1,15 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, HiddenField, MultipleFileField, IntegerField, SelectField, PasswordField
 from wtforms.fields.html5 import DateField, TimeField, EmailField
-from wtforms.validators import DataRequired
+from flask_wtf.file import FileAllowed, FileRequired
+from wtforms.validators import DataRequired, InputRequired
 
 
 # form for uploading files
 class uploadForm(FlaskForm):
-    file = MultipleFileField(u'Submit File')
+    #todo: This doesn't work as expected yet
+    file = MultipleFileField(u'Submit File', validators=[
+        FileRequired(), FileAllowed(["html", "txt"], message="Must be a html file")])
     submit = SubmitField("Submit: ")
 
 # form for registering
@@ -29,5 +32,5 @@ class signIn(FlaskForm):
 
 # form for selecting date
 class selectDate(FlaskForm):
-    date = DateField("Date: ")
+    date = StringField('Date', validators=[InputRequired()])
     submit = SubmitField("Select")

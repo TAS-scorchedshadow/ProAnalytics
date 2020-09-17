@@ -4,12 +4,7 @@
 {% block page_content %}
 
 
-<form action="" method="post" role="form">
- <!--TODO replace with a dropdown of dates-->
-    {{ form.hidden_tag() }}
-    {{ form.date(class_="form-control") }}
-    {{ form.submit }}
-</form>
+
 
 
 <!-- create dropdown for each shoot in target_list-->
@@ -17,6 +12,21 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-8">
+            <form action="" method="post" role="form">
+                {{ form.hidden_tag() }}
+                {{ form.date(type='hidden', id='Getdate', style="padding: 5x 100px;") }}
+                <div class="input-group mb-3">
+                    <select class="form-control" onchange="document.getElementById('Getdate').value=this.options[this.selectedIndex].text;">
+                        <option disabled selected value> -- select another date -- </option>
+                        {% for option in timeList %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {%-endfor %}
+                    </select>
+                    <div class="input-group-append">
+                        {{ form.submit(class_='btn btn-primary',style="padding: 5x 100px;") }}
+                    </div>
+                </div>
+            </form>
         {% for shoot in target_list %}
             <div class="row">
                 <div class="col-12 pb-5">

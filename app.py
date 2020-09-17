@@ -22,6 +22,7 @@ from datetime import datetime
 import time
 import os
 import graphProcessing
+import numpy
 
 import sqlite3
 from flask import g, session
@@ -43,9 +44,25 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')
-@app.route('/home')
-def home():
-    return render_template('home.html')
+def landingPage():
+    if current_user.is_authenticated:
+        if current_user.admin == 1:
+            return render_template('adminHome.html')
+        else:
+            return render_template('shooterHome.html')
+    return render_template('landingPage.html')
+
+
+@app.route('/adminHome')
+@login_required
+def adminHome():
+    return render_template('adminHome.html')
+
+
+@app.route('/shooterHome')
+@login_required
+def shooterHome():
+    return render_template('shooterHome.html')
 
 
 @app.route('/comparativeHomePage')
@@ -60,9 +77,8 @@ def comparativeHomePage():
 
 
 @app.route('/about')
-@login_required
 def about():
-    return render_template('about.html',variable="variable", )
+    return render_template('about.html')
 
 
 @app.route('/profile')
@@ -71,31 +87,54 @@ def profile():
 
 
 @app.route('/report', methods=['GET', 'POST'])
+@login_required
 def report():
     form = selectDate()
     target_list = []
     shot_table = {}
     username = request.args.get('username')
+    getDefault = True
     if username is None:
         # TODO create a custom error page
         return render_template('404.html')
+
+    # connect to database
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
+
+    # on submit, get the data from the select field
     if request.method == 'POST':
+        print(request.form)
         date = request.form['date']
-        # change date so its in dd/mm/yyyy format
-        date = '-'.join(reversed(date.split('-')))
-        date1 = time.mktime(datetime.strptime(date, "%d-%m-%Y").timetuple()) * 1000
-    else:
-        # collect latest date (as default)
+        print(date)
+        if date:
+            date1 = time.mktime(datetime.strptime(date, "%d-%m-%y").timetuple()) * 1000
+            getDefault = False
+
+    # collect latest date (as default)
+    if getDefault:
         c.execute('SELECT time FROM shoots WHERE username=? ORDER BY time desc;', (username,))
-        date1 = c.fetchone()[0]
+        shootTimes = c.fetchall()
+        if not shootTimes:
+            return render_template('noSheet.html', current_user=current_user)
+        print(shootTimes)
+        date1 = shootTimes[0][0]
         # convert date1 to the start of the day at 12:00:00 a.m.
         date1 = datetime.fromtimestamp(int(date1) / 1000).strftime('%d-%m-%y')
         date1 = time.mktime(datetime.strptime(date1, "%d-%m-%y").timetuple()) * 1000
+
+    # store all dates into a list (for the user to select from)
+    c.execute('SELECT time FROM shoots WHERE username=? ORDER BY time desc;', (username,))
+    shootTimes = c.fetchall()
+    timeList = []
+    for shoot in shootTimes:
+        stringDate = datetime.fromtimestamp(int(shoot[0]) / 1000).strftime('%d-%m-%y')
+        if stringDate not in timeList:
+            timeList.append(stringDate)
+
+    # date 2 is the same day as day 1 but at 11:59:59 p.m.
     date2 = date1 + 86399000
-    print(date1, date2)
-    # search through shoots database to get a tuple of shoots
+    # search through shoots database to get a tuple of shoots during the selected date
     c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;', (username, date1, date2))
     shoots = c.fetchall()
     # search through each shoot to collect a list of shots
@@ -105,6 +144,7 @@ def report():
         range = shoot[3]
         shots_tuple = c.fetchall()
         shots = {}
+        duration = str(int((shoot[4]) / 60000)) + ' mins ' + str(int((shoot[4]) / 1000) % 60) + ' secs'
         for row in shots_tuple:
             shots[row[-1]] = [row[5], row[3], row[6]]
             # create list of shots
@@ -114,37 +154,61 @@ def report():
             # row[3] is y
             # row[6] is score
         # create graph and put the data into target_list (along with shotNum
-        script, div = graphProcessing.drawTarget(shots, range, (shoot[6]/2), (shoot[7], shoot[8]))
-        date = datetime.fromtimestamp(int(shoot[1])/1000).strftime('%d-%m-%y')
-        target_list.append([(str(shoot[0])), script, div, date, shoot[9], round(shoot[6]/2, 2)])
+        script, div = graphProcessing.drawTarget(shots, range, (shoot[6] / 2), (shoot[7], shoot[8]))
+        date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d-%m-%y')
 
-    return render_template('shotList.html', target_list=target_list, shot_table=shot_table, form=form)
+        # TODO change target_list to a dictionary
+        target_list.append([(str(shoot[0])), script, div, date, shoot[9], round(shoot[6] / 2, 2), duration])
+
+    # collect general stats
+
+    # find the previous year
+    prevYear = date1 - 31622400000
+    # collect and calculate stats from just the past year
+    c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;', (username, prevYear, date2))
+    shoots = c.fetchall()
+    shot_list = []
+    percentage_list = []
+    for shoot in shoots:
+        percentage_list.append((float(shoot[9]) / (int(shoot[10])*5))*100)
+        shot_list.append(float(shoot[9]))
+    # TODO currently the calculation of sd is incorrect
+    standard_dev = numpy.std(percentage_list)
+    # calculate average percentage accuracy
+    mean_percentage = numpy.mean(percentage_list)
+    stat_dict = {'percentage': mean_percentage, 'sd': standard_dev}
+    return render_template('shotList.html', target_list=target_list, shot_table=shot_table, form=form, stat_dict=stat_dict, timeList=timeList)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload():
-    # create form
-    form = uploadForm()
+    if current_user.admin == 1:
+        # create form
+        form = uploadForm()
 
-    # on submission
-    if request.method == 'POST':
-        files = request.files.getlist('file')
-        for file in files:
-            filename = secure_filename(file.filename)
-            filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filePath)                 # Add file to upload folder
-            print(filename, "was uploaded")     # Debug
-            shoot = validateShots(filePath)     # Fixes up file to obtain relevant data and valid shots
+        # on submission
+        if request.method == 'POST':
+            files = request.files.getlist('file')
+            for file in files:
+                filename = secure_filename(file.filename)
+                filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filePath)                 # Add file to upload folder
+                print(filename, "was uploaded")     # Debug
+                shoot = validateShots(filePath)     # Fixes up file to obtain relevant data and valid shots
 
-            # todo: Handle missing values. 'username' may be a missing value.
-            # Adds missing values temporarily
-            shoot['rifleRange'] = "Malabar"
-            shoot['distance'] = "300m"
-            addShoot(shoot)                     # Import the shoot to the database
+                # todo: Handle missing values. 'username' may be a missing value.
+                # Adds missing values temporarily
+                shoot['rifleRange'] = "Malabar"
+                shoot['distance'] = "300m"
+                # todo: re-enable this
+                addShoot(shoot)                     # Import the shoot to the database
 
-            os.remove(filePath)                 # Delete file
-            print(filename, "was removed")      # Debug
-    return render_template('upload.html', form=form)
+                os.remove(filePath)                 # Delete file
+                print(filename, "was removed")      # Debug
+        return render_template('upload.html', form=form)
+    else:
+        return render_template('accessDenied.html')
 
 
 @app.route('/user/signup',methods=['GET', 'POST'])
@@ -158,7 +222,7 @@ def signup():
                 return render_template('signUpForm.html', form=form,emailError=True)
             else:
                 registerUser(form)
-                return render_template('home.html')
+                return render_template('adminHome.html')
     return render_template('signUpForm.html', form=form, emailError=False)
 
 
@@ -189,7 +253,8 @@ def signin():
                 # See https://stackoverflow.com/questions/60532973/how-do-i-get-a-is-safe-url-function-to-use-with-flask-and-how-does-it-work for an example.
                 if not is_safe_url(next):
                     return flask.abort(400)
-
+                if current_user.admin == 1:
+                    return render_template('adminHome.html')
                 return flask.redirect(next or flask.url_for('report',username=current_user.username))
     return render_template('signInForm.html', form=form)
 
@@ -225,7 +290,7 @@ def unauthorized():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('landingPage'))
 
 
 if __name__ == '__main__':

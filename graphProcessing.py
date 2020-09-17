@@ -177,7 +177,6 @@ def drawTarget(shots, targetSize, groupRadius, groupCenter):
     shotY = []
     score = []
     shotNum = []
-    print(shots)
     for i in shots:
         shotX.append(shots[i][0])
         shotY.append(shots[i][1])
