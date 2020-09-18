@@ -65,19 +65,18 @@ def shooterHome():
     return render_template('shooterHome.html')
 
 
-@app.route('/comparativeHomePage')
+@app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
     form = graphSelect()
-    if request.method == "POST":
-        details = request.form
-        print(details)
+    if form.validate_on_submit():
+        print(form.graphType)
         shots = {1: [10, 10, 5]}
         targetSize= "300m"
         groupRadius = 228.8
         group_center = (12.66, -32.5)
         first_script, first_div = graphProcessing.drawTarget(shots,targetSize,groupRadius,group_center)
         second_script, second_div = graphProcessing.drawTarget(shots,targetSize,groupRadius,group_center)
-        return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div)
+        return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, form= form)
     return render_template('comparativeHomePage.html', form=form)
 
 
