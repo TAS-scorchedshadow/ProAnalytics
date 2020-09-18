@@ -36,5 +36,5 @@ class selectDate(FlaskForm):
     submit = SubmitField("Select")
 
 class graphSelect(FlaskForm):
-    graphType = RadioField('Label', choices=[('value','Line'),('value_two','Bar')])
+    graphType = RadioField('Graph', choices=[('Line','Line'),('Bar','Bar')])
     submit = SubmitField('ENTER')

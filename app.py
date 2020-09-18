@@ -67,16 +67,23 @@ def shooterHome():
 
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
+
+    #calls the class from the uploadForms.py for
     form = graphSelect()
     if form.validate_on_submit():
-        print(form.graphType)
+        print(form.graphType.data)
         shots = {1: [10, 10, 5]}
-        targetSize= "300m"
+        targetSize = "300m"
         groupRadius = 228.8
         group_center = (12.66, -32.5)
-        first_script, first_div = graphProcessing.drawTarget(shots,targetSize,groupRadius,group_center)
-        second_script, second_div = graphProcessing.drawTarget(shots,targetSize,groupRadius,group_center)
-        return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, form= form)
+        first_script, first_div = graphProcessing.drawTarget(shots, targetSize, groupRadius, group_center)
+        second_script, second_div = graphProcessing.drawTarget(shots, targetSize, groupRadius, group_center)
+        if (form.graphType.data) == "Bar":
+            bar_script, bar_div = graphProcessing.compareBar()
+            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, form= form)
+        if (form.graphType.data) == "Line":
+            line_script, line_div = graphProcessing.compareLine([5,7,9,12],[13,18,17,14],("Shots"))
+            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, form= form)
     return render_template('comparativeHomePage.html', form=form)
 
 
