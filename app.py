@@ -175,7 +175,7 @@ def report():
         script, div = graphProcessing.drawTarget(shots, range, (shoot[6] / 2), (shoot[7], shoot[8]))
         date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d-%m-%y')
         standard_dev = round(shoot[13], 2)
-        mean = shoot[12]
+        mean = round(shoot[12], 1)
         # TODO change target_list to a dictionary
         target_list.append(
             [(str(shoot[0])), script, div, date, shoot[9], round(shoot[6] / 2, 2), duration, mean, standard_dev])
@@ -200,7 +200,7 @@ def report():
             quick_table[shoot[3]]['sd'].append(float(shoot[13]))
         num_of_shots += shoot[10]
     for distance in quick_table:
-        quick_table[distance]['percentage'] = numpy.mean(quick_table[distance]['percentage'])
+        quick_table[distance]['percentage'] = round(numpy.mean(quick_table[distance]['percentage']), 1)
         quick_table[distance]['sd'] = round(numpy.mean(quick_table[distance]['sd']), 2)
     # https://www.geeksforgeeks.org/python-convert-dictionary-to-list-of-tuples/
     sorted_table = [(k, v) for k, v in quick_table.items()]
@@ -212,15 +212,27 @@ def report():
     # create line graph
     c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time asc;', (username,))
     shoots = c.fetchall()
-    listx = [[], ]
+    lineList = [] #  [ [300m, [x,x,x,x,x], [y,y,y,y,y]] , [500m, [x,x,x,x,x], [y,y,y,y,y]] ]
+    listx = []
     listy = []
-    listName = [shooter_name, ]
-    # TODO make the graph account for days with multiple shoots
-    # TODO add a line for each range
-    # TODO rather use total score, use a percentage of maximum possible score
+    listName = []
     for shoot in shoots:
-        listy.append(datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y'))
-        listx[0].append(shoot[9])
+        distance = shoot[3]
+        percentageScore = (float(shoot[9])/(int(shoot[10])*5))*100
+        dateOfShoot = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y')
+        isInList = False
+        for data in lineList:
+            if distance in data:
+                data[1].append(percentageScore)
+                data[2].append(dateOfShoot)
+                isInList = True
+        if not isInList:
+            lineList.append([distance, [percentageScore, ], [dateOfShoot, ]])
+    lineList = sorted(lineList, key=lambda x: x[0])
+    for data in lineList:
+        listName.append(data[0])
+        listx.append(data[1])
+        listy.append(data[2])
     print(listx, listy)
     line_script, line_div = graphProcessing.compareLine(listx, listy, listName)
 
