@@ -9,7 +9,9 @@ from dataAccess import shooter_username
 class uploadForm(FlaskForm):
     #todo: This doesn't work as expected yet
     file = MultipleFileField(u'Submit File', validators=[
-        FileRequired(), FileAllowed(["html", "txt"], message="Must be a html file")])
+        FileRequired(),
+        FileAllowed(["txt", "json"], "Must be a json file")
+    ])
     submit = SubmitField("Submit: ")
 
 # form for registering
