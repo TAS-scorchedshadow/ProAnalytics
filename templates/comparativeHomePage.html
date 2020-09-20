@@ -26,6 +26,15 @@
                  </div>
             </div>
         </div>
+        <div>
+        <form action ="" method="post" onsubmit="">
+            {{ form_graph.hidden_tag() }}
+            <p>
+                {{ form_username.shooter_username.label }}<br>
+                {{ form_username.shooter_username(size = 0.05)  }}
+            </p>
+        </form>
+        </div>
 
         <div class = "col-3">
              <div class="card shadow border-0 h-100 justify-content-center">
@@ -37,16 +46,16 @@
         </div>
         <div>
         <form action ="" method="post" onsubmit="">
-            {{ form.hidden_tag() }}
+            {{ form_graph.hidden_tag() }}
             <p>
-                {{ form.graphType.label }}<br>
-                {{ form.graphType(size = 20)  }}
+                {{ form_graph.graphType.label }}<br>
+                {{ form_graph.graphType(size = 20)  }}
             </p>
             <p>
-                {{ form.submit }}
+                {{ form_graph.submit }}
             </p>
         </form>
-    </div>
+        </div>
     </div>
     <br>
     <div>

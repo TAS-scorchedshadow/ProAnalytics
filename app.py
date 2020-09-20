@@ -12,9 +12,9 @@ from flask_wtf import CSRFProtect
 import flask_login
 
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm, signUpForm, signIn, selectDate, graphSelect
+from uploadForms import uploadForm, signUpForm, signIn, selectDate, graphSelect, nameSelect
 from security import registerUser, validateLogin, User
-from dataAccess import emailExists, addShoot
+from dataAccess import emailExists, addShoot, shooter_username
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -68,23 +68,33 @@ def shooterHome():
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
 
+    form_username = nameSelect()
+
     #calls the class from the uploadForms.py for
-    form = graphSelect()
-    if form.validate_on_submit():
-        print(form.graphType.data)
+    form_graph = graphSelect()
+
+    #if the radio button is submit
+    if form_graph.validate_on_submit() and form_username.validate_on_submit():
+
+        #stubs for the targets to rander
         shots = {1: [10, 10, 5]}
         targetSize = "300m"
         groupRadius = 228.8
         group_center = (12.66, -32.5)
         first_script, first_div = graphProcessing.drawTarget(shots, targetSize, groupRadius, group_center)
         second_script, second_div = graphProcessing.drawTarget(shots, targetSize, groupRadius, group_center)
-        if (form.graphType.data) == "Bar":
+
+        #If the radio selected button is bar
+        if (form_graph.graphType.data) == "Bar":
             bar_script, bar_div = graphProcessing.compareBar()
-            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, form= form)
-        if (form.graphType.data) == "Line":
+            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, form_graph= form_graph)
+
+        #If the radio button selected is line
+        if (form_graph.graphType.data) == "Line":
             line_script, line_div = graphProcessing.compareLine([5,7,9,12],[13,18,17,14],("Shots"))
-            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, form= form)
-    return render_template('comparativeHomePage.html', form=form)
+            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, form_graph= form_graph)
+
+    return render_template('comparativeHomePage.html', form_username=form_username, form_graph=form_graph)
 
 
 @app.route('/about')

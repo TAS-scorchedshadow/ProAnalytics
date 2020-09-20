@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, HiddenField, MultipleFileField, In
 from wtforms.fields.html5 import DateField, TimeField, EmailField
 from flask_wtf.file import FileAllowed, FileRequired
 from wtforms.validators import DataRequired, InputRequired
-
+from dataAccess import shooter_username
 
 # form for uploading files
 class uploadForm(FlaskForm):
@@ -38,3 +38,7 @@ class selectDate(FlaskForm):
 class graphSelect(FlaskForm):
     graphType = RadioField('Graph', choices=[('Line','Line'),('Bar','Bar')])
     submit = SubmitField('ENTER')
+
+class nameSelect(FlaskForm):
+    usernames = shooter_username()
+    shooter_username = SelectField('Username', choices=shooter_username())
