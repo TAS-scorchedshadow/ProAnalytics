@@ -12,7 +12,7 @@ from flask_wtf import CSRFProtect
 import flask_login
 
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm, signUpForm, signIn, selectDate, graphSelect, nameSelect
+from uploadForms import uploadForm, signUpForm, signIn, selectDate, graphSelect, nameSelectTargetOne, nameSelectTargetTwo
 from security import registerUser, validateLogin, User
 from dataAccess import emailExists, addShoot, shooter_username
 
@@ -68,13 +68,14 @@ def shooterHome():
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
 
-    form_username = nameSelect()
+    form_usernameOne = nameSelectTargetOne()
+    form_usernameTwo = nameSelectTargetTwo()
 
     #calls the class from the uploadForms.py for
     form_graph = graphSelect()
 
     #if the radio button is submit
-    if form_graph.validate_on_submit() and form_username.validate_on_submit():
+    if form_graph.validate_on_submit() and form_usernameOne.validate_on_submit() and form_usernameTwo.validate_on_submit():
 
         #stubs for the targets to rander
         shots = {1: [10, 10, 5]}
@@ -94,7 +95,7 @@ def comparativeHomePage():
             line_script, line_div = graphProcessing.compareLine([5,7,9,12],[13,18,17,14],("Shots"))
             return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, form_graph= form_graph)
 
-    return render_template('comparativeHomePage.html', form_username=form_username, form_graph=form_graph)
+    return render_template('comparativeHomePage.html', form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_graph=form_graph)
 
 
 @app.route('/about')

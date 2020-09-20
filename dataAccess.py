@@ -117,22 +117,23 @@ def shooter_username():
     conn = sqlite3.connect('PARS.db')
     cur = conn.cursor()
     cur.execute("SELECT * FROM shots")
-
     rows = cur.fetchall()
     all = []
     bank = []
     for row in rows:
         row = list(row)
-        for i in range(2):
-            row.pop(0)
-            row.pop(4)
-            row.pop(2)
-            row.pop(2)
+        row.pop(0)
+        row.pop(0)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
         row[1] = str(row[0])
         if row[1] not in bank:
             bank.append(row[1])
             row = tuple(row)
             all.append(row)
-
     return all
-

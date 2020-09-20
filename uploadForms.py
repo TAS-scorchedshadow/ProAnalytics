@@ -41,6 +41,14 @@ class graphSelect(FlaskForm):
     graphType = RadioField('Graph', choices=[('Line','Line'),('Bar','Bar')])
     submit = SubmitField('ENTER')
 
-class nameSelect(FlaskForm):
-    usernames = shooter_username()
+class nameSelectTargetOne(FlaskForm):
+    shooter_username = SelectField('Username', choices=shooter_username())
+
+class nameSelectTargetTwo(FlaskForm):
+    shooter_username = SelectField('Username', choices=shooter_username())
+
+class rangeSelectTargetOne(FlaskForm):
+    shooter_username = SelectField('Username', choices=shooter_username())
+
+class rangeSelectTargetTwo(FlaskForm):
     shooter_username = SelectField('Username', choices=shooter_username())

@@ -30,8 +30,8 @@
         <form action ="" method="post" onsubmit="">
             {{ form_graph.hidden_tag() }}
             <p>
-                {{ form_username.shooter_username.label }}<br>
-                {{ form_username.shooter_username(size = 0.05)  }}
+                {{ form_usernameOne.shooter_username.label }}<br>
+                {{ form_usernameOne.shooter_username(size = 0.05)  }}
             </p>
         </form>
         </div>
@@ -43,6 +43,15 @@
                      {{ second_div | safe }}
                  </div>
             </div>
+        </div>
+        <div>
+        <form action ="" method="post" onsubmit="">
+            {{ form_graph.hidden_tag() }}
+            <p>
+                {{ form_usernameTwo.shooter_username.label }}<br>
+                {{ form_usernameTwo.shooter_username(size = 0.05)  }}
+            </p>
+        </form>
         </div>
         <div>
         <form action ="" method="post" onsubmit="">
