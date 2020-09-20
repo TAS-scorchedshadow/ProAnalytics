@@ -55,10 +55,10 @@ def addShoot(shoot):
             sighterCount += 1
         else:
             shotNum = i + 1 - sighterCount
-        c.execute("INSERT INTO shots (shootID, username, shotNum, sighter, score, scoreV, x, y, velocity)"
-                  "VALUES (?,?,?,?,?,?,?,?,?)",
+        c.execute("INSERT INTO shots (shootID, username, shotNum, sighter, score, scoreV, x, y, velocity, datetime)"
+                  "VALUES (?,?,?,?,?,?,?,?,?,?)",
                   (shootID, shoot['username'], shotNum, sighter, shots[i]['score'], shots[i]['Vscore'],
-                   shots[i]['x'], shots[i]['y'], shots[i]['v']))
+                   shots[i]['x'], shots[i]['y'], shots[i]['v'], shots[i]['ts']))
     conn.commit()
     conn.close()
 
