@@ -137,3 +137,34 @@ def shooter_username():
             row = tuple(row)
             all.append(row)
     return all
+
+def shoot_range():
+    conn = sqlite3.connect('PARS.db')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM shoots")
+    rows = cur.fetchall()
+    all = []
+    bank = []
+    for row in rows:
+        row = list(row)
+        row.pop(0)
+        row.pop(0)
+        row.pop(0)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row.pop(1)
+        row[1] = str(row[0])
+        if row[1] not in bank:
+            bank.append(row[1])
+            row = tuple(row)
+            all.append(row)
+    return all
+
+shoot_range()

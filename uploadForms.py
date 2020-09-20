@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, HiddenField, MultipleFileField, In
 from wtforms.fields.html5 import DateField, TimeField, EmailField
 from flask_wtf.file import FileAllowed, FileRequired
 from wtforms.validators import DataRequired, InputRequired
-from dataAccess import shooter_username
+from dataAccess import shooter_username, shoot_range
 
 # form for uploading files
 class uploadForm(FlaskForm):
@@ -48,7 +48,7 @@ class nameSelectTargetTwo(FlaskForm):
     shooter_username = SelectField('Username', choices=shooter_username())
 
 class rangeSelectTargetOne(FlaskForm):
-    shooter_username = SelectField('Username', choices=shooter_username())
+    shooting_range = SelectField('Range', choices=shoot_range())
 
 class rangeSelectTargetTwo(FlaskForm):
-    shooter_username = SelectField('Username', choices=shooter_username())
+    shooting_range = SelectField('Range', choices=shoot_range())

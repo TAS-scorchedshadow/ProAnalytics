@@ -34,6 +34,13 @@
                 {{ form_usernameOne.shooter_username(size = 0.05)  }}
             </p>
         </form>
+        <form action ="" method="post" onsubmit="">
+            {{ form_graph.hidden_tag() }}
+            <p>
+                {{ form_rangeOne.shooting_range.label }}<br>
+                {{ form_rangeOne.shooting_range(size = 0.05)  }}
+            </p>
+        </form>
         </div>
 
         <div class = "col-3">
@@ -50,6 +57,13 @@
             <p>
                 {{ form_usernameTwo.shooter_username.label }}<br>
                 {{ form_usernameTwo.shooter_username(size = 0.05)  }}
+            </p>
+        </form>
+        <form action ="" method="post" onsubmit="">
+            {{ form_graph.hidden_tag() }}
+            <p>
+                {{ form_rangeOne.shooting_range.label }}<br>
+                {{ form_rangeOne.shooting_range(size = 0.05)  }}
             </p>
         </form>
         </div>
