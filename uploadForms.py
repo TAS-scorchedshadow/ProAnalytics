@@ -7,11 +7,7 @@ from dataAccess import shooter_username, shoot_range
 
 # form for uploading files
 class uploadForm(FlaskForm):
-    #todo: This doesn't work as expected yet
-    file = MultipleFileField(u'Submit File', validators=[
-        FileRequired(),
-        FileAllowed(["txt", "json"], "Must be a json file")
-    ])
+    file = MultipleFileField(u'Submit File')
     submit = SubmitField("Submit: ")
 
 # form for registering

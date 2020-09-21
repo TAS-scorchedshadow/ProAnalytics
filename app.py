@@ -274,6 +274,7 @@ def upload():
                     success = True
                 except:
                     success = False
+                    # todo: Have file upload failures give more detail into nature of failure
                     print(str(filename) + " had an error in uploading")
                 if success:
                     # todo: Handle missing values. 'username' may be a missing value.
