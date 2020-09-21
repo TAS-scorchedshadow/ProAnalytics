@@ -269,15 +269,19 @@ def upload():
                 filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filePath)  # Add file to upload folder
                 print(filename, "was uploaded")  # Debug
-                shoot = validateShots(filePath)  # Fixes up file to obtain relevant data and valid shots
-
-                # todo: Handle missing values. 'username' may be a missing value.
-                # Adds missing values temporarily
-                shoot['rifleRange'] = "Malabar"
-                shoot['distance'] = "300m"
-                # todo: re-enable this
-                addShoot(shoot)  # Import the shoot to the database
-
+                try:
+                    shoot = validateShots(filePath)  # Fixes up file to obtain relevant data and valid shots
+                    success = True
+                except:
+                    success = False
+                    print(str(filename) + " had an error in uploading")
+                if success:
+                    # todo: Handle missing values. 'username' may be a missing value.
+                    # Adds missing values temporarily
+                    shoot['rifleRange'] = "Malabar"
+                    shoot['distance'] = "300m"
+                    # todo: re-enable this
+                    # addShoot(shoot)  # Import the shoot to the database
                 os.remove(filePath)  # Delete file
                 print(filename, "was removed")  # Debug
         return render_template('upload.html', form=form)
