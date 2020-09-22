@@ -195,17 +195,25 @@ def upload():
                     success = True
                 except:
                     success = False
-                    # todo: Have file upload failures give more detail into nature of failure
+                    # todo: Have file upload failures give more detail into nature of failure or return fail note
                     print(str(filename) + " had an error in uploading")
+                    os.remove(filePath)  # Delete file
+                    print(filename, "was removed")  # Debug
                 if success:
                     # todo: Handle missing values. 'username' may be a missing value.
                     # Adds missing values temporarily
-                    shoot['rifleRange'] = "Malabar"
-                    shoot['distance'] = "300m"
+                    shoot['rifleRange'] = form.rifleRange.data
+                    shoot['distance'] = form.distance.data
+                    shoot['weather'] = form.weather.data
+                    if shoot['username'] == "":
+                        # todo: Proper handling for no username
+                        # Will likely do this by sending the user to a different page to confirm usernames
+                        print("No username")
+                    print(shoot['username'], shoot['rifleRange'], shoot['distance'], shoot['weather'])
                     # todo: re-enable this
-                    # addShoot(shoot)  # Import the shoot to the database
-                os.remove(filePath)  # Delete file
-                print(filename, "was removed")  # Debug
+                    addShoot(shoot)  # Import the shoot to the database
+                    os.remove(filePath)  # Delete file
+                    print(filename, "was removed")  # Debug
         return render_template('upload.html', form=form)
     else:
         return render_template('accessDenied.html')

@@ -8,6 +8,11 @@ from dataAccess import shooter_username, shoot_range
 # form for uploading files
 class uploadForm(FlaskForm):
     file = MultipleFileField(u'Submit File')
+    rifleRange = SelectField("Rifle Range:", choices=[('Malabar', 'Malabar')])
+    distance = SelectField("Distance:", choices=[('300m', '300m'), ('500m', '500m'), ('600m', '600m'),
+                                                 ('700m', '700m'), ('800m', '800m')])
+    weather = SelectField("Weather:", choices=[('Sunny', 'Sunny'), ('Cloudy', 'Cloudy'), ('Windy', 'Windy'),
+                                               ('Rain', 'Rain'), ('Storm', 'Storm')])
     submit = SubmitField("Submit: ")
 
 # form for registering

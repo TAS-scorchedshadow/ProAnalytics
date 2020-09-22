@@ -40,12 +40,12 @@ def addShoot(shoot):
     # Add data to shoots table
     c.execute("INSERT INTO shoots (username, rifleRange, distance, time, duration,"
               "groupSize, groupCentreX, groupCentreY,"
-              "totalScore, totalShots, median, mean, std)"
-              "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+              "totalScore, totalShots, median, mean, std, weather)"
+              "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
               (shoot['username'], shoot['rifleRange'], shoot['distance'], shoot['time'], shoot['duration'],
                shoot['groupSize'], shoot['groupCentreX'], shoot['groupCentreY'],
                shoot['totalScore'], shoot['totalShots'],
-               shoot['stats']['median'], shoot['stats']['mean'], shoot['stats']['std']))
+               shoot['stats']['median'], shoot['stats']['mean'], shoot['stats']['std'], shoot['weather']))
     conn.commit()
     # Get ID of the added shoot
     c.execute('SELECT * FROM shoots ORDER BY shootID desc;')

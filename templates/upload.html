@@ -35,11 +35,18 @@
         <script src="../static/node_modules/bootstrap-fileinput/themes/fa/theme.js"></script>
         {{ form.csrf_token }}
         <!--Create upload button-->
-        {{ form.file(id="input-fa", name_="input-b1", type="file", class_="file") }}
+        <div class="file-loading">
+            {{ form.file(id="input-fa", name_="input-fa[]", multiple_type="file", accept="text/*") }}
+        </div>
         <script>
             $("#input-fa").fileinput({
                 theme: "fa",
+                {#uploadUrl: "/upload", <!-- This allows for better multi file upload, but implodes on itself --> #}
+                allowedFileExtensions: ["txt"]
         });
         </script>
+        {{ form.rifleRange() }}
+        {{ form.distance() }}
+        {{ form.weather() }}
     </form>
 {% endblock %}
