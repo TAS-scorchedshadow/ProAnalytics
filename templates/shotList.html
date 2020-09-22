@@ -17,6 +17,7 @@
                     </div>
                 </div>
             </form>
+            <hr>
         {% for shoot in target_list %}
             <div class="row">
                 <div class="col-12 pb-5">
@@ -26,9 +27,6 @@
                             <div class="row">
                                 <div class="col-12 px-4 mx-1">
                                     <p> {{ shoot['date'] }}
-                                      <button class="btn btn-primary" type="button" data-toggle="collapse" id="{{ 'button' + shoot['id'] }}" data-target="{{ "#" + shoot['id'] }}" aria-expanded="false" aria-controls="{{ shoot['id'] }}" onclick=buttonChange(this) >
-                                        +
-                                      </button>
                                     </p>
                                 </div>
                             </div>
@@ -64,6 +62,11 @@
                                                         <td>{{ shoot['mean'] }}</td>
                                                     </tr>
                                             </table>
+                                        </div>
+                                        <div align="right">
+                                          <button class="btn btn-primary" type="button" data-toggle="collapse" id="{{ 'button' + shoot['id'] }}" data-target="{{ "#" + shoot['id'] }}" aria-expanded="false" aria-controls="{{ shoot['id'] }}" onclick=buttonChange(this) >
+                                            +
+                                          </button>
                                         </div>
                                     </div>
                                 </div>
@@ -102,7 +105,11 @@
                             <thead>
                                 <tr>
                                     <th>Range</th>
-                                    <th>Avg. Accuracy</th>
+                                    <th>
+                                        Avg. Accuracy
+                                        <!-- Popup graph button -->
+                                        <button id="graphButton"><i class="fas fa-chart-line"></i></button>
+                                    </th>
                                     <th>Standard Deviation</th>
                                 </tr>
                                 {% for range in stat_dict['sorted_table'] %}
@@ -115,8 +122,6 @@
                             </thead>
                         </table>
                     </div>
-                    <!-- Popup graph button -->
-                    <button id="graphButton"><i class="fas fa-chart-line"></i></button>
                     <p>Stages Shot: {{ stat_dict['stages_shot'] }}</p>
                     <p>Amount of Shots: {{ stat_dict['num_of_shots'] }}</p>
                 </div>
