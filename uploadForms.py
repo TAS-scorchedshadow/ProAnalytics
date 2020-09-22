@@ -28,9 +28,9 @@ class signIn(FlaskForm):
 
     submit = SubmitField("Sign In")
 
-# form for selecting date
-class selectDate(FlaskForm):
-    date = StringField('Date', validators=[InputRequired()])
+# form for report page
+class reportForm(FlaskForm):
+    date = SelectField('Date',)
     submit = SubmitField("Select")
 
 class graphSelect(FlaskForm):

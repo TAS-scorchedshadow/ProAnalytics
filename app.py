@@ -12,9 +12,9 @@ from flask_wtf import CSRFProtect
 import flask_login
 
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm, signUpForm, signIn, selectDate, graphSelect, nameSelectTargetOne, nameSelectTargetTwo, rangeSelectTargetOne, rangeSelectTargetTwo
+from uploadForms import uploadForm, signUpForm, signIn, reportForm, graphSelect, nameSelectTargetOne, nameSelectTargetTwo, rangeSelectTargetOne, rangeSelectTargetTwo
 from security import registerUser, validateLogin, User
-from dataAccess import emailExists, addShoot, shooter_username
+from dataAccess import emailExists, addShoot, shooter_username, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -113,9 +113,7 @@ def profile():
 @app.route('/report', methods=['GET', 'POST'])
 @login_required
 def report():
-    form = selectDate()
-    target_list = []
-    shot_table = {}
+    form = reportForm()
     username = request.args.get('username')
     getDefault = True
     if username is None:
@@ -126,19 +124,20 @@ def report():
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
 
-    # collect the users name
+    # collect the shooter's name
     c.execute('SELECT * FROM users WHERE username=?', (username,))
     get_name = c.fetchone()
+
+    # if the shooter isn't in the database redirect the user to noSheet page
     if not get_name:
         return render_template('noSheet.html', current_user=current_user)
     shooter_name = get_name[2][0].upper() + get_name[2][1:] + ' ' + get_name[3][0].upper() + get_name[3][1:]
+
     # on submit, get the data from the select field
     if request.method == 'POST':
-        print(request.form)
         date = request.form['date']
-        print(date)
         if date:
-            date1 = time.mktime(datetime.strptime(date, "%d-%m-%y").timetuple()) * 1000
+            dayStart = time.mktime(datetime.strptime(date, "%d-%m-%y").timetuple()) * 1000
             getDefault = False
 
     # collect latest date (as default)
@@ -148,109 +147,31 @@ def report():
         if not shootTimes:
             return render_template('noSheet.html', current_user=current_user)
         print(shootTimes)
-        date1 = shootTimes[0][0]
-        # convert date1 to the start of the day at 12:00:00 a.m.
-        date1 = datetime.fromtimestamp(int(date1) / 1000).strftime('%d-%m-%y')
-        date1 = time.mktime(datetime.strptime(date1, "%d-%m-%y").timetuple()) * 1000
+        # convert dayStart to the start of the day at 12:00:00 a.m. (in ts format)
+        dayStart = shootTimes[0][0]
+        dayStart = datetime.fromtimestamp(int(dayStart) / 1000).strftime('%d-%m-%y')
+        dayStart = time.mktime(datetime.strptime(dayStart, "%d-%m-%y").timetuple()) * 1000
 
     # store all dates into a list (for the user to select from)
-    c.execute('SELECT time FROM shoots WHERE username=? ORDER BY time desc;', (username,))
-    shootTimes = c.fetchall()
-    timeList = []
-    for shoot in shootTimes:
-        stringDate = datetime.fromtimestamp(int(shoot[0]) / 1000).strftime('%d-%m-%y')
-        if stringDate not in timeList:
-            timeList.append(stringDate)
+    form.date.choices = get_all_dates(username)
 
-    # date 2 is the same day as day 1 but at 11:59:59 p.m.
-    date2 = date1 + 86399000
-    # search through shoots database to get a tuple of shoots during the selected date
-    c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;',
-              (username, date1, date2))
-    shoots = c.fetchall()
-    # search through each shoot to collect a list of shots
-    for shoot in shoots:
-        shot_table[str(shoot[0])] = []
-        c.execute('SELECT * FROM shots WHERE shootID=?', (shoot[0],))
-        range = shoot[3]
-        shots_tuple = c.fetchall()
-        shots = {}
-        duration = str(int((shoot[4]) / 60000)) + ' mins ' + str(int((shoot[4]) / 1000) % 60) + ' secs'
-        for row in shots_tuple:
-            shots[row[-1]] = [row[5], row[3], row[6]]
-            # create list of shots
-            shot_table[str(shoot[0])].append((row[6], row[9]))
-            # row[9] is shotNum
-            # row[5] is x
-            # row[3] is y
-            # row[6] is score
-        # create graph and put the data into target_list (along with shotNum)
-        script, div = graphProcessing.drawTarget(shots, range, (shoot[6] / 2), (shoot[7], shoot[8]))
-        date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d-%m-%y')
-        standard_dev = round(shoot[13], 2)
-        mean = round(shoot[12], 1)
-        # TODO change target_list to a dictionary
-        target_list.append(
-            [(str(shoot[0])), script, div, date, shoot[9], round(shoot[6] / 2, 2), duration, mean, standard_dev])
+    # dayEnd is the same day as day 1 but at 11:59:59 p.m.
+    dayEnd = dayStart + 86399000
 
+    target_list, shot_table = get_shoots_dict(username, dayStart, dayEnd)
     # collect general stats
 
     # TODO have the stats only apply to the current season
     # # find the previous year
-    # prevYear = date1 - 31622400000
+    # prevYear = dayStart - 31622400000
 
     # collect and calculate stats for the table
-    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time desc;', (username,))
-    shoots = c.fetchall()
-    num_of_shots = 0
-    quick_table = {}
-    for shoot in shoots:
-        if shoot[3] not in quick_table:
-            quick_table[shoot[3]] = {'percentage': list([(float(shoot[9]) / (int(shoot[10]) * 5)) * 100]),
-                                     'sd': list([float(shoot[13])])}
-        else:
-            quick_table[shoot[3]]['percentage'].append((float(shoot[9]) / (int(shoot[10]) * 5)) * 100)
-            quick_table[shoot[3]]['sd'].append(float(shoot[13]))
-        num_of_shots += shoot[10]
-    for distance in quick_table:
-        quick_table[distance]['percentage'] = round(numpy.mean(quick_table[distance]['percentage']), 1)
-        quick_table[distance]['sd'] = round(numpy.mean(quick_table[distance]['sd']), 2)
-    # https://www.geeksforgeeks.org/python-convert-dictionary-to-list-of-tuples/
-    sorted_table = [(k, v) for k, v in quick_table.items()]
-    sorted_table = sorted(sorted_table, key=lambda t: t[0])
-    print(sorted_table)
-    stages_shot = len(shoots)
-    stat_dict = {'sorted_table': sorted_table, 'num_of_shots': num_of_shots, 'stages_shot': stages_shot}
-
+    stat_dict = get_table_stats(username)
     # create line graph
-    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time asc;', (username,))
-    shoots = c.fetchall()
-    lineList = [] #  [ [300m, [x,x,x,x,x], [y,y,y,y,y]] , [500m, [x,x,x,x,x], [y,y,y,y,y]] ]
-    listx = []
-    listy = []
-    listName = []
-    for shoot in shoots:
-        distance = shoot[3]
-        percentageScore = (float(shoot[9])/(int(shoot[10])*5))*100
-        dateOfShoot = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y')
-        isInList = False
-        for data in lineList:
-            if distance in data:
-                data[1].append(percentageScore)
-                data[2].append(dateOfShoot)
-                isInList = True
-        if not isInList:
-            lineList.append([distance, [percentageScore, ], [dateOfShoot, ]])
-    lineList = sorted(lineList, key=lambda x: x[0])
-    for data in lineList:
-        listName.append(data[0])
-        listx.append(data[1])
-        listy.append(data[2])
-    print(listx, listy)
-    line_script, line_div = graphProcessing.compareLine(listx, listy, listName)
+    line_script, line_div = get_line_graph_ranges(username)
 
     return render_template('shotList.html', target_list=target_list, shot_table=shot_table,
-                           form=form, stat_dict=stat_dict, timeList=timeList, line_script=line_script,
+                           form=form, stat_dict=stat_dict, line_script=line_script,
                            line_div=line_div, shooter_name=shooter_name)
 
 
