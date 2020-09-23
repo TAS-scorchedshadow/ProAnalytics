@@ -14,7 +14,7 @@ import flask_login
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn, reportForm, graphSelect, nameSelectTargetOne, nameSelectTargetTwo, rangeSelectTargetOne, rangeSelectTargetTwo
 from security import registerUser, validateLogin, User
-from dataAccess import emailExists, addShoot, shooter_username, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges
+from dataAccess import emailExists, addShoot, shooter_username, usernameExists, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -181,10 +181,11 @@ def upload():
     if current_user.admin == 1:
         # create form
         form = uploadForm()
-
+        success = False
         # on submission
         if request.method == 'POST':
             files = request.files.getlist('file')
+            invalidShoots = {'count': 0}
             for file in files:
                 filename = secure_filename(file.filename)
                 filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -205,16 +206,27 @@ def upload():
                     shoot['rifleRange'] = form.rifleRange.data
                     shoot['distance'] = form.distance.data
                     shoot['weather'] = form.weather.data
-                    if shoot['username'] == "":
-                        # todo: Proper handling for no username
+                    idFound = usernameExists(shoot['username'])
+                    if idFound:
+                        print(shoot['username'], shoot['rifleRange'], shoot['distance'], shoot['weather'])
+                        # todo: re-enable this
+                        # addShoot(shoot)  # Import the shoot to the database
+                        os.remove(filePath)  # Delete file
+                        print(filename, "was removed")  # Debug
+                    else:
+                        # todo: Proper handling for usernames
                         # Will likely do this by sending the user to a different page to confirm usernames
-                        print("No username")
-                    print(shoot['username'], shoot['rifleRange'], shoot['distance'], shoot['weather'])
-                    # todo: re-enable this
-                    addShoot(shoot)  # Import the shoot to the database
-                    os.remove(filePath)  # Delete file
-                    print(filename, "was removed")  # Debug
-        return render_template('upload.html', form=form)
+                        print("Username not found")
+                        invalidShoots[invalidShoots['count']] = shoot
+                        invalidShoots['count'] += 1
+                        os.remove(filePath)  # Delete file
+                        print(filename, "was removed")  # Debug
+            print(invalidShoots)
+            if invalidShoots['count'] == 0:
+                success = True
+            else:
+                success = False
+        return render_template('upload.html', form=form, success=success)
     else:
         return render_template('accessDenied.html')
 
