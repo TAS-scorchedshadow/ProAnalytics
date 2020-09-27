@@ -38,18 +38,14 @@ class reportForm(FlaskForm):
     date = SelectField('Date',)
     submit = SubmitField("Select")
 
-class graphSelect(FlaskForm):
+class comparativeSelect(FlaskForm):
     graphType = RadioField('Graph', choices=[('Line','Line'),('Bar','Bar')])
+
+    shooter_username_one = SelectField('Username', choices=shooter_username())
+    shooter_username_two = SelectField('Username', choices=shooter_username())
+
+    shooting_range_one = SelectField('Range', choices=shoot_range())
+    shooting_range_two = SelectField('Range', choices=shoot_range())
+
     submit = SubmitField('ENTER')
 
-class nameSelectTargetOne(FlaskForm):
-    shooter_username = SelectField('Username', choices=shooter_username())
-
-class nameSelectTargetTwo(FlaskForm):
-    shooter_username = SelectField('Username', choices=shooter_username())
-
-class rangeSelectTargetOne(FlaskForm):
-    shooting_range = SelectField('Range', choices=shoot_range())
-
-class rangeSelectTargetTwo(FlaskForm):
-    shooting_range = SelectField('Range', choices=shoot_range())

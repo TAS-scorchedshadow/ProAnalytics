@@ -28,17 +28,17 @@
         </div>
         <div>
         <form action ="" method="post" onsubmit="">
-            {{ form_graph.hidden_tag() }}
+            {{ all_forms.hidden_tag() }}
             <p>
-                {{ form_usernameOne.shooter_username.label }}<br>
-                {{ form_usernameOne.shooter_username(size = 0.05)  }}
+                {{ all_forms.shooter_username_one.label }}<br>
+                {{ all_forms.shooter_username_one(size = 1)  }}
             </p>
         </form>
         <form action ="" method="post" onsubmit="">
             {{ form_graph.hidden_tag() }}
             <p>
-                {{ form_rangeOne.shooting_range.label }}<br>
-                {{ form_rangeOne.shooting_range(size = 0.05)  }}
+                {{ form_rangeOne.shooting_range_one.label }}<br>
+                {{ form_rangeOne.shooting_range_one(size = 1)  }}
             </p>
         </form>
         </div>
@@ -53,17 +53,17 @@
         </div>
         <div>
         <form action ="" method="post" onsubmit="">
-            {{ form_graph.hidden_tag() }}
+            {{ all_forms.hidden_tag() }}
             <p>
-                {{ form_usernameTwo.shooter_username.label }}<br>
-                {{ form_usernameTwo.shooter_username(size = 0.05)  }}
+                {{ all_forms.shooter_username_two.label }}<br>
+                {{ all_forms.shooter_username_two(size = 1)  }}
             </p>
         </form>
         <form action ="" method="post" onsubmit="">
-            {{ form_graph.hidden_tag() }}
+            {{ all_forms.hidden_tag() }}
             <p>
-                {{ form_rangeOne.shooting_range.label }}<br>
-                {{ form_rangeOne.shooting_range(size = 0.05)  }}
+                {{ form_rangeOne.shooting_range_two.label }}<br>
+                {{ form_rangeOne.shooting_range_two(size = 1)  }}
             </p>
         </form>
         </div>
@@ -71,8 +71,8 @@
         <form action ="" method="post" onsubmit="">
             {{ form_graph.hidden_tag() }}
             <p>
-                {{ form_graph.graphType.label }}<br>
-                {{ form_graph.graphType(size = 20)  }}
+                {{ all_forms.graphType.label }}<br>
+                {{ all_forms.graphType(size = 20)  }}
             </p>
             <p>
                 {{ form_graph.submit }}
@@ -155,5 +155,5 @@
         </div>
     </div>
 </section>
---!>
+-->
 {% endblock %}
