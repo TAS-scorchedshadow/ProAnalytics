@@ -120,60 +120,19 @@ def initialiseSettings(username):  # initialise user settings from database
         session['email'] = row[5]
     conn.close()
 
-
-def shooter_username():
-    conn = sqlite3.connect('PARS.db')
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM shots")
-    rows = cur.fetchall()
-    all = []
-    bank = []
-    for row in rows:
-        row = list(row)
-        row.pop(0)
-        row.pop(0)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row[1] = str(row[0])
-        if row[1] not in bank:
-            bank.append(row[1])
-            row = tuple(row)
-            all.append(row)
-    return all
-
-
 def shoot_range():
     conn = sqlite3.connect('PARS.db')
     cur = conn.cursor()
-    cur.execute("SELECT * FROM shoots")
+    cur.execute("SELECT distance FROM shoots")
     rows = cur.fetchall()
     all = []
-    bank = []
     for row in rows:
-        row = list(row)
-        row.pop(0)
-        row.pop(0)
-        row.pop(0)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row[1] = str(row[0])
-        if row[1] not in bank:
-            bank.append(row[1])
-            row = tuple(row)
-            all.append(row)
+        create_tuple = (row[0], row[0])
+        all.append(create_tuple)
+    print(all)
     return all
 
+shoot_range()
 
 def get_all_shooter_names():
     conn = sqlite3.connect("PARS.db")
