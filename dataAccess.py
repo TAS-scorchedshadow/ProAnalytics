@@ -183,10 +183,10 @@ def get_all_shooter_names():
     shooters = []
     for name in names:
         if name[2] == 0:
-            shooters.append(capitalise(name[0]) + " " + capitalise(name[1]))
-    print(shooters)
+            create_tuple = (capitalise(name[0]) + " " + capitalise(name[1]),capitalise(name[0]) + " " + capitalise(name[1]))
+            if create_tuple not in shooters:
+                shooters.append(create_tuple)
     return shooters
-
 
 def get_all_dates(shooter):  # collect all the dates that a shooter has shot in and returns it as a list (sorted from latest to oldest)
     conn = sqlite3.connect("PARS.db")

@@ -31,14 +31,14 @@
             {{ all_forms.hidden_tag() }}
             <p>
                 {{ all_forms.shooter_username_one.label }}<br>
-                {{ all_forms.shooter_username_one(size = 1)  }}
+                {{ all_forms.shooter_username_one() }}
             </p>
         </form>
         <form action ="" method="post" onsubmit="">
-            {{ form_graph.hidden_tag() }}
+            {{ all_forms.hidden_tag() }}
             <p>
-                {{ form_rangeOne.shooting_range_one.label }}<br>
-                {{ form_rangeOne.shooting_range_one(size = 1)  }}
+                {{ all_forms.shooting_range_one.label }}<br>
+                {{ all_forms.shooting_range_one() }}
             </p>
         </form>
         </div>
@@ -56,26 +56,26 @@
             {{ all_forms.hidden_tag() }}
             <p>
                 {{ all_forms.shooter_username_two.label }}<br>
-                {{ all_forms.shooter_username_two(size = 1)  }}
+                {{ all_forms.shooter_username_two() }}
             </p>
         </form>
         <form action ="" method="post" onsubmit="">
             {{ all_forms.hidden_tag() }}
             <p>
-                {{ form_rangeOne.shooting_range_two.label }}<br>
-                {{ form_rangeOne.shooting_range_two(size = 1)  }}
+                {{ all_forms.shooting_range_two.label }}<br>
+                {{ all_forms.shooting_range_two() }}
             </p>
         </form>
         </div>
         <div>
         <form action ="" method="post" onsubmit="">
-            {{ form_graph.hidden_tag() }}
+            {{ all_forms.hidden_tag() }}
             <p>
                 {{ all_forms.graphType.label }}<br>
                 {{ all_forms.graphType(size = 20)  }}
             </p>
             <p>
-                {{ form_graph.submit }}
+                {{ all_forms.submit() }}
             </p>
         </form>
         </div>
