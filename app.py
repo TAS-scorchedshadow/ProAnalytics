@@ -14,7 +14,7 @@ import flask_login
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn, reportForm, comparativeSelect
 from security import registerUser, validateLogin, User
-from dataAccess import emailExists, addShoot, shooter_username, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges
+from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
