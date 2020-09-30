@@ -48,3 +48,6 @@ class comparativeSelect(FlaskForm):
     shooting_range_two = SelectField('Range', choices=shoot_range())
 
     submit = SubmitField('ENTER')
+
+def thing():
+    print(get_all_shooter_names())
