@@ -144,7 +144,17 @@ def get_all_shooter_names():
                 shooters.append(create_tuple)
     return shooters
 
-get_all_shooter_names()
+def get_all_usernames():
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute("SELECT username FROM shoots")
+    names = c.fetchall()
+    usernames = []
+    for name in names:
+        create_tuple = (name[0], name[0])
+        if create_tuple not in usernames:
+            usernames.append(create_tuple)
+    return usernames
 
 def get_all_dates(shooter):  # collect all the dates that a shooter has shot in and returns it as a list (sorted from latest to oldest)
     conn = sqlite3.connect("PARS.db")
@@ -159,6 +169,7 @@ def get_all_dates(shooter):  # collect all the dates that a shooter has shot in 
             timeList.append(create_tuple)
     print(timeList)
     return timeList
+get_all_dates('d.huynh1')
 
 def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain all the information on a shoot from a shooter in a specific time frame
     conn = sqlite3.connect("PARS.db")

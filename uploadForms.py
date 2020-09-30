@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, HiddenField, MultipleFileField, In
 from wtforms.fields.html5 import DateField, TimeField, EmailField
 from flask_wtf.file import FileAllowed, FileRequired
 from wtforms.validators import DataRequired, InputRequired
-from dataAccess import shoot_range, get_all_shooter_names
+from dataAccess import shoot_range, get_all_shooter_names, get_all_usernames, get_all_dates
 
 # form for uploading files
 class uploadForm(FlaskForm):
@@ -41,13 +41,16 @@ class reportForm(FlaskForm):
 class comparativeSelect(FlaskForm):
     graphType = RadioField('Graph', choices=[('Line','Line'),('Bar','Bar')])
 
-    shooter_username_one = SelectField('Username', choices=get_all_shooter_names())
-    shooter_username_two = SelectField('Username', choices=get_all_shooter_names())
+    shooter_username_one = SelectField('Username', choices=get_all_usernames())
+    shooter_username_two = SelectField('Username', choices=get_all_usernames())
 
     shooting_range_one = SelectField('Range', choices=shoot_range())
     shooting_range_two = SelectField('Range', choices=shoot_range())
 
+    dates_one = StringField('Dates')
+    dates_two = StringField('Dates')
+
     submit = SubmitField('ENTER')
 
-def thing():
-    print(get_all_shooter_names())
+class comparativeSpecify(FlaskForm):
+    shooter_username_one = SelectField('Username', choices=get_all_shooter_names())
