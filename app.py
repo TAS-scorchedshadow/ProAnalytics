@@ -14,7 +14,7 @@ import flask_login
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn, reportForm, comparativeSelect
 from security import registerUser, validateLogin, User
-from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges, get_all_shooter_names
+from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges, get_all_shooter_names, get_graph_details
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -72,15 +72,22 @@ def comparativeHomePage():
     all_forms = comparativeSelect()
     #if the radio button is submit
     if request.method == "POST":
-        print(all_forms.data)
 
-        #stubs for the targets to render
-        shots = {1: [10, 10, 5]}
-        targetSize = "300m"
-        groupRadius = 228.8
-        group_center = (12.66, -32.5)
-        first_script, first_div = graphProcessing.drawTarget(shots, targetSize, groupRadius, group_center)
-        second_script, second_div = graphProcessing.drawTarget(shots, targetSize, groupRadius, group_center)
+        first_shoot_data = get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data)
+        second_shoot_data = get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data)
+
+        first_shots = {1: [first_shoot_data[0][1],first_shoot_data[0][2], (first_shoot_data[0][3])]}
+        first_distance = all_forms.shooting_range_one.data
+        first_group_size = first_shoot_data[0][0]
+        first_group_center = (first_shoot_data[0][1], first_shoot_data[0][2])
+
+        second_shots = {1: [second_shoot_data[0][1],second_shoot_data[0][2], (second_shoot_data[0][3])]}
+        second_distance = all_forms.shooting_range_two.data
+        second_group_size = second_shoot_data[0][0]
+        second_group_center = (second_shoot_data[0][1], second_shoot_data[0][2])
+
+        first_script, first_div = graphProcessing.drawTarget(first_shots, first_distance, first_group_size, first_group_center)
+        second_script, second_div = graphProcessing.drawTarget(second_shots, second_distance, second_group_size, second_group_center)
 
         #If the radio selected button is bar
         #if (all_forms.graphType.data) == "Bar":

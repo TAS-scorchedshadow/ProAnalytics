@@ -120,7 +120,7 @@ def initialiseSettings(username):  # initialise user settings from database
         session['email'] = row[5]
     conn.close()
 
-def shoot_range():
+def shoot_range(): #creates a list of tuples of all ranges possible
     conn = sqlite3.connect('PARS.db')
     cur = conn.cursor()
     cur.execute("SELECT distance FROM shoots")
@@ -131,7 +131,7 @@ def shoot_range():
         all.append(create_tuple)
     return all
 
-def get_all_shooter_names():
+def get_all_shooter_names(): #creates a list of tuples of all of the shooter's names in the users table
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
     c.execute("SELECT fName, sName, admin FROM users")
@@ -144,7 +144,7 @@ def get_all_shooter_names():
                 shooters.append(create_tuple)
     return shooters
 
-def get_all_usernames():
+def get_all_usernames(): #creates a list of tuples of all of the usernames in the shoots table
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
     c.execute("SELECT username FROM shoots")
@@ -169,7 +169,6 @@ def get_all_dates(shooter):  # collect all the dates that a shooter has shot in 
             timeList.append(create_tuple)
     print(timeList)
     return timeList
-get_all_dates('d.huynh1')
 
 def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain all the information on a shoot from a shooter in a specific time frame
     conn = sqlite3.connect("PARS.db")
@@ -177,8 +176,17 @@ def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain 
     c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;',
               (shooter, dayStart, dayEnd))
     shoots = c.fetchall()
+    print(shoots)
     return shoots
 
+def get_graph_details(username,distance):
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore FROM shoots WHERE username=? AND distance=? AND time BETWEEN ? AND ? ORDER BY time desc;',
+              (username, distance, 1434928417046, 1434929348896))
+    shoots = c.fetchall()
+    print(shoots)
+    return shoots
 
 def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries which contain all the information on a shoot, including a target's script div
     conn = sqlite3.connect("PARS.db")
