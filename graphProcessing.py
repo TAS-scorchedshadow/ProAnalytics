@@ -55,11 +55,11 @@ def compareLine(listx, listy, listName):
 def compareBar(username_one, username_two, score_one, score_two):
     #allStudentsTotal= {"SMITH_John": [7, 12], "JACK_Bob": [8, 6], "LI_Reginald": [9, 33], "VETTEL_Seb": [10,13],"CHILTON_Max": [11,20], "SENNA_Bruno": [12,27] }
     # init vars
-    username_two = username_two + "null"
+    username_two = username_two + "0000000000000"
     names = [username_one, username_two]
     scores = [score_one, score_two]
     colour_list = ["blue", "red"]
-    label_year = ["Year 7", "Year 8"]
+    label_year = [username_one, username_two]
     legendTemp = []
 
     # create ColumnDataSource
@@ -68,7 +68,7 @@ def compareBar(username_one, username_two, score_one, score_two):
         score=scores,
         colour=colour_list,
     ))
-    p_vbar = figure(x_range=names, plot_height=400, plot_width=800, title="Standings",
+    p_vbar = figure(x_range=names, plot_height=400, plot_width=800, title="Comparison Bar",
                     toolbar_location=None, tools="hover")
     p_vbar.hover.tooltips = [
         ("Name", "@name"),
@@ -80,7 +80,7 @@ def compareBar(username_one, username_two, score_one, score_two):
     # add the labels (it was done this way so they are indexed correctly) https://discourse.bokeh.org/t/cant-order-legend-entries-in-hbar-plot/3816
     for label, num in zip(label_year, range(len(label_year))):
         legendTemp.append(LegendItem(label=label, renderers=[r], index=num))
-    legend = Legend(items=legendTemp, title='Year Groups', location='top_right')
+    legend = Legend(items=legendTemp, title='Usernames', location='top_right')
     p_vbar.add_layout(legend)
 
     p_vbar.y_range.start = 0  # ensures that the y-axis begins at 0

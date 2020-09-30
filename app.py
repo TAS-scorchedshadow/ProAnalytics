@@ -67,25 +67,34 @@ def shooterHome():
 
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
-
     #calls the class from the uploadForms.py for
     all_forms = comparativeSelect()
+
     #if the radio button is submit
     if request.method == "POST":
 
+        # passes the values selected from the SelectFields to the get_graph_details
+        # off the database of the (x,y) point of centre, the grouping size and total score in a shoot session e.g.
+        # shoot_data = [(243.1, 5.6, 4.1, '95')]
         first_shoot_data = get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data)
         second_shoot_data = get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data)
 
+        # filters through each piece of data from the list of tuples and assigns them to the
+        # variables necessary. e.g.
+        # shot = {1: [5.6, 4.1, 95]
+        # distance = "300m"
+        # group_size = 243.3
+        # group_center = (5.6, 4.1)
         first_shots = {1: [first_shoot_data[0][1],first_shoot_data[0][2], (first_shoot_data[0][3])]}
         first_distance = all_forms.shooting_range_one.data
         first_group_size = first_shoot_data[0][0]
         first_group_center = (first_shoot_data[0][1], first_shoot_data[0][2])
-
         second_shots = {1: [second_shoot_data[0][1],second_shoot_data[0][2], (second_shoot_data[0][3])]}
         second_distance = all_forms.shooting_range_two.data
         second_group_size = second_shoot_data[0][0]
         second_group_center = (second_shoot_data[0][1], second_shoot_data[0][2])
 
+        #passes the shot values to render the bokeh targets
         first_script, first_div = graphProcessing.drawTarget(first_shots, first_distance, first_group_size, first_group_center)
         second_script, second_div = graphProcessing.drawTarget(second_shots, second_distance, second_group_size, second_group_center)
 
