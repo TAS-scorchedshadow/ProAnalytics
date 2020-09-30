@@ -90,9 +90,9 @@ def comparativeHomePage():
         second_script, second_div = graphProcessing.drawTarget(second_shots, second_distance, second_group_size, second_group_center)
 
         #If the radio selected button is bar
-        #if (all_forms.graphType.data) == "Bar":
-        #    bar_script, bar_div = graphProcessing.compareBar()
-        #    return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, form_graph= form_graph)
+        if (all_forms.graphType.data) == "Bar":
+            bar_script, bar_div = graphProcessing.compareBar(all_forms.shooter_username_one.data, all_forms.shooter_username_two.data, first_shoot_data[0][3], second_shoot_data[0][3])
+            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, all_forms=all_forms)
 
         #If the radio button selected is line
         #if (all_forms.graphType.data) == "Line":

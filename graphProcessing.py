@@ -52,33 +52,15 @@ def compareLine(listx, listy, listName):
 
 #Designed to provide a comparison between shooters
 #allStudentsTotal is a dictionary with the name as the key & the value as a list, where the first value is year & the second is the score
-def compareBar():
-    allStudentsTotal= {"SMITH_John": [7, 12], "JACK_Bob": [8, 6], "LI_Reginald": [9, 33], "VETTEL_Seb": [10,13],"CHILTON_Max": [11,20], "SENNA_Bruno": [12,27] }
+def compareBar(username_one, username_two, score_one, score_two):
+    #allStudentsTotal= {"SMITH_John": [7, 12], "JACK_Bob": [8, 6], "LI_Reginald": [9, 33], "VETTEL_Seb": [10,13],"CHILTON_Max": [11,20], "SENNA_Bruno": [12,27] }
     # init vars
-    names = []
-    scores = []
-    year = []
-    colour_list = []
-    label_year = ["Year 7", "Year 8", "Year 9", "Year 10", "Year 11", "Year 12"]
+    username_two = username_two + "null"
+    names = [username_one, username_two]
+    scores = [score_one, score_two]
+    colour_list = ["blue", "red"]
+    label_year = ["Year 7", "Year 8"]
     legendTemp = []
-    for i in allStudentsTotal:
-        names.append(i)
-        scores.append(int(allStudentsTotal[i][1]))
-        year.append(int(allStudentsTotal[i][0]))
-
-    for years in year:
-        if years == 7:
-            colour_list.append("blue")
-        if years == 8:
-            colour_list.append("red")
-        if years == 9:
-            colour_list.append("yellow")
-        if years == 10:
-            colour_list.append("green")
-        if years == 11:
-            colour_list.append("black")
-        if years == 12:
-            colour_list.append("orange")
 
     # create ColumnDataSource
     source = ColumnDataSource(data=dict(
@@ -86,7 +68,7 @@ def compareBar():
         score=scores,
         colour=colour_list,
     ))
-    p_vbar = figure(x_range=names, plot_height=600, plot_width=1000, title="Standings",
+    p_vbar = figure(x_range=names, plot_height=400, plot_width=800, title="Standings",
                     toolbar_location=None, tools="hover")
     p_vbar.hover.tooltips = [
         ("Name", "@name"),
