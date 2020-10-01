@@ -182,11 +182,18 @@ def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain 
 def get_graph_details(username,distance):
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
-    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore FROM shoots WHERE username=? AND distance=? AND time BETWEEN ? AND ? ORDER BY time desc;',
+    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore, shootID FROM shoots WHERE username=? AND distance=? AND time BETWEEN ? AND ? ORDER BY time desc;',
               (username, distance, 1434928417046, 1434929348896))
     shoots = c.fetchall()
-    print(shoots)
     return shoots
+
+def get_shot_details(shootId):
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute('SELECT shotNum, x, y, score FROM shots WHERE shootID=?;', (shootId,))
+    shoots = c.fetchall()
+    return shoots
+
 
 def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries which contain all the information on a shoot, including a target's script div
     conn = sqlite3.connect("PARS.db")

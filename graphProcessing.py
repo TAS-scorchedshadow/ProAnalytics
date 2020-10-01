@@ -75,7 +75,6 @@ def compareLine(values, xLabel, yLabel, title):
 #Designed to provide a comparison between shooters
 #allStudentsTotal is a dictionary with the name as the key & the value as a list, where the first value is year & the second is the score
 def compareBar(username_one, username_two, score_one, score_two):
-    #allStudentsTotal= {"SMITH_John": [7, 12], "JACK_Bob": [8, 6], "LI_Reginald": [9, 33], "VETTEL_Seb": [10,13],"CHILTON_Max": [11,20], "SENNA_Bruno": [12,27] }
     # init vars
     username_two = username_two + "0000000000000"
     names = [username_one, username_two]
