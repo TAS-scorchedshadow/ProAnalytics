@@ -2,6 +2,9 @@
 {% set active_page = "report" %}
 {% block page_title %} Comparative Homepage {% endblock %}
 {% block page_content %}
+<!--Pass variables from jinja into js-->
+<meta id="all_dates" data-dates="{{ all_dates }}">
+<meta id="all_ranges" data-ranges="{{ all_ranges }}">
 <div class="jumbotron jumbotron-fluid">
   <div class="container justify-content-center text-center">
             <div class="bs-example">
@@ -27,22 +30,22 @@
             </div>
         </div>
         <div>
-        <form action ="" method="post" onsubmit="">
-            {{ all_forms.hidden_tag() }}
-            <p>
-                {{ all_forms.shooter_username_one.label }}<br>
-                {{ all_forms.shooter_username_one() }}
-            </p>
+        <form action ="" method="post">
 
             {{ all_forms.hidden_tag() }}
             <p>
+                {{ all_forms.shooter_username_one.label }}<br>
+                {{ all_forms.shooter_username_one(onchange="changeDateSelect('1'); ", id="name1") }}
+            </p>
+
+            <p>
                 {{ all_forms.shooting_range_one.label }}<br>
-                {{ all_forms.shooting_range_one() }}
+                {{ all_forms.shooting_range_one(onchange="changeDateSelect('1')", id="dist1") }}
             </p>
 
             <p>
                 {{ all_forms.dates_one.label }}<br>
-                {{ all_forms.dates_one(size=4) }}
+                {{ all_forms.dates_one(id="date1") }}
             </p>
         </div>
 
@@ -55,24 +58,21 @@
             </div>
         </div>
         <div>
-            {{ all_forms.hidden_tag() }}
             <p>
                 {{ all_forms.shooter_username_two.label }}<br>
-                {{ all_forms.shooter_username_two() }}
+                {{ all_forms.shooter_username_two(onchange="changeDateSelect('2')", id="name2") }}
             </p>
 
-            {{ all_forms.hidden_tag() }}
             <p>
                 {{ all_forms.shooting_range_two.label }}<br>
-                {{ all_forms.shooting_range_two() }}
+                {{ all_forms.shooting_range_two(onchange="changeDateSelect('2')", id="dist2") }}
             </p>
             <p>
                 {{ all_forms.dates_two.label }}<br>
-                {{ all_forms.dates_two(size=4) }}
+                {{ all_forms.dates_two(id='date2') }}
             </p>
         </div>
         <div>
-            {{ all_forms.hidden_tag() }}
             <p>
                 {{ all_forms.graphType.label }}<br>
                 {{ all_forms.graphType(size = 20)  }}
@@ -84,7 +84,6 @@
         </div>
     </div>
     <br>
-    <div>
         <div class = "col-3">
              <div class="card shadow border-0 h-100 justify-content-center">
                  <div class = "card-body" style="size: 15px">
@@ -95,7 +94,57 @@
         </div>
 
 
-
+<script>
+    // removes all of the elements from a select element
+    function removeOptions(selectElement) {
+       let i, L = selectElement.options.length - 1;
+       for(i = L; i >= 0; i--) {
+          selectElement.remove(i);
+       }
+    }
+    //selectNum is the number of the select field as a string
+    //addDates adds the date options to a select field
+    function addDates(selectNum) {
+        let allDates = $('#all_dates').data('dates');
+        let userCheck = document.getElementById('name' + selectNum);
+        let distCheck = document.getElementById('dist' + selectNum);
+        let date = document.getElementById('date' + selectNum);
+        //add dates to select field
+        for (let opts in allDates[userCheck.value][distCheck.value]) {
+                    let opt = document.createElement('option')
+                    opt.appendChild(document.createTextNode(allDates[userCheck.value][distCheck.value][opts]))
+                    date.appendChild(opt)
+                }
+    }
+    //addRanges adds the ranges options to a select field
+    function addRanges(selectNum) {
+        let allRanges = $('#all_ranges').data('ranges');
+        let userCheck = document.getElementById('name' + selectNum);
+        let range = document.getElementById('dist' + selectNum);
+        for (let i in allRanges[userCheck.value]) {
+            let opt = document.createElement('option')
+            opt.appendChild(document.createTextNode(allRanges[userCheck.value][i]))
+            range.appendChild(opt)
+        }
+    }
+    //selectNum is the number of the select field as a string
+    function changeDateSelect(selectNum) {
+        let date = document.getElementById('date' + selectNum);
+        removeOptions(date)
+        addDates(selectNum)
+    }
+    function changeRangeSelect(selectNum) {
+        let range = document.getElementById('dist' + selectNum)
+        removeOptions(range)
+        addRanges(range)
+    }
+    //When page first loads, run the following to add dates to the select fields
+    // and also ranges to the appropriate select fields
+    addRanges('1')
+    addRanges('2')
+    addDates('1')
+    addDates('2')
+</script>
 
 <!-- <section>
     <div class="row">

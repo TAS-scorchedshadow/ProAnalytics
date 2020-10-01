@@ -40,15 +40,14 @@ class reportForm(FlaskForm):
 
 class comparativeSelect(FlaskForm):
     graphType = RadioField('Graph', choices=[('Line','Line'),('Bar','Bar')])
-
     shooter_username_one = SelectField('Username', choices=get_all_usernames())
     shooter_username_two = SelectField('Username', choices=get_all_usernames())
 
-    shooting_range_one = SelectField('Range', choices=shoot_range())
-    shooting_range_two = SelectField('Range', choices=shoot_range())
+    shooting_range_one = SelectField('Range')
+    shooting_range_two = SelectField('Range')
 
-    dates_one = StringField('Dates')
-    dates_two = StringField('Dates')
+    dates_one = SelectField('Dates')
+    dates_two = SelectField('Dates')
 
     submit = SubmitField('ENTER')
 

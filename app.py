@@ -14,7 +14,9 @@ import flask_login
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn, reportForm, comparativeSelect
 from security import registerUser, validateLogin, User
-from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges, get_all_shooter_names, get_graph_details, get_shot_details
+from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates,\
+    get_shoots_dict, get_line_graph_ranges, get_all_shooter_names,\
+    get_graph_details, get_shot_details, get_dates_for_all, get_ranges_for_all
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -23,6 +25,7 @@ import time
 import os
 import graphProcessing
 import numpy
+import json
 
 import sqlite3
 from flask import g, session
@@ -67,12 +70,17 @@ def shooterHome():
 
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
-    #calls the class from the uploadForms.py for
+    # calls the class from the uploadForms.py for
+
     all_forms = comparativeSelect()
 
-    #if the radio button is submit
+    # collect the data used for the select fields and convert into jsons which javascript can read from
+    all_dates = get_dates_for_all()
+    all_dates = json.dumps(all_dates)
+    all_ranges = get_ranges_for_all()
+    all_ranges = json.dumps(all_ranges)
+    # f the radio button is submit
     if request.method == "POST":
-
         # passes the values selected from the SelectFields to the get_graph_details
         # off the database of the (x,y) point of centre, the grouping size and total score in a shoot session e.g.
         # shoot_data = [(243.1, 5.6, 4.1, '95')]
@@ -113,15 +121,14 @@ def comparativeHomePage():
         # If the radio selected button is bar
         if (all_forms.graphType.data) == "Bar":
             bar_script, bar_div = graphProcessing.compareBar(all_forms.shooter_username_one.data, all_forms.shooter_username_two.data, first_shoot_data[0][3], second_shoot_data[0][3])
-            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, all_forms=all_forms)
+            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
 
         # If the radio button selected is line
         # if (all_forms.graphType.data) == "Line":
         #    line_script, line_div = graphProcessing.compareLine([5,7,9,12],[13,18,17,14],("Shots"))
         #    return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, form_graph= form_graph)
-
-        return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, all_forms=all_forms)
-    return render_template('comparativeHomePage.html', all_forms=all_forms)  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
+        return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
+    return render_template('comparativeHomePage.html', all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
 
 
 @app.route('/about')

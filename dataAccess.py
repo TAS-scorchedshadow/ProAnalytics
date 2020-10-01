@@ -307,3 +307,39 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
     #     listy.append(data[2])
     line_script, line_div = graphProcessing.compareLine(values, 'Dates', 'Scores', 'Scores for Each Range')
     return line_script, line_div
+
+
+def get_dates_for_all():  # collect the dates for every shooter in a dictionary and separated by range
+    all_dates = {}
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute('SELECT username FROM users')
+    users = c.fetchall()
+    for user in users:
+        dateDict = {}
+        c.execute('SELECT distance, time FROM shoots WHERE username=?;', (user[0],))
+        shoots = c.fetchall()
+        for shoot in shoots:
+            date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y')
+            if shoot[0] not in dateDict:
+                dateDict[shoot[0]] = [date]
+            else:
+                dateDict[shoot[0]].append(date)
+        all_dates[user[0]] = dateDict
+    return all_dates
+
+
+def get_ranges_for_all():  # collect the ranges every shooter has in a dictionary
+    all_ranges = {}
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute('SELECT username FROM users')
+    users = c.fetchall()
+    for user in users:
+        all_ranges[user[0]] = []
+        c.execute('SELECT distance FROM shoots WHERE username=?;', (user[0],))
+        shoots = c.fetchall()
+        for shoot in shoots:
+            if shoot[0] not in all_ranges[user[0]]:
+                all_ranges[user[0]].append(shoot[0])
+    return all_ranges
