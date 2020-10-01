@@ -55,7 +55,7 @@
                                                         <th>Mean</th>
                                                     </tr>
                                                     <tr>
-                                                        <td>300m</td>
+                                                        <td>{{ shoot['distance'] }}</td>
                                                         {% for shot in shot_table[shoot['id']] %}
                                                             <td>{{ shot[0] }}</td>
                                                         {%- endfor %}

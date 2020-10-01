@@ -11,28 +11,50 @@ import time
 
 from shotProcessing import validateShots
 
+# values is a dictionary with each key being the name for the line.
+# If comparing shooters, this can be the shooters name e.g Rishi Wig
+# The values of each dictionary will be another dictionary that looks like the following:
+# { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']}
+# where the list in xValue must be the same length as the list in yValue
+# So an example of values would be
+# {
+# 'Andrew': { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']} ,
+# 'Rishi': { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']}
+# }
+def compareLine(values, xLabel, yLabel, title):
+    # break down values into three lists
 
-# listx is a list containing a list of scores eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
-# Each of the list of shots are one line and should all be the same length does
-# listy is a list of dates (dd/mm/yyyy) for each line eg. [['10/08/2020', '11/08/2020', '12/08/2020'],  ['13/08/2020', '14/08/2020', '15/08/2020']]
-# listName is a list of names eg. ['Andrew', 'Ryan']
-def compareLine(listx, listy, listName):
+    # listx is a list containing a list of scores eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
+    # Each of the list of shots are one line and should all be the same length does
+    # listy is a list of dates (dd/mm/yyyy) for each line eg. [['10/08/2020', '11/08/2020', '12/08/2020'],  ['13/08/2020', '14/08/2020', '15/08/2020']]
+    # listName is a list of names eg. ['Andrew', 'Ryan']
+    listx = []
+    listy = []
+    listName = []
+    print(values)
+    for key in values:
+        listName.append(key)
+        listx.append(values[key]['xValue'])
+        listy.append(values[key]['yValue'])
+    print(listName)
+    print(listx)
+    print(listy)
     # vars used to set the x-axis range
     cLine = figure(plot_height=500, plot_width=1000, sizing_mode='scale_width', title='Compare Graph',
-                     x_axis_label='Date', y_axis_label='Score', x_axis_type='datetime',
+                     x_axis_label=xLabel, y_axis_label=yLabel, x_axis_type='datetime',
                    )
     cLine.toolbar.logo = None
     # convert dates into a format we can use
     dates = []
     colours = cycle(palette)
-    for shoot in listy:
+    for shoot in listx:
         dates.append([])
         for day in shoot:
             dates[-1].append(time.mktime(datetime.strptime(day, "%d/%m/%Y").timetuple()) * 1000)
     legend_temp = []
     # Add lines
-    for lineX, lineY, name, colour in zip(listx, dates, listName, colours):
-        c = cLine.line(lineY, lineX, color=colour)
+    for lineY, lineX, name, colour in zip(listy, dates, listName, colours):
+        c = cLine.line(lineX, lineY, color=colour)
         legend_temp.append((name, [c]))
     legend = Legend(items=legend_temp)
     cLine.add_layout(legend, 'right')
@@ -53,7 +75,6 @@ def compareLine(listx, listy, listName):
 #Designed to provide a comparison between shooters
 #allStudentsTotal is a dictionary with the name as the key & the value as a list, where the first value is year & the second is the score
 def compareBar(username_one, username_two, score_one, score_two):
-    #allStudentsTotal= {"SMITH_John": [7, 12], "JACK_Bob": [8, 6], "LI_Reginald": [9, 33], "VETTEL_Seb": [10,13],"CHILTON_Max": [11,20], "SENNA_Bruno": [12,27] }
     # init vars
     username_two = username_two + "0000000000000"
     names = [username_one, username_two]

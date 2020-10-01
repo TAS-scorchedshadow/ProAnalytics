@@ -182,11 +182,18 @@ def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain 
 def get_graph_details(username,distance):
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
-    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore FROM shoots WHERE username=? AND distance=? AND time BETWEEN ? AND ? ORDER BY time desc;',
+    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore, shootID FROM shoots WHERE username=? AND distance=? AND time BETWEEN ? AND ? ORDER BY time desc;',
               (username, distance, 1434928417046, 1434929348896))
     shoots = c.fetchall()
-    print(shoots)
     return shoots
+
+def get_shot_details(shootId):
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute('SELECT shotNum, x, y, score FROM shots WHERE shootID=?;', (shootId,))
+    shoots = c.fetchall()
+    return shoots
+
 
 def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries which contain all the information on a shoot, including a target's script div
     conn = sqlite3.connect("PARS.db")
@@ -227,6 +234,7 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
                 'duration': duration,
                 'mean': mean,
                 'sd': standard_dev,
+                'distance': shoot[3],
             }
         )
     return target_list, shot_table
@@ -267,6 +275,7 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
     # create line graph
     c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time asc;', (shooter,))
     shoots = c.fetchall()
+    values = {}
     lineList = []  # should end up looking like [ [300m, [x,x,x,x,x], [y,y,y,y,y]] , [500m, [x,x,x,x,x], [y,y,y,y,y]] ]
     listx = []
     listy = []
@@ -286,9 +295,15 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
 
     # sort the lineList from lowest range to highest range
     lineList = sorted(lineList, key=lambda x: x[0])
-    for data in lineList:
-        listName.append(data[0])
-        listx.append(data[1])
-        listy.append(data[2])
-    line_script, line_div = graphProcessing.compareLine(listx, listy, listName)
+    # convert lineList into a format (a dictionary) that the line graph function understands
+    for dist in lineList:
+        values[dist[0]] = {
+            'xValue': dist[2],
+            'yValue': dist[1]
+        }
+    # for data in lineList:
+    #     listName.append(data[0])
+    #     listx.append(data[1])
+    #     listy.append(data[2])
+    line_script, line_div = graphProcessing.compareLine(values, 'Dates', 'Scores', 'Scores for Each Range')
     return line_script, line_div

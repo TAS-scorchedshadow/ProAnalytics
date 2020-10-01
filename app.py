@@ -14,7 +14,7 @@ import flask_login
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn, reportForm, comparativeSelect
 from security import registerUser, validateLogin, User
-from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges, get_all_shooter_names, get_graph_details
+from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges, get_all_shooter_names, get_graph_details, get_shot_details
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -78,6 +78,10 @@ def comparativeHomePage():
         # shoot_data = [(243.1, 5.6, 4.1, '95')]
         first_shoot_data = get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data)
         second_shoot_data = get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data)
+        first_shotID = first_shoot_data[0][4]
+        second_shotID = first_shoot_data[0][4]
+        first_shots_data =  get_shot_details(first_shotID)
+        second_shots_data = get_shot_details(second_shotID)
 
         # filters through each piece of data from the list of tuples and assigns them to the
         # variables necessary. e.g.
@@ -85,31 +89,39 @@ def comparativeHomePage():
         # distance = "300m"
         # group_size = 243.3
         # group_center = (5.6, 4.1)
-        first_shots = {1: [first_shoot_data[0][1],first_shoot_data[0][2], (first_shoot_data[0][3])]}
+        first_shots = {}
+        for i in range(len(first_shots_data)):
+            key_first = first_shots_data[i][0]
+            values_first = [first_shots_data[i][1], first_shots_data[i][2], first_shots_data[i][3]]
+            first_shots[key_first] = values_first
         first_distance = all_forms.shooting_range_one.data
         first_group_size = first_shoot_data[0][0]
         first_group_center = (first_shoot_data[0][1], first_shoot_data[0][2])
-        second_shots = {1: [second_shoot_data[0][1],second_shoot_data[0][2], (second_shoot_data[0][3])]}
+        second_shots = {}
+        for j in range(len(second_shots_data)):
+            key_second = second_shots_data[j][0]
+            values_second = [second_shots_data[j][1], second_shots_data[j][2], second_shots_data[j][3]]
+            second_shots[key_second] = values_second
         second_distance = all_forms.shooting_range_two.data
         second_group_size = second_shoot_data[0][0]
         second_group_center = (second_shoot_data[0][1], second_shoot_data[0][2])
 
-        #passes the shot values to render the bokeh targets
+        # passes the shot values to render the bokeh targets
         first_script, first_div = graphProcessing.drawTarget(first_shots, first_distance, first_group_size, first_group_center)
         second_script, second_div = graphProcessing.drawTarget(second_shots, second_distance, second_group_size, second_group_center)
 
-        #If the radio selected button is bar
+        # If the radio selected button is bar
         if (all_forms.graphType.data) == "Bar":
             bar_script, bar_div = graphProcessing.compareBar(all_forms.shooter_username_one.data, all_forms.shooter_username_two.data, first_shoot_data[0][3], second_shoot_data[0][3])
             return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, all_forms=all_forms)
 
-        #If the radio button selected is line
-        #if (all_forms.graphType.data) == "Line":
+        # If the radio button selected is line
+        # if (all_forms.graphType.data) == "Line":
         #    line_script, line_div = graphProcessing.compareLine([5,7,9,12],[13,18,17,14],("Shots"))
         #    return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, form_graph= form_graph)
 
         return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, all_forms=all_forms)
-    return render_template('comparativeHomePage.html', all_forms=all_forms)#form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
+    return render_template('comparativeHomePage.html', all_forms=all_forms)  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
 
 
 @app.route('/about')
