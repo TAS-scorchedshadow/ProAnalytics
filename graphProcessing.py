@@ -132,7 +132,7 @@ def create_target(range_type):
 
     p = figure(plot_width=plot_size, plot_height=plot_size, tools=["hover"], sizing_mode="scale_width",toolbar_location=None, tooltips=TOOLTIPS)
     p.toolbar.logo = None
-    # Draws the circles of the target from the largest to the smallest
+    # Draws the rings of the target from the largest to the smallest
     p.circle([0], [0], radius=int(target_details[range_type][5]/2), color="black", line_color="white", line_width=4)
     p.circle([0], [0], radius=int(target_details[range_type][4]/2), color="black", line_color="white", line_width=4)
     p.circle([0], [0], radius=int(target_details[range_type][3]/2), color="black", line_color="white", line_width=4)
@@ -194,7 +194,7 @@ def drawTarget(shots, targetSize, groupRadius, groupCenter):
         shotNum=shotNum
     ))
     p.select(type=HoverTool).names = ['shot']
-    p.circle('x', 'y', size=30, color="black", line_color="white", line_width=2, source=source, name='shot')
+    p.circle('x', 'y', radius=20, color="black", line_color="white", line_width=2, source=source, name='shot')
     p.text('x', 'y', text='shotNum', text_baseline="middle", text_align="center", color="white", source=source)
     # Uses stats_circle_center and stats_circle_radius in order to perform
     group_center = (12.66, -32.5)
