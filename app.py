@@ -94,22 +94,22 @@ def comparativeHomePage():
         second_group_size = second_shoot_data[0][0]
         second_group_center = (second_shoot_data[0][1], second_shoot_data[0][2])
 
-        #passes the shot values to render the bokeh targets
+        # passes the shot values to render the bokeh targets
         first_script, first_div = graphProcessing.drawTarget(first_shots, first_distance, first_group_size, first_group_center)
         second_script, second_div = graphProcessing.drawTarget(second_shots, second_distance, second_group_size, second_group_center)
 
-        #If the radio selected button is bar
+        # If the radio selected button is bar
         if (all_forms.graphType.data) == "Bar":
             bar_script, bar_div = graphProcessing.compareBar(all_forms.shooter_username_one.data, all_forms.shooter_username_two.data, first_shoot_data[0][3], second_shoot_data[0][3])
             return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, all_forms=all_forms)
 
-        #If the radio button selected is line
-        #if (all_forms.graphType.data) == "Line":
+        # If the radio button selected is line
+        # if (all_forms.graphType.data) == "Line":
         #    line_script, line_div = graphProcessing.compareLine([5,7,9,12],[13,18,17,14],("Shots"))
         #    return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, form_graph= form_graph)
 
         return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, all_forms=all_forms)
-    return render_template('comparativeHomePage.html', all_forms=all_forms)#form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
+    return render_template('comparativeHomePage.html', all_forms=all_forms)  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
 
 
 @app.route('/about')

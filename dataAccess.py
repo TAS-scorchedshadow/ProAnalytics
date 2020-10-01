@@ -204,7 +204,7 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
         shots = {}
         duration = str(int((shoot[4]) / 60000)) + ' mins ' + str(int((shoot[4]) / 1000) % 60) + ' secs'
         for row in shots_tuple:
-            shots[row[-1]] = [row[5], row[3], row[6]]
+            shots[row[9]] = [row[5], row[3], row[6]]
             # create list of shots
             shot_table[str(shoot[0])].append((row[6], row[9]))
             # row[9] is shotNum
@@ -227,6 +227,7 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
                 'duration': duration,
                 'mean': mean,
                 'sd': standard_dev,
+                'distance': shoot[3],
             }
         )
     return target_list, shot_table
@@ -267,6 +268,7 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
     # create line graph
     c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time asc;', (shooter,))
     shoots = c.fetchall()
+    values = {}
     lineList = []  # should end up looking like [ [300m, [x,x,x,x,x], [y,y,y,y,y]] , [500m, [x,x,x,x,x], [y,y,y,y,y]] ]
     listx = []
     listy = []
@@ -286,9 +288,15 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
 
     # sort the lineList from lowest range to highest range
     lineList = sorted(lineList, key=lambda x: x[0])
-    for data in lineList:
-        listName.append(data[0])
-        listx.append(data[1])
-        listy.append(data[2])
-    line_script, line_div = graphProcessing.compareLine(listx, listy, listName)
+    # convert lineList into a format (a dictionary) that the line graph function understands
+    for dist in lineList:
+        values[dist[0]] = {
+            'xValue': dist[2],
+            'yValue': dist[1]
+        }
+    # for data in lineList:
+    #     listName.append(data[0])
+    #     listx.append(data[1])
+    #     listy.append(data[2])
+    line_script, line_div = graphProcessing.compareLine(values, 'Dates', 'Scores', 'Scores for Each Range')
     return line_script, line_div
