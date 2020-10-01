@@ -204,7 +204,7 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
         shots = {}
         duration = str(int((shoot[4]) / 60000)) + ' mins ' + str(int((shoot[4]) / 1000) % 60) + ' secs'
         for row in shots_tuple:
-            shots[row[-1]] = [row[5], row[3], row[6]]
+            shots[row[9]] = [row[5], row[3], row[6]]
             # create list of shots
             shot_table[str(shoot[0])].append((row[6], row[9]))
             # row[9] is shotNum

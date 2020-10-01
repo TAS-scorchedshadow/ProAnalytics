@@ -23,15 +23,18 @@
                 <div class="col-12 pb-5">
                     <div class="card shadow border-0 h-100">
                         <!--Section of the card that the user always sees-->
-                        <div class="card-title">
-                            <div class="row">
-                                <div class="col-12 px-4 mx-1">
-                                    <p> {{ shoot['date'] }}
-                                    </p>
+                            <div class="d-flex flex-row justify-content-between">
+                                <div class="pl-2">
+                                    <p> {{ shoot['date'] }} </p>
+                                </div>
+                                <div>
+                                  <button class="btn btn-primary" type="button" data-toggle="collapse" id="{{ 'button' + shoot['id'] }}" data-target="{{ "#" + shoot['id'] }}" aria-expanded="false" aria-controls="{{ shoot['id'] }}" onclick=buttonChange(this) >
+                                    +
+                                  </button>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12 px-4 mx-1">
+                                <div class="col-12 pl-4">
                                     <p>Duration: {{ shoot['duration'] }}</p>
                                 </div>
                             </div>
@@ -63,29 +66,21 @@
                                                     </tr>
                                             </table>
                                         </div>
-                                        <div align="right">
-                                          <button class="btn btn-primary" type="button" data-toggle="collapse" id="{{ 'button' + shoot['id'] }}" data-target="{{ "#" + shoot['id'] }}" aria-expanded="false" aria-controls="{{ shoot['id'] }}" onclick=buttonChange(this) >
-                                            +
-                                          </button>
-                                        </div>
                                     </div>
-                                </div>
                         </div>
                         <!--Collapsible section of the card-->
-                         <div class="card-body">
-                             <div class="collapse" id="{{ shoot['id'] }}">
-                                 <div class="row">
-                                     <div class="col-3">
-                                     </div>
-                                     <div class = "col-6">
-                                         <!--Create target-->
-                                        {{ shoot['target_script'] | safe }}
-                                        {{ shoot['target_div'] | safe }}
-                                     </div>
-                                     <div class="col-3">
-                                     </div>
-                                </div>
-                             </div>
+                         <div class="collapse" id="{{ shoot['id'] }}">
+                             <div class="row pb-2">
+                                 <div class="col-3">
+                                 </div>
+                                 <div class = "col-6">
+                                     <!--Create target-->
+                                    {{ shoot['target_script'] | safe }}
+                                    {{ shoot['target_div'] | safe }}
+                                 </div>
+                                 <div class="col-3">
+                                 </div>
+                            </div>
                          </div>
                     </div>
                 </div>
