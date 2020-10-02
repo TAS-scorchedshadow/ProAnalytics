@@ -105,10 +105,15 @@
         let userCheck = document.getElementById('name' + selectNum);
         let distCheck = document.getElementById('dist' + selectNum);
         let date = document.getElementById('date' + selectNum);
-        //add dates to select field
+        //add date options to select field
         for (let opts in allDates[userCheck.value][distCheck.value]) {
+                    //add the date to the option (this is what the user sees)
                     let opt = document.createElement('option')
-                    opt.appendChild(document.createTextNode(allDates[userCheck.value][distCheck.value][opts]))
+                    opt.appendChild(document.createTextNode(allDates[userCheck.value][distCheck.value][opts][0]))
+                    //add the value attribute which is the epoch time (this is the value returned on submission of the form)
+                    let valAtt = document.createAttribute("value");
+                    valAtt.value = allDates[userCheck.value][distCheck.value][opts][1]
+                    opt.setAttributeNode(valAtt)
                     date.appendChild(opt)
                 }
     }
@@ -140,6 +145,7 @@
     addRanges('2')
     addDates('1')
     addDates('2')
+    console.log(document.getElementById('date1'))
 </script>
 
 <!-- <section>

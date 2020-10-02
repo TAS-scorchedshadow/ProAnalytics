@@ -322,9 +322,9 @@ def get_dates_for_all():  # collect the dates for every shooter in a dictionary 
         for shoot in shoots:
             date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y')
             if shoot[0] not in dateDict:
-                dateDict[shoot[0]] = [date]
+                dateDict[shoot[0]] = [(date, shoot[1])]
             else:
-                dateDict[shoot[0]].append(date)
+                dateDict[shoot[0]].append((date, shoot[1]))
         all_dates[user[0]] = dateDict
     return all_dates
 
