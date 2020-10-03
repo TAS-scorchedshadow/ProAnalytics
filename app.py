@@ -84,8 +84,9 @@ def comparativeHomePage():
         # passes the values selected from the SelectFields to the get_graph_details
         # off the database of the (x,y) point of centre, the grouping size and total score in a shoot session e.g.
         # shoot_data = [(243.1, 5.6, 4.1, '95')]
-        first_shoot_data = get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data)
-        second_shoot_data = get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data)
+
+        first_shoot_data = get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data, all_forms.dates_one.data)
+        second_shoot_data = get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data, all_forms.dates_two.data)
         first_shotID = first_shoot_data[0][4]
         second_shotID = first_shoot_data[0][4]
         first_shots_data =  get_shot_details(first_shotID)
