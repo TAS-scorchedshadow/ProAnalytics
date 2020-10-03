@@ -120,62 +120,18 @@ def initialiseSettings(username):  # initialise user settings from database
         session['email'] = row[5]
     conn.close()
 
-
-def shooter_username():
+def shoot_range(): #creates a list of tuples of all ranges possible
     conn = sqlite3.connect('PARS.db')
     cur = conn.cursor()
-    cur.execute("SELECT * FROM shots")
+    cur.execute("SELECT distance FROM shoots")
     rows = cur.fetchall()
     all = []
-    bank = []
     for row in rows:
-        row = list(row)
-        row.pop(0)
-        row.pop(0)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row[1] = str(row[0])
-        if row[1] not in bank:
-            bank.append(row[1])
-            row = tuple(row)
-            all.append(row)
+        create_tuple = (row[0], row[0])
+        all.append(create_tuple)
     return all
 
-
-def shoot_range():
-    conn = sqlite3.connect('PARS.db')
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM shoots")
-    rows = cur.fetchall()
-    all = []
-    bank = []
-    for row in rows:
-        row = list(row)
-        row.pop(0)
-        row.pop(0)
-        row.pop(0)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row.pop(1)
-        row[1] = str(row[0])
-        if row[1] not in bank:
-            bank.append(row[1])
-            row = tuple(row)
-            all.append(row)
-    return all
-
-
-def get_all_shooter_names():
+def get_all_shooter_names(): #creates a list of tuples of all of the shooter's names in the users table
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
     c.execute("SELECT fName, sName, admin FROM users")
@@ -183,10 +139,22 @@ def get_all_shooter_names():
     shooters = []
     for name in names:
         if name[2] == 0:
-            shooters.append(capitalise(name[0]) + " " + capitalise(name[1]))
-    print(shooters)
+            create_tuple = (capitalise(name[0]) + " " + capitalise(name[1]),capitalise(name[0]) + " " + capitalise(name[1]))
+            if create_tuple not in shooters:
+                shooters.append(create_tuple)
     return shooters
 
+def get_all_usernames(): #creates a list of tuples of all of the usernames in the shoots table
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute("SELECT username FROM shoots")
+    names = c.fetchall()
+    usernames = []
+    for name in names:
+        create_tuple = (name[0], name[0])
+        if create_tuple not in usernames:
+            usernames.append(create_tuple)
+    return usernames
 
 def get_all_dates(shooter):  # collect all the dates that a shooter has shot in and returns it as a list (sorted from latest to oldest)
     conn = sqlite3.connect("PARS.db")
@@ -197,15 +165,32 @@ def get_all_dates(shooter):  # collect all the dates that a shooter has shot in 
     for shoot in shootTimes:
         stringDate = datetime.fromtimestamp(int(shoot[0]) / 1000).strftime('%d-%m-%y')
         if stringDate not in timeList:
-            timeList.append(stringDate)
+            create_tuple = (stringDate, stringDate)
+            timeList.append(create_tuple)
+    print(timeList)
     return timeList
-
 
 def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain all the information on a shoot from a shooter in a specific time frame
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
     c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;',
               (shooter, dayStart, dayEnd))
+    shoots = c.fetchall()
+    print(shoots)
+    return shoots
+
+def get_graph_details(username,distance, time):
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore, shootID FROM shoots WHERE username=? AND distance=? AND time=?;',
+              (username, distance, time))
+    shoots = c.fetchall()
+    return shoots
+
+def get_shot_details(shootId):
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute('SELECT shotNum, x, y, score FROM shots WHERE shootID=?;', (shootId,))
     shoots = c.fetchall()
     return shoots
 
@@ -226,7 +211,7 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
         shots = {}
         duration = str(int((shoot[4]) / 60000)) + ' mins ' + str(int((shoot[4]) / 1000) % 60) + ' secs'
         for row in shots_tuple:
-            shots[row[-1]] = [row[5], row[3], row[6]]
+            shots[row[9]] = [row[5], row[3], row[6]]
             # create list of shots
             shot_table[str(shoot[0])].append((row[6], row[9]))
             # row[9] is shotNum
@@ -249,6 +234,7 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
                 'duration': duration,
                 'mean': mean,
                 'sd': standard_dev,
+                'distance': shoot[3],
             }
         )
     return target_list, shot_table
@@ -289,6 +275,7 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
     # create line graph
     c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time asc;', (shooter,))
     shoots = c.fetchall()
+    values = {}
     lineList = []  # should end up looking like [ [300m, [x,x,x,x,x], [y,y,y,y,y]] , [500m, [x,x,x,x,x], [y,y,y,y,y]] ]
     listx = []
     listy = []
@@ -308,9 +295,51 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
 
     # sort the lineList from lowest range to highest range
     lineList = sorted(lineList, key=lambda x: x[0])
-    for data in lineList:
-        listName.append(data[0])
-        listx.append(data[1])
-        listy.append(data[2])
-    line_script, line_div = graphProcessing.compareLine(listx, listy, listName)
+    # convert lineList into a format (a dictionary) that the line graph function understands
+    for dist in lineList:
+        values[dist[0]] = {
+            'xValue': dist[2],
+            'yValue': dist[1]
+        }
+    # for data in lineList:
+    #     listName.append(data[0])
+    #     listx.append(data[1])
+    #     listy.append(data[2])
+    line_script, line_div = graphProcessing.compareLine(values, 'Dates', 'Scores', 'Scores for Each Range')
     return line_script, line_div
+
+
+def get_dates_for_all():  # collect the dates for every shooter in a dictionary and separated by range
+    all_dates = {}
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute('SELECT username FROM users')
+    users = c.fetchall()
+    for user in users:
+        dateDict = {}
+        c.execute('SELECT distance, time FROM shoots WHERE username=?;', (user[0],))
+        shoots = c.fetchall()
+        for shoot in shoots:
+            date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y')
+            if shoot[0] not in dateDict:
+                dateDict[shoot[0]] = [(date, shoot[1])]
+            else:
+                dateDict[shoot[0]].append((date, shoot[1]))
+        all_dates[user[0]] = dateDict
+    return all_dates
+
+
+def get_ranges_for_all():  # collect the ranges every shooter has in a dictionary
+    all_ranges = {}
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute('SELECT username FROM users')
+    users = c.fetchall()
+    for user in users:
+        all_ranges[user[0]] = []
+        c.execute('SELECT distance FROM shoots WHERE username=?;', (user[0],))
+        shoots = c.fetchall()
+        for shoot in shoots:
+            if shoot[0] not in all_ranges[user[0]]:
+                all_ranges[user[0]].append(shoot[0])
+    return all_ranges

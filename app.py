@@ -12,9 +12,11 @@ from flask_wtf import CSRFProtect
 import flask_login
 
 from shotProcessing import validateShots, getScore
-from uploadForms import uploadForm, signUpForm, signIn, reportForm, graphSelect, nameSelectTargetOne, nameSelectTargetTwo, rangeSelectTargetOne, rangeSelectTargetTwo
+from uploadForms import uploadForm, signUpForm, signIn, reportForm, comparativeSelect
 from security import registerUser, validateLogin, User
-from dataAccess import emailExists, addShoot, shooter_username, usernameExists, get_table_stats, get_all_dates, get_shoots_dict, get_line_graph_ranges
+from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates,\
+    get_shoots_dict, get_line_graph_ranges, get_all_shooter_names,\
+    get_graph_details, get_shot_details, get_dates_for_all, get_ranges_for_all
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -23,6 +25,7 @@ import time
 import os
 import graphProcessing
 import numpy
+import json
 
 import sqlite3
 from flask import g, session
@@ -67,37 +70,66 @@ def shooterHome():
 
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
+    # calls the class from the uploadForms.py for
 
-    form_usernameOne = nameSelectTargetOne()
-    form_usernameTwo = nameSelectTargetTwo()
-    form_rangeOne = rangeSelectTargetOne()
-    form_rangeTwo = rangeSelectTargetTwo()
+    all_forms = comparativeSelect()
 
-    #calls the class from the uploadForms.py for
-    form_graph = graphSelect()
+    # collect the data used for the select fields and convert into jsons which javascript can read from
+    all_dates = get_dates_for_all()
+    all_dates = json.dumps(all_dates)
+    all_ranges = get_ranges_for_all()
+    all_ranges = json.dumps(all_ranges)
+    # f the radio button is submit
+    if request.method == "POST":
+        # passes the values selected from the SelectFields to the get_graph_details
+        # off the database of the (x,y) point of centre, the grouping size and total score in a shoot session e.g.
+        # shoot_data = [(243.1, 5.6, 4.1, '95')]
 
-    #if the radio button is submit
-    if form_graph.validate_on_submit() and form_usernameOne.validate_on_submit() and form_usernameTwo.validate_on_submit() and form_rangeOne.validate_on_submit() and form_rangeTwo.validate_on_submit():
+        first_shoot_data = get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data, all_forms.dates_one.data)
+        second_shoot_data = get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data, all_forms.dates_two.data)
+        first_shotID = first_shoot_data[0][4]
+        second_shotID = first_shoot_data[0][4]
+        first_shots_data =  get_shot_details(first_shotID)
+        second_shots_data = get_shot_details(second_shotID)
 
-        #stubs for the targets to rander
-        shots = {1: [10, 10, 5]}
-        targetSize = "300m"
-        groupRadius = 228.8
-        group_center = (12.66, -32.5)
-        first_script, first_div = graphProcessing.drawTarget(shots, targetSize, groupRadius, group_center)
-        second_script, second_div = graphProcessing.drawTarget(shots, targetSize, groupRadius, group_center)
+        # filters through each piece of data from the list of tuples and assigns them to the
+        # variables necessary. e.g.
+        # shot = {1: [5.6, 4.1, 95]
+        # distance = "300m"
+        # group_size = 243.3
+        # group_center = (5.6, 4.1)
+        first_shots = {}
+        for i in range(len(first_shots_data)):
+            key_first = first_shots_data[i][0]
+            values_first = [first_shots_data[i][1], first_shots_data[i][2], first_shots_data[i][3]]
+            first_shots[key_first] = values_first
+        first_distance = all_forms.shooting_range_one.data
+        first_group_size = first_shoot_data[0][0]
+        first_group_center = (first_shoot_data[0][1], first_shoot_data[0][2])
+        second_shots = {}
+        for j in range(len(second_shots_data)):
+            key_second = second_shots_data[j][0]
+            values_second = [second_shots_data[j][1], second_shots_data[j][2], second_shots_data[j][3]]
+            second_shots[key_second] = values_second
+        second_distance = all_forms.shooting_range_two.data
+        second_group_size = second_shoot_data[0][0]
+        second_group_center = (second_shoot_data[0][1], second_shoot_data[0][2])
 
-        #If the radio selected button is bar
-        if (form_graph.graphType.data) == "Bar":
-            bar_script, bar_div = graphProcessing.compareBar()
-            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, form_graph= form_graph)
+        # passes the shot values to render the bokeh targets
+        first_script, first_div = graphProcessing.drawTarget(first_shots, first_distance, first_group_size, first_group_center)
+        second_script, second_div = graphProcessing.drawTarget(second_shots, second_distance, second_group_size, second_group_center)
 
-        #If the radio button selected is line
-        if (form_graph.graphType.data) == "Line":
-            line_script, line_div = graphProcessing.compareLine([5,7,9,12],[13,18,17,14],("Shots"))
-            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, form_graph= form_graph)
+        # If the radio selected button is bar
+        if (all_forms.graphType.data) == "Bar":
+            bar_script, bar_div = graphProcessing.compareBar(all_forms.shooter_username_one.data, all_forms.shooter_username_two.data, first_shoot_data[0][3], second_shoot_data[0][3])
+            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
 
-    return render_template('comparativeHomePage.html', form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
+        # If the radio button selected is line
+        # if (all_forms.graphType.data) == "Line":
+        #    line_script, line_div = graphProcessing.compareLine([5,7,9,12],[13,18,17,14],("Shots"))
+        #    return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, form_graph= form_graph)
+        return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
+    return render_template('comparativeHomePage.html', all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
 
 
 @app.route('/about')
@@ -181,11 +213,10 @@ def upload():
     if current_user.admin == 1:
         # create form
         form = uploadForm()
-        success = False
+
         # on submission
         if request.method == 'POST':
             files = request.files.getlist('file')
-            invalidShoots = {'count': 0}
             for file in files:
                 filename = secure_filename(file.filename)
                 filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -206,27 +237,16 @@ def upload():
                     shoot['rifleRange'] = form.rifleRange.data
                     shoot['distance'] = form.distance.data
                     shoot['weather'] = form.weather.data
-                    idFound = usernameExists(shoot['username'])
-                    if idFound:
-                        print(shoot['username'], shoot['rifleRange'], shoot['distance'], shoot['weather'])
-                        # todo: re-enable this
-                        # addShoot(shoot)  # Import the shoot to the database
-                        os.remove(filePath)  # Delete file
-                        print(filename, "was removed")  # Debug
-                    else:
-                        # todo: Proper handling for usernames
+                    if shoot['username'] == "":
+                        # todo: Proper handling for no username
                         # Will likely do this by sending the user to a different page to confirm usernames
-                        print("Username not found")
-                        invalidShoots[invalidShoots['count']] = shoot
-                        invalidShoots['count'] += 1
-                        os.remove(filePath)  # Delete file
-                        print(filename, "was removed")  # Debug
-            print(invalidShoots)
-            if invalidShoots['count'] == 0:
-                success = True
-            else:
-                success = False
-        return render_template('upload.html', form=form, success=success)
+                        print("No username")
+                    print(shoot['username'], shoot['rifleRange'], shoot['distance'], shoot['weather'])
+                    # todo: re-enable this
+                    addShoot(shoot)  # Import the shoot to the database
+                    os.remove(filePath)  # Delete file
+                    print(filename, "was removed")  # Debug
+        return render_template('upload.html', form=form)
     else:
         return render_template('accessDenied.html')
 

@@ -11,28 +11,50 @@ import time
 
 from shotProcessing import validateShots
 
+# values is a dictionary with each key being the name for the line.
+# If comparing shooters, this can be the shooters name e.g Rishi Wig
+# The values of each dictionary will be another dictionary that looks like the following:
+# { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']}
+# where the list in xValue must be the same length as the list in yValue
+# So an example of values would be
+# {
+# 'Andrew': { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']} ,
+# 'Rishi': { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']}
+# }
+def compareLine(values, xLabel, yLabel, title):
+    # break down values into three lists
 
-# listx is a list containing a list of scores eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
-# Each of the list of shots are one line and should all be the same length does
-# listy is a list of dates (dd/mm/yyyy) for each line eg. [['10/08/2020', '11/08/2020', '12/08/2020'],  ['13/08/2020', '14/08/2020', '15/08/2020']]
-# listName is a list of names eg. ['Andrew', 'Ryan']
-def compareLine(listx, listy, listName):
+    # listx is a list containing a list of scores eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
+    # Each of the list of shots are one line and should all be the same length does
+    # listy is a list of dates (dd/mm/yyyy) for each line eg. [['10/08/2020', '11/08/2020', '12/08/2020'],  ['13/08/2020', '14/08/2020', '15/08/2020']]
+    # listName is a list of names eg. ['Andrew', 'Ryan']
+    listx = []
+    listy = []
+    listName = []
+    print(values)
+    for key in values:
+        listName.append(key)
+        listx.append(values[key]['xValue'])
+        listy.append(values[key]['yValue'])
+    print(listName)
+    print(listx)
+    print(listy)
     # vars used to set the x-axis range
-    cLine = figure(plot_height=500, plot_width=1000, sizing_mode='scale_width', title='Compare Graph',
-                     x_axis_label='Date', y_axis_label='Score', x_axis_type='datetime',
+    cLine = figure(plot_height=500, plot_width=1000, sizing_mode='scale_width', title=title,
+                     x_axis_label=xLabel, y_axis_label=yLabel, x_axis_type='datetime',
                    )
     cLine.toolbar.logo = None
     # convert dates into a format we can use
     dates = []
     colours = cycle(palette)
-    for shoot in listy:
+    for shoot in listx:
         dates.append([])
         for day in shoot:
             dates[-1].append(time.mktime(datetime.strptime(day, "%d/%m/%Y").timetuple()) * 1000)
     legend_temp = []
     # Add lines
-    for lineX, lineY, name, colour in zip(listx, dates, listName, colours):
-        c = cLine.line(lineY, lineX, color=colour)
+    for lineY, lineX, name, colour in zip(listy, dates, listName, colours):
+        c = cLine.line(lineX, lineY, color=colour)
         legend_temp.append((name, [c]))
     legend = Legend(items=legend_temp)
     cLine.add_layout(legend, 'right')
@@ -52,33 +74,14 @@ def compareLine(listx, listy, listName):
 
 #Designed to provide a comparison between shooters
 #allStudentsTotal is a dictionary with the name as the key & the value as a list, where the first value is year & the second is the score
-def compareBar():
-    allStudentsTotal= {"SMITH_John": [7, 12], "JACK_Bob": [8, 6], "LI_Reginald": [9, 33], "VETTEL_Seb": [10,13],"CHILTON_Max": [11,20], "SENNA_Bruno": [12,27] }
+def compareBar(username_one, username_two, score_one, score_two):
     # init vars
-    names = []
-    scores = []
-    year = []
-    colour_list = []
-    label_year = ["Year 7", "Year 8", "Year 9", "Year 10", "Year 11", "Year 12"]
+    username_two = username_two + "0000000000000"
+    names = [username_one, username_two]
+    scores = [score_one, score_two]
+    colour_list = ["blue", "red"]
+    label_year = [username_one, username_two]
     legendTemp = []
-    for i in allStudentsTotal:
-        names.append(i)
-        scores.append(int(allStudentsTotal[i][1]))
-        year.append(int(allStudentsTotal[i][0]))
-
-    for years in year:
-        if years == 7:
-            colour_list.append("blue")
-        if years == 8:
-            colour_list.append("red")
-        if years == 9:
-            colour_list.append("yellow")
-        if years == 10:
-            colour_list.append("green")
-        if years == 11:
-            colour_list.append("black")
-        if years == 12:
-            colour_list.append("orange")
 
     # create ColumnDataSource
     source = ColumnDataSource(data=dict(
@@ -86,7 +89,7 @@ def compareBar():
         score=scores,
         colour=colour_list,
     ))
-    p_vbar = figure(x_range=names, plot_height=600, plot_width=1000, title="Standings",
+    p_vbar = figure(x_range=names, plot_height=400, plot_width=800, title="Comparison Bar",
                     toolbar_location=None, tools="hover")
     p_vbar.hover.tooltips = [
         ("Name", "@name"),
@@ -98,7 +101,7 @@ def compareBar():
     # add the labels (it was done this way so they are indexed correctly) https://discourse.bokeh.org/t/cant-order-legend-entries-in-hbar-plot/3816
     for label, num in zip(label_year, range(len(label_year))):
         legendTemp.append(LegendItem(label=label, renderers=[r], index=num))
-    legend = Legend(items=legendTemp, title='Year Groups', location='top_right')
+    legend = Legend(items=legendTemp, title='Usernames', location='top_right')
     p_vbar.add_layout(legend)
 
     p_vbar.y_range.start = 0  # ensures that the y-axis begins at 0
@@ -129,7 +132,7 @@ def create_target(range_type):
 
     p = figure(plot_width=plot_size, plot_height=plot_size, tools=["hover"], sizing_mode="scale_width",toolbar_location=None, tooltips=TOOLTIPS)
     p.toolbar.logo = None
-    # Draws the circles of the target from the largest to the smallest
+    # Draws the rings of the target from the largest to the smallest
     p.circle([0], [0], radius=int(target_details[range_type][5]/2), color="black", line_color="white", line_width=4)
     p.circle([0], [0], radius=int(target_details[range_type][4]/2), color="black", line_color="white", line_width=4)
     p.circle([0], [0], radius=int(target_details[range_type][3]/2), color="black", line_color="white", line_width=4)
@@ -191,7 +194,7 @@ def drawTarget(shots, targetSize, groupRadius, groupCenter):
         shotNum=shotNum
     ))
     p.select(type=HoverTool).names = ['shot']
-    p.circle('x', 'y', size=30, color="black", line_color="white", line_width=2, source=source, name='shot')
+    p.circle('x', 'y', radius=20, color="black", line_color="white", line_width=2, source=source, name='shot')
     p.text('x', 'y', text='shotNum', text_baseline="middle", text_align="center", color="white", source=source)
     # Uses stats_circle_center and stats_circle_radius in order to perform
     group_center = (12.66, -32.5)
