@@ -76,6 +76,7 @@ def comparativeHomePage():
 
     # collect the data used for the select fields and convert into jsons which javascript can read from
     all_dates = get_dates_for_all()
+    all_dates_dict = all_dates
     all_dates = json.dumps(all_dates)
     all_ranges = get_ranges_for_all()
     all_ranges = json.dumps(all_ranges)
@@ -115,6 +116,32 @@ def comparativeHomePage():
         second_group_size = second_shoot_data[0][0]
         second_group_center = (second_shoot_data[0][1], second_shoot_data[0][2])
 
+        values = {}
+        xFill_one = []
+        yFill_one = []
+        for t in range(len(all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data])):
+            internal_dict_one = {}
+            if (all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][1]) >= int(all_forms.dates_one.data):
+                xFill_one.append(all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][0])
+                yFill_one.append(get_graph_details(all_forms.shooter_username_one.data,all_forms.shooting_range_one.data, all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][1])[0][3])
+            internal_dict_one["yValue"] = yFill_one
+            internal_dict_one["xValue"] = xFill_one
+            values[all_forms.shooter_username_one.data] = internal_dict_one
+        xFill_two = []
+        yFill_two = []
+        for t in range(len(all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data])):
+            internal_dict_two = {}
+            if (all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1]) >= int(all_forms.dates_two.data):
+                xFill_two.append(all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][0])
+                yFill_two.append(get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data,all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1])[0][3])
+            internal_dict_two["yValue"] = yFill_two
+            internal_dict_two["xValue"] = xFill_two
+            values[all_forms.shooter_username_two.data + "0000000000"] = internal_dict_two
+
+        xLabel = "Dates"
+        yLabel = "Times"
+        title = "Comparison Line"
+
         # passes the shot values to render the bokeh targets
         first_script, first_div = graphProcessing.drawTarget(first_shots, first_distance, first_group_size, first_group_center)
         second_script, second_div = graphProcessing.drawTarget(second_shots, second_distance, second_group_size, second_group_center)
@@ -125,9 +152,10 @@ def comparativeHomePage():
             return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
 
         # If the radio button selected is line
-        # if (all_forms.graphType.data) == "Line":
-        #    line_script, line_div = graphProcessing.compareLine([5,7,9,12],[13,18,17,14],("Shots"))
-        #    return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, form_graph= form_graph)
+        if (all_forms.graphType.data) == "Line":
+            line_script, line_div = graphProcessing.compareLine(values, xLabel, yLabel, title)
+            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
+
         return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
     return render_template('comparativeHomePage.html', all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
 
