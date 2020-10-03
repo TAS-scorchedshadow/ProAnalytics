@@ -70,22 +70,24 @@ def shooterHome():
 
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
-    # calls the class from the uploadForms.py for
 
+    # calls the class from the uploadForms.py for
     all_forms = comparativeSelect()
 
     # collect the data used for the select fields and convert into jsons which javascript can read from
+    #all_dates_dict leaves a copy in dictionary format for ease in further code
     all_dates = get_dates_for_all()
     all_dates_dict = all_dates
     all_dates = json.dumps(all_dates)
     all_ranges = get_ranges_for_all()
     all_ranges = json.dumps(all_ranges)
+
     # f the radio button is submit
     if request.method == "POST":
+
         # passes the values selected from the SelectFields to the get_graph_details
         # off the database of the (x,y) point of centre, the grouping size and total score in a shoot session e.g.
         # shoot_data = [(243.1, 5.6, 4.1, '95')]
-
         first_shoot_data = get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data, all_forms.dates_one.data)
         second_shoot_data = get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data, all_forms.dates_two.data)
         first_shotID = first_shoot_data[0][4]
@@ -116,32 +118,6 @@ def comparativeHomePage():
         second_group_size = second_shoot_data[0][0]
         second_group_center = (second_shoot_data[0][1], second_shoot_data[0][2])
 
-        values = {}
-        xFill_one = []
-        yFill_one = []
-        for t in range(len(all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data])):
-            internal_dict_one = {}
-            if (all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][1]) >= int(all_forms.dates_one.data):
-                xFill_one.append(all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][0])
-                yFill_one.append(get_graph_details(all_forms.shooter_username_one.data,all_forms.shooting_range_one.data, all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][1])[0][3])
-            internal_dict_one["yValue"] = yFill_one
-            internal_dict_one["xValue"] = xFill_one
-            values[all_forms.shooter_username_one.data] = internal_dict_one
-        xFill_two = []
-        yFill_two = []
-        for t in range(len(all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data])):
-            internal_dict_two = {}
-            if (all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1]) >= int(all_forms.dates_two.data):
-                xFill_two.append(all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][0])
-                yFill_two.append(get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data,all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1])[0][3])
-            internal_dict_two["yValue"] = yFill_two
-            internal_dict_two["xValue"] = xFill_two
-            values[all_forms.shooter_username_two.data + "0000000000"] = internal_dict_two
-
-        xLabel = "Dates"
-        yLabel = "Times"
-        title = "Comparison Line"
-
         # passes the shot values to render the bokeh targets
         first_script, first_div = graphProcessing.drawTarget(first_shots, first_distance, first_group_size, first_group_center)
         second_script, second_div = graphProcessing.drawTarget(second_shots, second_distance, second_group_size, second_group_center)
@@ -153,6 +129,46 @@ def comparativeHomePage():
 
         # If the radio button selected is line
         if (all_forms.graphType.data) == "Line":
+            # sets up for the line graph
+            # gets shot data from a particular day forward to display a line graph
+            # e.g. values = {'Rishi': { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']}
+            # internal_dict have the key as yValue and xValue, scores and times respectively
+            values = {}
+            xFill_one = []
+            yFill_one = []
+            for t in range(len(all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data])):
+                internal_dict_one = {}
+                if (
+                all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][1]) >= int(
+                        all_forms.dates_one.data):
+                    xFill_one.append(
+                        all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][0])
+                    yFill_one.append(
+                        get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data,
+                                          all_dates_dict[all_forms.shooter_username_one.data][
+                                              all_forms.shooting_range_one.data][t][1])[0][3])
+                internal_dict_one["yValue"] = yFill_one
+                internal_dict_one["xValue"] = xFill_one
+                values[all_forms.shooter_username_one.data] = internal_dict_one
+            xFill_two = []
+            yFill_two = []
+            for t in range(len(all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data])):
+                internal_dict_two = {}
+                if (
+                all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1]) >= int(
+                        all_forms.dates_two.data):
+                    xFill_two.append(
+                        all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][0])
+                    yFill_two.append(
+                        get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data,
+                                          all_dates_dict[all_forms.shooter_username_two.data][
+                                              all_forms.shooting_range_two.data][t][1])[0][3])
+                internal_dict_two["yValue"] = yFill_two
+                internal_dict_two["xValue"] = xFill_two
+                values[all_forms.shooter_username_two.data + "0000000000"] = internal_dict_two
+            xLabel = "Dates"
+            yLabel = "Times"
+            title = "Comparison Line"
             line_script, line_div = graphProcessing.compareLine(values, xLabel, yLabel, title)
             return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
 
