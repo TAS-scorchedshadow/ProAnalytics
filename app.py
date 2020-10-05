@@ -90,10 +90,8 @@ def comparativeHomePage():
         # shoot_data = [(243.1, 5.6, 4.1, '95')]
         first_shoot_data = get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data, all_forms.dates_one.data)
         second_shoot_data = get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data, all_forms.dates_two.data)
-        first_shotID = first_shoot_data[0][4]
-        second_shotID = first_shoot_data[0][4]
-        first_shots_data =  get_shot_details(first_shotID)
-        second_shots_data = get_shot_details(second_shotID)
+        first_shots_data =  get_shot_details(first_shoot_data[0][4])
+        second_shots_data = get_shot_details(second_shoot_data[0][4])
 
         # filters through each piece of data from the list of tuples and assigns them to the
         # variables necessary. e.g.

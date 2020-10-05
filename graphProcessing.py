@@ -31,14 +31,10 @@ def compareLine(values, xLabel, yLabel, title):
     listx = []
     listy = []
     listName = []
-    print(values)
     for key in values:
         listName.append(key)
         listx.append(values[key]['xValue'])
         listy.append(values[key]['yValue'])
-    print(listName)
-    print(listx)
-    print(listy)
     # vars used to set the x-axis range
     cLine = figure(plot_height=500, plot_width=1000, sizing_mode='scale_width', title=title,
                      x_axis_label=xLabel, y_axis_label=yLabel, x_axis_type='datetime',
