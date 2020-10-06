@@ -182,7 +182,7 @@ def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain 
 def get_graph_details(username,distance, time):
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
-    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore, shootID FROM shoots WHERE username=? AND distance=? AND time=?;',
+    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore, shootID, median, mean, std, weather FROM shoots WHERE username=? AND distance=? AND time=?;',
               (username, distance, time))
     shoots = c.fetchall()
     return shoots
