@@ -45,6 +45,7 @@ def validateShots(txtfile):
         newShoot['totalShots'] = countingShots
         newShoot['totalScore'] = str(runningScore['score']) + "." + str(runningScore['Vscore'])
         newShoot['stats'] = shotStats(validShotList)
+        newShoot['shotList'] = shootList(validShotList)
     return newShoot
 
 
@@ -55,12 +56,18 @@ def shotStats(shoot):
     for i in shoot:
         if not i['sighter']:
             shots.append(i['score'])
-    print(shots)
     stats['median'] = numpy.median(shots)
     stats['mean'] = numpy.mean(shots)
     stats['std'] = numpy.std(shots)
-    print(stats)
     return stats
+
+
+# Gets shot statistics
+def shootList(shoot):
+    shots = []
+    for i in shoot:
+        shots.append(i['value'])
+    return shots
 
 
 # Reformats score into a dictionary of score and Vscore

@@ -255,12 +255,13 @@ def upload():
     if current_user.admin == 1:
         # create form
         form = uploadForm()
-        invalidShoots = {'count': {'success': 0, 'incomplete': 0, 'failure': 0, 'total': 0}}
+        invalidShoots = []
+        count = {'success': 0, 'incomplete': 0, 'failure': 0, 'total': 0}
         # on submission
         if request.method == 'POST':
             files = request.files.getlist('file')
             for file in files:
-                invalidShoots['count']['total'] += 1
+                count['total'] += 1
                 filename = secure_filename(file.filename)
                 filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filePath)  # Add file to upload folder
@@ -270,7 +271,7 @@ def upload():
                     success = True
                 except:
                     success = False
-                    invalidShoots['count']['failure'] += 1
+                    count['failure'] += 1
                     # todo: Have file upload failures give more detail into nature of failure or return fail note
                     print(str(filename) + " had an error in uploading")
                     os.remove(filePath)  # Delete file
@@ -285,20 +286,26 @@ def upload():
                     if idFound:
                         # todo: re-enable this
                         # addShoot(shoot)  # Import the shoot to the database
-                        invalidShoots['count']['success'] += 1
+                        count['success'] += 1
                         os.remove(filePath)  # Delete file
                         print(filename, "was removed")  # Debug
                     else:
                         # todo: Proper handling for usernames
                         # Will likely do this by sending the user to a different page to confirm usernames
                         print("Username not found")     # Debug
-                        invalidShoots['count']['incomplete'] += 1
-                        invalidShoots[invalidShoots['count']['incomplete']] = shoot
+                        count['incomplete'] += 1
+                        invalidShoots.append(shoot)
                         os.remove(filePath)  # Delete file
                         print(filename, "was removed")  # Debug
                     print(invalidShoots)
-        return render_template('upload.html', form=form, success=invalidShoots['count']['success'],
-                               total=invalidShoots['count']['total'], failure=invalidShoots['count']['failure'])
+        if count['incomplete'] > 0:
+            return render_template('uploadVerify.html', invalidShoots=invalidShoots,
+                                   success=count['success'],
+                                   total=count['total'], failure=count['failure'])
+        else:
+            print(invalidShoots)
+            return render_template('upload.html', form=form, success=count['success'],
+                                   total=count['total'], failure=count['failure'])
     else:
         return render_template('accessDenied.html')
 
