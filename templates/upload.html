@@ -7,7 +7,13 @@
         <style>
             .alert {
               padding: 20px;
-              background-color: #86c232;
+            {% if success == total %}
+                background-color: #86c232;
+            {% elif failure == total %}
+                background-color: #EF4836;
+            {% else %}
+                background-color: #e77b33;
+            {% endif %}
               color: white;
               opacity: 1;
               transition: opacity 0.6s; /* 600ms to fade out */
@@ -54,11 +60,16 @@
     <!-- optionally if you need a theme like font awesome theme you can include it as mentioned below -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.2/themes/fa/theme.js"></script>
 
-    {% if success %}
+    {% if total %}
         <body>
             <div class="alert">
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                Files have been successfully uploaded
+                {% if failure != total %}
+                    {{ success }} / {{ total - failure }} files successfully uploaded.
+                {% endif %}
+                {% if failure > 0 %}
+                    {{ failure }} files were in incorrect format and could not be uploaded.
+                {% endif %}
             </div>
 
             <script>
