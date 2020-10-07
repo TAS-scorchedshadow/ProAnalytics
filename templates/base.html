@@ -96,7 +96,7 @@
                     <h5>Admin</h5>
                 {% endif %}
                 {% if current_user.admin == 0 %}
-                    <h5>For Students</h5>
+                    <h5>For Shooters</h5>
                 {% endif %}
             </div>
             <!-- Coaches View -->
@@ -184,15 +184,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/about">
-                             <i class="fas fa-briefcase"></i>
-                            About
-                        </a>
-                    </li>
-                    <li>
                         <a href="/report?username={{ current_user.username }}">
-                            <i class="fas fa-user"></i>
-                            Profile
+                            <i class="fas fa-clipboard-list"></i>
+                            Recent Shots
                         </a>
                     </li>
             {% endif %}
@@ -236,9 +230,9 @@
                                     <a class="nav-link" href="/profile"><i class="fas fa-user"></i> {{ current_user.fName }} {{ current_user.sName }}</a>
                                 </li>
                             {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/user/signin">Sign In <i class="fas fa-sign-in-alt"></i></a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/user/signin">Sign In <i class="fas fa-sign-in-alt"></i></a>
+                                </li>
                             {% endif %}
                             <!--
                              <li class="nav-item">
