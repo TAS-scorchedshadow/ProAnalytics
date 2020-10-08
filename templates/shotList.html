@@ -19,7 +19,7 @@
                     </div>
                     {{ form.date(class_="form-control", id="inputGroupSelect01") }}
                     <div class="input-group-append">
-                        {{ form.submit(class_='btn btn-success',style="padding: 5x 100px;") }}
+                        {{ form.submit(class_='btn btn-primary',style="padding: 5x 100px;") }}
                     </div>
                 </div>
             </form>
@@ -28,6 +28,7 @@
             <div class="row">
                 <div class="col-12 pb-5">
                     <div class="card shadow border-0 h-100">
+                        <div class="card-header">
                         <!--Section of the card that the user always sees-->
                             <div class="d-flex flex-row justify-content-between">
                                 <div class="pl-2">
@@ -39,6 +40,8 @@
                                   </button>
                                 </div>
                             </div>
+                        </div>
+                        <div class="card-body">
                             <div class="row">
                                 <div class="col-12 pl-4">
                                     <p>Duration: {{ shoot['duration'] }}</p>
@@ -73,6 +76,7 @@
                                             </table>
                                         </div>
                                     </div>
+                                </div>
                         </div>
                         <!--Collapsible section of the card-->
                          <div class="collapse" id="{{ shoot['id'] }}">

@@ -1,16 +1,16 @@
-$palette-1: #86c232;
-$palette-2: #61892F;
-$palette-3: #6B6E70;
-$palette-4: #474B4F;
-$palette-5: #222629;
+$palette-1: #7386D5;
+$palette-2: #6d7fcc;
+$palette-3: #fff;
+$palette-4: #7386D5;
+$palette-5: #6d7fcc;
 
-$txt-color: #fff;
+$txt-color: black;
+
 $theme-colors: (
   "primary": $palette-1,
   "nav-color-bg": $palette-4,
   "nav-color-txt": $txt-color
 );
-
 $link-hover-decoration : none;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
@@ -20,8 +20,6 @@ $link-hover-decoration : none;
     width: 100%;
 }
 
-
-
 #sidebar {
     width: 250px;
     position: fixed;
@@ -29,7 +27,7 @@ $link-hover-decoration : none;
     left: 0;
     height: 100vh;
     z-index: 999;
-    background: $palette-4;
+    background: #7386D5;
     color: #fff;
     transition: all 0.3s;
 }
@@ -40,12 +38,12 @@ $link-hover-decoration : none;
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: $palette-5;
+    background: #6d7fcc;
 }
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid $palette-1;
+    border-bottom: 1px solid #47748b;
 }
 
 #sidebar ul p {
@@ -55,20 +53,20 @@ $link-hover-decoration : none;
 
 #sidebar ul li a {
     padding: 10px;
-    color: #fff;
     font-size: 1.1em;
+    color: #fff;
     display: block;
 }
 
 #sidebar ul li a:hover {
-    color: $palette-1;
-    background: $palette-3;
+    color: #7386D5;
+    background: #fff;
 }
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: $palette-3;
+    background: #6d7fcc;
 }
 
 a[data-toggle="collapse"] {
@@ -86,7 +84,7 @@ a[data-toggle="collapse"] {
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: $palette-3
+    background: #6d7fcc;
 }
 
 ul.CTAs {
@@ -103,52 +101,18 @@ ul.CTAs a {
 
 a.download {
     background: #fff;
-    color: $palette-1;
+    color: #7386D5;
 }
 
 a.article {
-    background-color: $palette-1;
+    background: #6d7fcc !important;
     color: #fff !important;
 }
 
-
-.article:hover {
-    background-color: $palette-1 !important;
-    color: #fff !important;
+a.article:hover{
+        background: #fff !important;
+    color: #6d7fcc !important;
 }
-
-body{
-    background-color: $palette-3;
-}
-
-label{
+h4, p, th, td {
     color: $txt-color;
-}
-
-h1, h2, h3, h4, h5, h6, p, th, td {
-    color: $txt-color;
-}
-
-.card {
-    background-color: $palette-4;
-}
-.card-header{
-    background-color: $palette-5;
-}
-
-.input-group-text{
-    background-color: $palette-4;
-    color: #fff;
-    border: 1px solid $palette-5;
-}
-
-.text-primary{
-    color: $palette-1;
-}
-
-.text-secondary{
-    color: $palette-2;
-}
-#text-primary {
-    color: $palette-1;
 }
