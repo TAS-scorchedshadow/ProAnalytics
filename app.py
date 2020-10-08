@@ -301,7 +301,7 @@ def upload():
                     idFound = usernameExists(shoot['username'])
                     if idFound:
                         # todo: re-enable this
-                        addShoot(shoot)  # Import the shoot to the database
+                        # addShoot(shoot)  # Import the shoot to the database
                         count['success'] += 1
                         os.remove(filePath)  # Delete file
                         print(filename, "was removed")  # Debug

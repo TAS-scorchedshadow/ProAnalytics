@@ -14,7 +14,7 @@ class uploadForm(FlaskForm):
     weather = SelectField("Weather:", choices=[('Sunny', 'Sunny'), ('Cloudy', 'Cloudy'), ('Windy', 'Windy'),
                                                ('Rain', 'Rain'), ('Storm', 'Storm')])
     username = StringField("Username:")
-    submit = SubmitField("Submit: ")
+    submit = SubmitField("Submit")
 
 # form for registering
 class signUpForm(FlaskForm):
