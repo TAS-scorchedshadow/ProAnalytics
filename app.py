@@ -285,7 +285,7 @@ def upload():
                     idFound = usernameExists(shoot['username'])
                     if idFound:
                         # todo: re-enable this
-                        # addShoot(shoot)  # Import the shoot to the database
+                        addShoot(shoot)  # Import the shoot to the database
                         count['success'] += 1
                         os.remove(filePath)  # Delete file
                         print(filename, "was removed")  # Debug
@@ -294,12 +294,13 @@ def upload():
                         # Will likely do this by sending the user to a different page to confirm usernames
                         print("Username not found")     # Debug
                         count['incomplete'] += 1
+                        shoot['id'] = count['incomplete']
                         invalidShoots.append(shoot)
                         os.remove(filePath)  # Delete file
                         print(filename, "was removed")  # Debug
                     print(invalidShoots)
         if count['incomplete'] > 0:
-            return render_template('uploadVerify.html', invalidShoots=invalidShoots,
+            return render_template('uploadVerify.html', form=form, invalidShoots=invalidShoots,
                                    success=count['success'],
                                    total=count['total'], failure=count['failure'])
         else:

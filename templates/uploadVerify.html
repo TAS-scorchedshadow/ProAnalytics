@@ -72,10 +72,14 @@
         </body>
     {% endif %}
     {% for invalidShoot in invalidShoots %}
+        <div>
         {% for shot in invalidShoot['shotList'] %}
             {{ shot }}
         {% endfor %}
-        <br>
+            <form action ="" method="post">
+                {{ form.username(id=invalidShoot['id'], value=invalidShoot['username']) }}
+            </form>
+        </div>
     {% endfor %}
 
 {% endblock %}

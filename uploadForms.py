@@ -13,6 +13,7 @@ class uploadForm(FlaskForm):
                                                  ('700m', '700m'), ('800m', '800m')])
     weather = SelectField("Weather:", choices=[('Sunny', 'Sunny'), ('Cloudy', 'Cloudy'), ('Windy', 'Windy'),
                                                ('Rain', 'Rain'), ('Storm', 'Storm')])
+    username = StringField("Username:")
     submit = SubmitField("Submit: ")
 
 # form for registering
