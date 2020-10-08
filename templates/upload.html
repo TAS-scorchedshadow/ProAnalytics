@@ -33,6 +33,15 @@
             .closebtn:hover {
               color: black;
             }
+
+            .file-caption-info{
+                color: white;
+            }
+
+            .file-size-info{
+                color: white;
+            }
+
         </style>
     </head>
     <!-- File styling assests-->
@@ -114,8 +123,17 @@
                 allowedFileExtensions: ["txt"]
         });
         </script>
-        {{ form.rifleRange() }}
-        {{ form.distance() }}
-        {{ form.weather() }}
+        <hr>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                {{ form.rifleRange(class_="form-control") }}
+            </div>
+            <div class="input-group-append">
+                {{ form.distance(class_="form-control") }}
+            </div>
+            <div class="input-group-append">
+                {{ form.weather(class_="form-control") }}
+            </div>
+        </div>
     </form>
 {% endblock %}

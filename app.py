@@ -16,7 +16,8 @@ from uploadForms import uploadForm, signUpForm, signIn, reportForm, comparativeS
 from security import registerUser, validateLogin, User
 from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates,\
     get_shoots_dict, get_line_graph_ranges, get_all_shooter_names,\
-    get_graph_details, get_shot_details, get_dates_for_all, get_ranges_for_all, usernameExists
+    get_graph_details, get_shot_details, get_dates_for_all, get_ranges_for_all, usernameExists,\
+    get_shooter_and_year
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -60,6 +61,14 @@ def landingPage():
 @login_required
 def adminHome():
     return render_template('adminHome.html')
+
+
+@app.route('/studentList')
+@login_required
+def studentList():
+    all_shooters = get_shooter_and_year()
+    return render_template('studentList.html', all_shooters=all_shooters)
+
 
 
 @app.route('/shooterHome')

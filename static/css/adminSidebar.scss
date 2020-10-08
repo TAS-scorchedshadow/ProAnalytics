@@ -13,6 +13,15 @@ $theme-colors: (
 
 $link-hover-decoration : none;
 
+.alert-secondary {
+  color: #121415;
+  background-color: $palette-4 !important;
+  border-color: $palette-4 !important;
+}
+.alert-secondary hr {
+  border-top-color: #b4b5b6;
+}
+
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 .wrapper {

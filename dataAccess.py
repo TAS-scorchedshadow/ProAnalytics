@@ -343,3 +343,19 @@ def get_ranges_for_all():  # collect the ranges every shooter has in a dictionar
             if shoot[0] not in all_ranges[user[0]]:
                 all_ranges[user[0]].append(shoot[0])
     return all_ranges
+
+
+def get_shooter_and_year():  # collect shooter and their year group they are in into a dictionary
+    all_shooters = {}
+    conn = sqlite3.connect("PARS.db")
+    c = conn.cursor()
+    c.execute('SELECT username, fName, sName, year FROM users WHERE admin IS 0 ORDER BY year asc')
+    users = c.fetchall()
+    for user in users:
+        if user[3] not in all_shooters:
+            all_shooters[user[3]] = [[user[0], capitalise(user[1]), capitalise(user[2])]]
+        else:
+            print(all_shooters)
+            all_shooters[user[3]].append([user[0], capitalise(user[1]), capitalise(user[2])])
+    print(all_shooters)
+    return all_shooters
