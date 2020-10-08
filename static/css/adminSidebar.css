@@ -88,8 +88,42 @@ a.download {
     color: #7386D5;
 }
 
-a.article,
-a.article:hover {
-    background: #86C232 !important;
+a.article {
+    background-color: #86C232;
     color: #fff !important;
+}
+
+
+.article:hover {
+    background-color: #61892F !important;
+    color: #fff !important;
+}
+
+body{
+    background-color: #6B6E70;
+}
+
+label{
+    color: white;
+}
+
+h1, h2, h3, h4, h5, h6, p, th, td {
+    color: white;
+}
+
+.card {
+    background-color: #474B4F;
+}
+
+.btn-success {
+    background-color: #86C232;
+    outline-color: #86C232;
+}
+.btn-success:hover {
+    background-color: #61892F;
+    outline-color: #61892F;
+}
+.btn-outline-success {
+    color: #86C232;
+    outline-color: #86C232;
 }

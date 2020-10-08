@@ -164,7 +164,7 @@ def get_all_dates(shooter):  # collect all the dates that a shooter has shot in 
     timeList = []
     for shoot in shootTimes:
         stringDate = datetime.fromtimestamp(int(shoot[0]) / 1000).strftime('%d-%m-%y')
-        if stringDate not in timeList:
+        if (stringDate, stringDate) not in timeList:
             create_tuple = (stringDate, stringDate)
             timeList.append(create_tuple)
     print(timeList)

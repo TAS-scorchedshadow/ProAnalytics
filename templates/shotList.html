@@ -2,6 +2,9 @@
 {% set active_page = "shotList" %}
 {% block page_title %} Shot List {% endblock %}
 {% block page_content %}
+<style>
+.ui-dialog { z-index: 1000 !important ;}
+</style>
 <!-- create dropdown for each shoot in target_list-->
 <div class="container-fluid">
     <h2>{{ shooter_name }}</h2>
@@ -11,9 +14,12 @@
             <form action="" method="post" role="form">
                 {{ form.hidden_tag() }}
                 <div class="input-group mb-3">
-                    {{ form.date(class_="form-control") }}
+                    <div class="input-group-prepend" for="inputGroupSelect01">
+                        <label class="input-group-text" for="inputGroupSelect01">Date:</label>
+                    </div>
+                    {{ form.date(class_="form-control", id="inputGroupSelect01") }}
                     <div class="input-group-append">
-                        {{ form.submit(class_='btn btn-primary',style="padding: 5x 100px;") }}
+                        {{ form.submit(class_='btn btn-success',style="padding: 5x 100px;") }}
                     </div>
                 </div>
             </form>
@@ -28,7 +34,7 @@
                                     <p> {{ shoot['date'] }} </p>
                                 </div>
                                 <div>
-                                  <button class="btn btn-primary" type="button" data-toggle="collapse" id="{{ 'button' + shoot['id'] }}" data-target="{{ "#" + shoot['id'] }}" aria-expanded="false" aria-controls="{{ shoot['id'] }}" onclick=buttonChange(this) >
+                                  <button class="btn btn-outline-primary" type="button" data-toggle="collapse" id="{{ 'button' + shoot['id'] }}" data-target="{{ "#" + shoot['id'] }}" aria-expanded="false" aria-controls="{{ shoot['id'] }}" onclick=buttonChange(this) >
                                     +
                                   </button>
                                 </div>
@@ -140,7 +146,7 @@
 
 
 <!--Html of the popup graph-->
-<div id='lineGraph' title='Line Graph' hidden>
+<div id='lineGraph' title='Percentage Accuracy' hidden>
     {{ line_script | safe }}
     {{ line_div | safe }}
 </div>
@@ -155,7 +161,12 @@
     $(document).ready(() => {
         $("#graphButton").click(() => {
             $("#lineGraph").removeAttr("hidden");
-            $("#lineGraph").dialog({height: 550, width: 1000});
+            $("#lineGraph").dialog({
+                height: 550,
+                width: 1000,
+                zIndex:1000,
+
+            });
         });
     });
 </script>

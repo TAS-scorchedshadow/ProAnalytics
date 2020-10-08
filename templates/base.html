@@ -16,6 +16,7 @@
     <!--Themes--->
     {% if current_user.admin == 1 %}
         <link rel="stylesheet" type="text/css" href="../static/css/adminSidebar.css">
+        <link rel="stylesheet" type="text/css" href="../static/css/adminSidebar.scss">
     {% else %}
          <link rel="stylesheet" type="text/css" href="../static/css/studentSidebar.css">
     {% endif %}
@@ -54,6 +55,35 @@
             });
         });
     </script>
+
+    <!-- Twitter TypeAhead -->
+    <script type="text/javascript" src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+    <!-- Defining Local Dataset -->
+    <script>
+        $(document).ready(function(){
+            // Defining the local dataset
+            var cars = ['Dylan Dinh An Huynh', 'Henry Guo', 'Victor Zhang', 'Rishi Wig', 'Dylan Marcusia', 'Thomas Nguyen', 'Daniel Wakeford', 'Daniel Comben', 'Daniel Wakeson'];
+
+            // Constructing the suggestion engine
+            var cars = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: cars
+            });
+
+            // Initializing the typeahead
+            $('.typeahead').typeahead({
+                hint: true,
+                highlight: true, /* Enable substring highlighting */
+                minLength: 1 /* Specify minimum characters required for showing result */
+            },
+            {
+                name: 'cars',
+                source: cars
+            });
+        });
+    </script>
+
 
 </head>
 
