@@ -92,6 +92,14 @@ def comparativeHomePage():
         second_shoot_data = get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data, all_forms.dates_two.data)
         first_shots_data =  get_shot_details(first_shoot_data[0][4])
         second_shots_data = get_shot_details(second_shoot_data[0][4])
+        first_median = first_shoot_data[0][5]
+        first_mean = first_shoot_data[0][6]
+        first_std = first_shoot_data[0][7]
+        first_weather = first_shoot_data[0][8]
+        second_median = second_shoot_data[0][5]
+        second_mean = second_shoot_data[0][6]
+        second_std = second_shoot_data[0][7]
+        second_weather = second_shoot_data[0][8]
 
         # filters through each piece of data from the list of tuples and assigns them to the
         # variables necessary. e.g.
@@ -123,7 +131,10 @@ def comparativeHomePage():
         # If the radio selected button is bar
         if (all_forms.graphType.data) == "Bar":
             bar_script, bar_div = graphProcessing.compareBar(all_forms.shooter_username_one.data, all_forms.shooter_username_two.data, first_shoot_data[0][3], second_shoot_data[0][3])
-            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script, graph_div=bar_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
+            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script,
+                                   graph_div=bar_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges,
+                                   first_median = first_median, first_mean = first_mean, first_std = first_std, first_weather = first_weather,
+                                   second_median = second_median, second_mean = second_mean, second_std= second_std, second_weather = second_weather)
 
         # If the radio button selected is line
         if (all_forms.graphType.data) == "Line":
@@ -168,9 +179,14 @@ def comparativeHomePage():
             yLabel = "Times"
             title = "Comparison Line"
             line_script, line_div = graphProcessing.compareLine(values, xLabel, yLabel, title)
-            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script, graph_div=line_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
+            return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script,
+                                   graph_div=line_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges,
+                                   first_median = first_median, first_mean = first_mean, first_std = first_std, first_weather = first_weather,
+                                   second_median = second_median, second_mean = second_mean, second_std = second_std, second_weather = second_weather)
 
-        return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)
+        return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges,
+                               first_median=first_median, first_mean=first_mean, first_std=first_std, first_weather=first_weather,
+                               second_median=second_median, second_mean=second_mean, second_std=second_std, second_weather=second_weather)
     return render_template('comparativeHomePage.html', all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
 
 

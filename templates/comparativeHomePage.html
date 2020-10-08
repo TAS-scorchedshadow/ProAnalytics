@@ -47,6 +47,12 @@
                 {{ all_forms.dates_one.label }}<br>
                 {{ all_forms.dates_one(id="date1") }}
             </p>
+            <p>
+                Mean: {{ first_mean }}
+                Median: {{ first_median }}
+                Standard Deviation: {{ first_std }}
+                Weather: {{ first_weather }}
+            </p>
         </div>
 
         <div class = "col-8">
@@ -70,6 +76,12 @@
             <p>
                 {{ all_forms.dates_two.label }}<br>
                 {{ all_forms.dates_two(id='date2') }}
+            </p>
+            <p>
+                Mean: {{ second_mean }}
+                Median: {{ second_median }}
+                Standard Deviation: {{ second_std }}
+                Weather: {{ second_weather }}
             </p>
         </div>
         <div class="card" style=" position: relative; padding-top: 30px; padding-left: 10px; padding-right: 10px; left: 120px; bottom: 100px">
