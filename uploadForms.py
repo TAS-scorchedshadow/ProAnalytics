@@ -15,6 +15,7 @@ class uploadForm(FlaskForm):
                                                ('Rain', 'Rain'), ('Storm', 'Storm')])
     username = StringField("Username:")
     submit = SubmitField("Submit")
+    identifier = HiddenField("Upload/Verify", default="upload")
 
 # form for registering
 class signUpForm(FlaskForm):
