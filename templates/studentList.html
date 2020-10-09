@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% set active_page = "studentList" %}
+{% block page_title %} Student List {% endblock %}
+{% block page_content %}
+<div class="container-fluid">
+    <h4>Student List</h4>
+    {% for year in all_shooters %}
+        <div class="row">
+            <div class="col-12">
+                <h4>Year {{ year }}</h4>
+            </div>
+            {% for user in all_shooters[year] %}
+                <div class="col-2">
+                    <div class="card">
+                        <a href="/report?username={{ user[0] }}">
+                            <p style="text-align: center"><u>{{ user[1] + ' ' + user[2] }}</u></p>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,4 +1,14 @@
 @charset "UTF-8";
+.alert-secondary {
+  color: #121415;
+  background-color: #474B4F !important;
+  border-color: #474B4F !important;
+}
+
+.alert-secondary hr {
+  border-top-color: #b4b5b6;
+}
+
 /*!
  * Bootstrap v4.5.2 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
