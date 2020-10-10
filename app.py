@@ -305,6 +305,7 @@ def upload():
                         shoot['rifleRange'] = form.rifleRange.data
                         shoot['distance'] = form.distance.data
                         shoot['weather'] = form.weather.data
+                        shoot['displayID'] = count['total']
                         idFound = usernameExists(shoot['username'])
                         if idFound:
                             addShoot(shoot)  # Import the shoot to the database
@@ -333,7 +334,6 @@ def upload():
                         addShoot(shoots[id])
                         count['success'] += 1
                     else:
-                        print("Username not found")  # Debug
                         shoots[id]['id'] = count['incomplete']
                         count['incomplete'] += 1
                         invalidShoots.append(shoots[id])

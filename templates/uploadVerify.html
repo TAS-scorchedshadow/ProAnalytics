@@ -107,7 +107,6 @@
             });
         });
     </script>
-
     {% if total %}
         <body>
             <div class="alert">
@@ -143,18 +142,22 @@
             </script>
         </body>
     {% endif %}
+    <h1>Verify Username</h1>
     <form action="" method="post">
         {{ form.csrf_token }}
         {% for invalidShoot in invalidShoots %}
             <div>
+                Shoot {{ invalidShoot['displayID'] }} <br>
+                {{ invalidShoot['dateTime'] }} <br>
                 {% for shot in invalidShoot['shotList'] %}
                     {{ shot }}
                 {% endfor %}
+                - Total: {{ invalidShoot['totalScore'] }}
                 <br>
                 <input type="text" class="typeahead tt-query" name="username.{{ invalidShoot['id'] }}" value={{ invalidShoot['username'] }}>
             </div>
+            <br>
         {% endfor %}
-        <br>
         <br>
         <br>
         {{ form.submit }}

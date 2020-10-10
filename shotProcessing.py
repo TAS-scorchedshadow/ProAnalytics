@@ -1,6 +1,7 @@
 import math
 import json
 import numpy
+from datetime import datetime
 
 
 # Reformats the shots to filter for relevant data
@@ -37,6 +38,7 @@ def validateShots(txtfile):
         firstShotTime = validShotList[0]['ts']              # time of last shot
         lastShotTime = validShotList[totalShots - 1]['ts']  # time of last shot
         newShoot['time'] = firstShotTime
+        newShoot['dateTime'] = msToDatetime(firstShotTime)
         newShoot['duration'] = lastShotTime - firstShotTime
         newShoot['groupSize'] = data['stats_group_size']
         newShoot['groupCentreX'] = data['stats_group_center']['x']
@@ -60,6 +62,11 @@ def shotStats(shoot):
     stats['mean'] = numpy.mean(shots)
     stats['std'] = numpy.std(shots)
     return stats
+
+
+def msToDatetime(ms):
+    date = datetime.fromtimestamp(ms / 1000).strftime('%d/%m/%Y %H:%M')
+    return date
 
 
 # Gets shot statistics
