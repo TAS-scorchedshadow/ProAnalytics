@@ -277,8 +277,10 @@ def report():
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
+    # todo: neaten this up
+    # todo: make verify page clearer (i.e. make it so that user knows that username field is for usernames)
     if current_user.admin == 1:
-        # create form
+        # Create Form
         form = uploadForm()
         count = {'success': 0, 'incomplete': 0, 'failure': 0, 'total': 0}
         if form.identifier.data == "upload":
@@ -294,15 +296,6 @@ def upload():
                     print(filename, "was uploaded")  # Debug
                     try:
                         shoot = validateShots(filePath)  # Fixes up file to obtain relevant data and valid shots
-                        success = True
-                    except:
-                        success = False
-                        count['failure'] += 1
-                        # todo: Have file upload failures give more detail into nature of failure or return fail note
-                        print(str(filename) + " had an error in uploading")
-                        os.remove(filePath)  # Delete file
-                        print(filename, "was removed")  # Debug
-                    if success:
                         shoot['rifleRange'] = form.rifleRange.data
                         shoot['distance'] = form.distance.data
                         shoot['weather'] = form.weather.data
@@ -311,24 +304,17 @@ def upload():
                             # todo: re-enable this
                             addShoot(shoot)  # Import the shoot to the database
                             count['success'] += 1
-                            os.remove(filePath)  # Delete file
-                            print(filename, "was removed")  # Debug
+
                         else:
                             shoot['id'] = count['incomplete']
                             count['incomplete'] += 1
                             invalidShoots.append(shoot)
-                            os.remove(filePath)  # Delete file
-                            print(filename, "was removed")  # Debug
-            if count['incomplete'] > 0:
-                invalidShootsJson = json.dumps(invalidShoots)
-                return render_template('uploadVerify.html', form=form, invalidShoots=invalidShoots,
-                                       invalidShootsJson=invalidShootsJson,
-                                       success=count['success'],
-                                       total=count['total'], failure=count['failure'])
-            else:
-                print(invalidShoots)
-                return render_template('upload.html', form=form, success=count['success'],
-                                       total=count['total'], failure=count['failure'])
+                    except:
+                        count['failure'] += 1
+                        # todo: Have file upload failures give more detail into nature of failure or return fail note
+                        print(str(filename) + " had an error in uploading")
+                    os.remove(filePath)  # Delete file
+                    print(filename, "was removed")  # Debug
         else:
             shoots = json.loads(request.form["invalidShootInfo"])
             count['success'] = int(request.form["success"])
@@ -348,15 +334,17 @@ def upload():
                         shoots[id]['id'] = count['incomplete']
                         count['incomplete'] += 1
                         invalidShoots.append(shoots[id])
-            if count['incomplete'] > 0:
-                invalidShootsJson = json.dumps(invalidShoots)
-                return render_template('uploadVerify.html', form=form, invalidShoots=invalidShoots,
-                                       invalidShootsJson=invalidShootsJson,
-                                       success=count['success'],
-                                       total=count['total'], failure=count['failure'])
-            else:
-                return render_template('upload.html', form=form, success=count['success'],
-                                       total=count['total'], failure=count['failure'])
+
+        if count['incomplete'] > 0:
+            invalidShootsJson = json.dumps(invalidShoots)
+            return render_template('uploadVerify.html', form=form, invalidShoots=invalidShoots,
+                                   invalidShootsJson=invalidShootsJson,
+                                   success=count['success'],
+                                   total=count['total'], failure=count['failure'])
+        else:
+            print(invalidShoots)
+            return render_template('upload.html', form=form, success=count['success'],
+                                   total=count['total'], failure=count['failure'])
     else:
         return render_template('accessDenied.html')
 

@@ -86,6 +86,6 @@
         {{ form.identifier(value="verify") }}
         {{ form.invalidShootInfo(value=invalidShootsJson) }}
         {{ form.success(value=success) }}
-        {{ form.total(value=total) }}
+        {{ form.total(value=total-failure) }}
     </form>
 {% endblock %}
