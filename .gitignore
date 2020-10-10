@@ -8,3 +8,5 @@ __pycache__
 /myvenv/
 /.idea/
 >>>>>>> master
+/venv/Lib/site-packages/
+/venv/Scripts/
