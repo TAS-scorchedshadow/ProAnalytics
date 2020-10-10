@@ -151,9 +151,8 @@ def get_all_usernames(): #creates a list of tuples of all of the usernames in th
     names = c.fetchall()
     usernames = []
     for name in names:
-        create_tuple = (name[0], name[0])
-        if create_tuple not in usernames:
-            usernames.append(create_tuple)
+        if name[0] not in usernames:
+            usernames.append(name[0])
     return usernames
 
 def get_all_dates(shooter):  # collect all the dates that a shooter has shot in and returns it as a list (sorted from latest to oldest)
