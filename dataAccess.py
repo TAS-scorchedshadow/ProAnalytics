@@ -20,6 +20,20 @@ def get_db():
         return db
 
 
+# convert to unix time (ts)
+# date is a string in the format dd/mm/yyyy
+def convertTimeStr(date):
+    newDate = time.mktime(datetime.strptime(date, "%d-%m-%y").timetuple()) * 1000
+    return newDate
+
+
+# convert unix time into readable string (dd/mm/yyyy)
+# ts is unix time in milliseconds as an integer
+def convertStrTime(ts):
+    newDate = datetime.fromtimestamp(int(shoot[0]) / 1000).strftime('%d-%m-%y')
+    return newDate
+
+
 # Adds a row to the users table of PARS.db with the indicated information
 # Only used to add essential information
 def addUser(username, fname, sname, school, email, password):
@@ -317,7 +331,7 @@ def get_dates_for_all():  # collect the dates for every shooter in a dictionary 
     users = c.fetchall()
     for user in users:
         dateDict = {}
-        c.execute('SELECT distance, time FROM shoots WHERE username=?;', (user[0],))
+        c.execute('SELECT distance, time FROM shoots WHERE username=? ORDER BY time desc;', (user[0],))
         shoots = c.fetchall()
         for shoot in shoots:
             date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y')
