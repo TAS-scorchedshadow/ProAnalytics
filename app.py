@@ -277,55 +277,65 @@ def report():
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
+    # todo: neaten this up
+    # todo: make verify page clearer (i.e. make it so that user knows that username field is for usernames)
     if current_user.admin == 1:
-        # create form
+        # Create Form
         form = uploadForm()
-        invalidShoots = []
         count = {'success': 0, 'incomplete': 0, 'failure': 0, 'total': 0}
-        # on submission
-        if request.method == 'POST':
-            files = request.files.getlist('file')
-            for file in files:
-                count['total'] += 1
-                filename = secure_filename(file.filename)
-                filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(filePath)  # Add file to upload folder
-                print(filename, "was uploaded")  # Debug
-                try:
-                    shoot = validateShots(filePath)  # Fixes up file to obtain relevant data and valid shots
-                    success = True
-                except:
-                    success = False
-                    count['failure'] += 1
-                    # todo: Have file upload failures give more detail into nature of failure or return fail note
-                    print(str(filename) + " had an error in uploading")
+        if form.identifier.data == "upload":
+            invalidShoots = []
+            # on submission
+            if request.method == 'POST':
+                files = request.files.getlist('file')
+                for file in files:
+                    count['total'] += 1
+                    filename = secure_filename(file.filename)
+                    filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    file.save(filePath)  # Add file to upload folder
+                    print(filename, "was uploaded")  # Debug
+                    try:
+                        shoot = validateShots(filePath)  # Fixes up file to obtain relevant data and valid shots
+                        shoot['rifleRange'] = form.rifleRange.data
+                        shoot['distance'] = form.distance.data
+                        shoot['weather'] = form.weather.data
+                        idFound = usernameExists(shoot['username'])
+                        if idFound:
+                            addShoot(shoot)  # Import the shoot to the database
+                            count['success'] += 1
+                        else:
+                            shoot['id'] = count['incomplete']
+                            count['incomplete'] += 1
+                            invalidShoots.append(shoot)
+                    except:
+                        count['failure'] += 1
+                        print(str(filename) + " had an error in uploading")
                     os.remove(filePath)  # Delete file
                     print(filename, "was removed")  # Debug
-                if success:
-                    # todo: Handle missing values. 'username' may be a missing value.
-                    # Adds missing values temporarily
-                    shoot['rifleRange'] = form.rifleRange.data
-                    shoot['distance'] = form.distance.data
-                    shoot['weather'] = form.weather.data
-                    idFound = usernameExists(shoot['username'])
+        else:
+            shoots = json.loads(request.form["invalidShootInfo"])
+            count['success'] = int(request.form["success"])
+            count['total'] = int(request.form["total"])
+            invalidShoots = []
+            for key in request.form:
+                if "username." in key:
+                    id = int(key[9:])
+                    username = request.form[key]
+                    shoots[id]['username'] = username
+                    idFound = usernameExists(username)
                     if idFound:
-                        # todo: re-enable this
-                        # addShoot(shoot)  # Import the shoot to the database
+                        addShoot(shoots[id])
                         count['success'] += 1
-                        os.remove(filePath)  # Delete file
-                        print(filename, "was removed")  # Debug
                     else:
-                        # todo: Proper handling for usernames
-                        # Will likely do this by sending the user to a different page to confirm usernames
-                        print("Username not found")     # Debug
+                        print("Username not found")  # Debug
+                        shoots[id]['id'] = count['incomplete']
                         count['incomplete'] += 1
-                        shoot['id'] = count['incomplete']
-                        invalidShoots.append(shoot)
-                        os.remove(filePath)  # Delete file
-                        print(filename, "was removed")  # Debug
-                    print(invalidShoots)
+                        invalidShoots.append(shoots[id])
+
         if count['incomplete'] > 0:
+            invalidShootsJson = json.dumps(invalidShoots)
             return render_template('uploadVerify.html', form=form, invalidShoots=invalidShoots,
+                                   invalidShootsJson=invalidShootsJson,
                                    success=count['success'],
                                    total=count['total'], failure=count['failure'])
         else:

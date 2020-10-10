@@ -71,15 +71,21 @@
             </script>
         </body>
     {% endif %}
-    {% for invalidShoot in invalidShoots %}
-        <div>
-        {% for shot in invalidShoot['shotList'] %}
-            {{ shot }}
+    <form action="" method="post">
+        {{ form.csrf_token }}
+        {% for invalidShoot in invalidShoots %}
+            <div>
+                {% for shot in invalidShoot['shotList'] %}
+                    {{ shot }}
+                {% endfor %}
+                <br>
+                <input type="text" name="username.{{ invalidShoot['id'] }}" value={{ invalidShoot['username'] }}>
+            </div>
         {% endfor %}
-            <form action ="" method="post">
-                {{ form.username(id=invalidShoot['id'], value=invalidShoot['username']) }}
-            </form>
-        </div>
-    {% endfor %}
-    {{ form.submit }}
+        {{ form.submit }}
+        {{ form.identifier(value="verify") }}
+        {{ form.invalidShootInfo(value=invalidShootsJson) }}
+        {{ form.success(value=success) }}
+        {{ form.total(value=total-failure) }}
+    </form>
 {% endblock %}
