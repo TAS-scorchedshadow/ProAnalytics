@@ -24,6 +24,12 @@ $link-hover-decoration : none;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+.custom-radio-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
 .wrapper {
     display: flex;
     width: 100%;
@@ -160,4 +166,8 @@ h1, h2, h3, h4, h5, h6, p, th, td {
 }
 #text-primary {
     color: $palette-1;
+}
+
+.jumbotron-fluid{
+    background-color: $palette-4;
 }

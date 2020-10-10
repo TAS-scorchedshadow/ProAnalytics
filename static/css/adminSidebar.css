@@ -10177,6 +10177,12 @@ h3 {
     border-color: #dee2e6;
   }
 }
+.custom-radio-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
 .wrapper {
   display: flex;
   width: 100%;
@@ -10312,6 +10318,10 @@ h1, h2, h3, h4, h5, h6, p, th, td {
 
 #text-primary {
   color: #86c232;
+}
+
+.jumbotron-fluid {
+  background-color: #474B4F;
 }
 
 /*# sourceMappingURL=adminSidebar.css.map */

@@ -2,8 +2,14 @@
 {% set active_page = "studentList" %}
 {% block page_title %} Student List {% endblock %}
 {% block page_content %}
+<div class="jumbotron jumbotron-fluid">
+  <div class="container justify-content-center text-center">
+            <div class="bs-example">
+                <h2>Shooter List</h2>
+            </div>
+    </div>
+</div>
 <div class="container-fluid">
-    <h4>Student List</h4>
     {% for year in all_shooters %}
         <div class="row">
             <div class="col-12">
@@ -19,6 +25,7 @@
                 </div>
             {% endfor %}
         </div>
+        <hr>
     {% endfor %}
 </div>
 {% endblock %}

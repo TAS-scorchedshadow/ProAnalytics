@@ -85,7 +85,7 @@ def compareBar(username_one, username_two, score_one, score_two):
         score=scores,
         colour=colour_list,
     ))
-    p_vbar = figure(x_range=names, plot_height=400, plot_width=800, title="Comparison Bar",
+    p_vbar = figure(x_range=names, plot_height=200, plot_width=800, sizing_mode='scale_width', title="Comparison Bar",
                     toolbar_location=None, tools="hover")
     p_vbar.hover.tooltips = [
         ("Name", "@name"),

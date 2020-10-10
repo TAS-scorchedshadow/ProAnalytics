@@ -90,7 +90,7 @@ def comparativeHomePage():
     all_forms = comparativeSelect()
 
     # collect the data used for the select fields and convert into jsons which javascript can read from
-    #all_dates_dict leaves a copy in dictionary format for ease in further code
+    # all_dates_dict leaves a copy in dictionary format for ease in further code
     all_dates = get_dates_for_all()
     all_dates_dict = all_dates
     all_dates = json.dumps(all_dates)
@@ -149,7 +149,7 @@ def comparativeHomePage():
             return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script,
                                    graph_div=bar_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges,
                                    first_median = first_median, first_mean = first_mean, first_std = first_std, first_weather = first_weather,
-                                   second_median = second_median, second_mean = second_mean, second_std= second_std, second_weather = second_weather)
+                                   second_median = second_median, second_mean = second_mean, second_std= second_std, second_weather = second_weather, submit='True')
 
         # If the radio button selected is line
         if (all_forms.graphType.data) == "Line":
@@ -197,12 +197,12 @@ def comparativeHomePage():
             return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script,
                                    graph_div=line_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges,
                                    first_median = first_median, first_mean = first_mean, first_std = first_std, first_weather = first_weather,
-                                   second_median = second_median, second_mean = second_mean, second_std = second_std, second_weather = second_weather)
+                                   second_median = second_median, second_mean = second_mean, second_std = second_std, second_weather = second_weather, submit='True')
 
         return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges,
                                first_median=first_median, first_mean=first_mean, first_std=first_std, first_weather=first_weather,
-                               second_median=second_median, second_mean=second_mean, second_std=second_std, second_weather=second_weather)
-    return render_template('comparativeHomePage.html', all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges)  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
+                               second_median=second_median, second_mean=second_mean, second_std=second_std, second_weather=second_weather, submit='True')
+    return render_template('comparativeHomePage.html', all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges, submit='False')  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
 
 
 @app.route('/about')
@@ -221,9 +221,9 @@ def report():
     form = reportForm()
     username = request.args.get('username')
     getDefault = True
-    if username is None:
-        # TODO create a custom error page
-        return render_template('404.html')
+    # if username is None:
+    #     # TODO create a custom error page for when username is None
+    #     return render_template('404.html')
 
     # connect to database
     conn = sqlite3.connect('PARS.db')

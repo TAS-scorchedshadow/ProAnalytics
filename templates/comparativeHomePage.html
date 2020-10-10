@@ -18,89 +18,83 @@
         crossorigin="anonymous"></script>
 <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.0.1.min.js"
         crossorigin="anonymous"></script>
-
-<div class="container">
-    <div class="row">
-        <div class = "col-8">
-             <div class="card shadow border-0 h-100 justify-content-center">
-                 <div class = "card-body" style="size: 15px">
-                     {{ first_script | safe }} 
-                     {{ first_div | safe }}
-                 </div>
+<form action="" method="post">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-5">
+                <div class="card h-100 justify-content-center">
+                    <div class="card-body">
+                        {{ all_forms.hidden_tag() }}
+                        {{ all_forms.shooter_username_one.label }}
+                        {{ all_forms.shooter_username_one(class_='form-control', onchange="changeDateSelect('1'); ", id="name1") }}<br>
+                        {{ all_forms.shooting_range_one.label }}
+                        {{ all_forms.shooting_range_one(class_='form-control', onchange="changeDateSelect('1')", id="dist1") }}<br>
+                        {{ all_forms.dates_one.label }}
+                        {{ all_forms.dates_one(class_='form-control', id="date1") }}
+                        <hr>
+                        {% if submit == 'True' %}
+{#                            TODO add styling to the following data, perhaps put it in a table#}
+{#                            <p>#}
+{#                                Mean: {{ first_mean }}#}
+{#                                Median: {{ first_median }}#}
+{#                                Standard Deviation: {{ first_std }}#}
+{#                                Weather: {{ first_weather }}#}
+{#                            </p>#}
+                            {{ first_script | safe }}
+                            {{ first_div | safe }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="card h-100 justify-content-center">
+                    <div class="card-body">
+                        {{ all_forms.shooter_username_two.label }}
+                        {{ all_forms.shooter_username_two(class_='form-control', onchange="changeDateSelect('2')", id="name2") }}<br>
+                        {{ all_forms.shooting_range_two.label }}
+                        {{ all_forms.shooting_range_two(class_='form-control', onchange="changeDateSelect('2')", id="dist2") }}<br>
+                        {{ all_forms.dates_two.label }}
+                        {{ all_forms.dates_two(class_='form-control', id='date2') }}
+                        <hr>
+                        {% if submit == 'True' %}
+{#                            TODO add styling to the following data, perhaps put it in a table#}
+{#                            <p>#}
+{#                                Mean: {{ second_mean }}#}
+{#                                Median: {{ second_median }}#}
+{#                                Standard Deviation: {{ second_std }}#}
+{#                                Weather: {{ second_weather }}#}
+{#                            </p>#}
+                            {{ second_script | safe }}
+                            {{ second_div | safe }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                    <div class="card">
+                        <div class="card-body">
+                            {{ all_forms.graphType.label }}<br>
+                            {{ all_forms.graphType(class_=("custom-radio-list"))  }}
+                            {{ all_forms.submit() }}
+                        </div>
+                    </div>
             </div>
         </div>
-        <div>
-        <form action ="" method="post">
-
-            {{ all_forms.hidden_tag() }}
-            <p>
-                {{ all_forms.shooter_username_one.label }}<br>
-                {{ all_forms.shooter_username_one(onchange="changeDateSelect('1'); ", id="name1") }}
-            </p>
-
-            <p>
-                {{ all_forms.shooting_range_one.label }}<br>
-                {{ all_forms.shooting_range_one(onchange="changeDateSelect('1')", id="dist1") }}
-            </p>
-
-            <p>
-                {{ all_forms.dates_one.label }}<br>
-                {{ all_forms.dates_one(id="date1") }}
-            </p>
-            <p>
-                Mean: {{ first_mean }}
-                Median: {{ first_median }}
-                Standard Deviation: {{ first_std }}
-                Weather: {{ first_weather }}
-            </p>
-        </div>
-
-        <div class = "col-8">
-             <div class="card shadow border-0 h-100 justify-content-center">
-                 <div class = "card-body">
-                     {{ second_script | safe }}
-                     {{ second_div | safe }}
-                 </div>
+        <br>
+        {% if submit == 'True' %}
+            <div class="row">
+                <div class="col-12">
+                     <div class="card shadow border-0 h-100 justify-content-center">
+                         <div class="card-body" style="size: 15px">
+                             {{ graph_script | safe }}
+                             {{ graph_div | safe }}
+                         </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div>
-            <p>
-                {{ all_forms.shooter_username_two.label }}<br>
-                {{ all_forms.shooter_username_two(onchange="changeDateSelect('2')", id="name2") }}
-            </p>
-
-            <p>
-                {{ all_forms.shooting_range_two.label }}<br>
-                {{ all_forms.shooting_range_two(onchange="changeDateSelect('2')", id="dist2") }}
-            </p>
-            <p>
-                {{ all_forms.dates_two.label }}<br>
-                {{ all_forms.dates_two(id='date2') }}
-            </p>
-            <p>
-                Mean: {{ second_mean }}
-                Median: {{ second_median }}
-                Standard Deviation: {{ second_std }}
-                Weather: {{ second_weather }}
-            </p>
-        </div>
-        <div class="card" style=" position: relative; padding-top: 30px; padding-left: 10px; padding-right: 10px; left: 120px; bottom: 100px">
-                {{ all_forms.graphType.label }}<br>
-                {{ all_forms.graphType(size = 20)  }}
-                {{ all_forms.submit() }}
-        </form>
-        </div>
+        {% endif %}
     </div>
-    <br>
-        <div class = "col-12">
-             <div class="card shadow border-0 h-100 justify-content-center">
-                 <div class = "card-body" style="size: 15px">
-                     {{ graph_script | safe }}
-                     {{ graph_div | safe }}
-                 </div>
-            </div>
-        </div>
-
+</form>
 
 <script>
     // removes all of the elements from a select element

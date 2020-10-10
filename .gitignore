@@ -3,6 +3,7 @@
 .idea/misc.xml
 .idea/ProAnalytics.iml
 .idea/shelf
+__pycache__
 =======
 /myvenv/
 /.idea/
