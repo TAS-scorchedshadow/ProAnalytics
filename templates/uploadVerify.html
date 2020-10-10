@@ -86,12 +86,10 @@
     <script>
         $(document).ready(function(){
             // Defining the local dataset
-            let allDates = $('#foo').data('boo');
-            var shooters = allDates;
-            console.log(shooters)
+            let shooters = $('#foo').data('boo');
 
             // Constructing the suggestion engine
-            var shooters = new Bloodhound({
+            var shooterSource = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 local: shooters
@@ -105,7 +103,7 @@
             },
             {
                 name: 'shooters',
-                source: shooters
+                source: shooterSource
             });
         });
     </script>
