@@ -301,17 +301,14 @@ def upload():
                         shoot['weather'] = form.weather.data
                         idFound = usernameExists(shoot['username'])
                         if idFound:
-                            # todo: re-enable this
                             addShoot(shoot)  # Import the shoot to the database
                             count['success'] += 1
-
                         else:
                             shoot['id'] = count['incomplete']
                             count['incomplete'] += 1
                             invalidShoots.append(shoot)
                     except:
                         count['failure'] += 1
-                        # todo: Have file upload failures give more detail into nature of failure or return fail note
                         print(str(filename) + " had an error in uploading")
                     os.remove(filePath)  # Delete file
                     print(filename, "was removed")  # Debug
