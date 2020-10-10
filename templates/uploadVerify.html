@@ -79,10 +79,13 @@
                     {{ shot }}
                 {% endfor %}
                 <br>
-                {{ form.username(id=invalidShoot['id'], value=invalidShoot['username']) }}
+                <input type="text" name="username.{{ invalidShoot['id'] }}" value={{ invalidShoot['username'] }}>
             </div>
         {% endfor %}
         {{ form.submit }}
         {{ form.identifier(value="verify") }}
+        {{ form.invalidShootInfo(value=invalidShootsJson) }}
+        {{ form.success(value=success) }}
+        {{ form.total(value=total) }}
     </form>
 {% endblock %}
