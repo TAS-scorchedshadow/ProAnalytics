@@ -14,7 +14,7 @@ import flask_login
 from shotProcessing import validateShots, getScore
 from uploadForms import uploadForm, signUpForm, signIn, reportForm, comparativeSelect
 from security import registerUser, validateLogin, User
-from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates,\
+from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates, get_all_usernames,\
     get_shoots_dict, get_line_graph_ranges, get_all_shooter_names,\
     get_graph_details, get_shot_details, get_dates_for_all, get_ranges_for_all, usernameExists,\
     get_shooter_and_year
@@ -61,6 +61,12 @@ def landingPage():
 @login_required
 def adminHome():
     return render_template('adminHome.html')
+
+@app.route('/test')
+def adminHome2():
+    get_all_usernames()
+    return render_template('report.html')
+
 
 
 @app.route('/studentList')
@@ -334,10 +340,12 @@ def upload():
 
         if count['incomplete'] > 0:
             invalidShootsJson = json.dumps(invalidShoots)
+            username = json.dumps(get_all_usernames())
+            print(username)
             return render_template('uploadVerify.html', form=form, invalidShoots=invalidShoots,
                                    invalidShootsJson=invalidShootsJson,
                                    success=count['success'],
-                                   total=count['total'], failure=count['failure'])
+                                   total=count['total'], failure=count['failure'], usernameList=username)
         else:
             print(invalidShoots)
             return render_template('upload.html', form=form, success=count['success'],
