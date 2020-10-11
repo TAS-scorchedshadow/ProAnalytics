@@ -33,13 +33,12 @@
                         {{ all_forms.dates_one(class_='form-control', id="date1") }}
                         <hr>
                         {% if submit == 'True' %}
-{#                            TODO add styling to the following data, perhaps put it in a table#}
-{#                            <p>#}
-{#                                Mean: {{ first_mean }}#}
-{#                                Median: {{ first_median }}#}
-{#                                Standard Deviation: {{ first_std }}#}
-{#                                Weather: {{ first_weather }}#}
-{#                            </p>#}
+                            <p>
+                                Mean: {{ first_mean }}
+                                Median: {{ first_median }}
+                                Standard Deviation: {{ first_std }}
+                                Weather: {{ first_weather }}
+                            </p>
                             {{ first_script | safe }}
                             {{ first_div | safe }}
                         {% endif %}
@@ -57,13 +56,12 @@
                         {{ all_forms.dates_two(class_='form-control', id='date2') }}
                         <hr>
                         {% if submit == 'True' %}
-{#                            TODO add styling to the following data, perhaps put it in a table#}
-{#                            <p>#}
-{#                                Mean: {{ second_mean }}#}
-{#                                Median: {{ second_median }}#}
-{#                                Standard Deviation: {{ second_std }}#}
-{#                                Weather: {{ second_weather }}#}
-{#                            </p>#}
+                            <p>
+                                Mean: {{ second_mean }}
+                                Median: {{ second_median }}
+                                Standard Deviation: {{ second_std }}
+                                Weather: {{ second_weather }}
+                            </p>
                             {{ second_script | safe }}
                             {{ second_div | safe }}
                         {% endif %}
