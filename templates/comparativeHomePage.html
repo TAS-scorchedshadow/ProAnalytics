@@ -4,6 +4,8 @@
 {% block page_content %}
 <!--Pass variables from jinja into js-->
 <meta id="all_dates" data-dates="{{ all_dates }}">
+<meta id="prev_date_1" data-one="{{ count_one }}">
+<meta id="prev_date_2" data-two="{{ count_two }}">
 <meta id="all_ranges" data-ranges="{{ all_ranges }}">
 <div class="jumbotron jumbotron-fluid">
   <div class="container justify-content-center text-center">
@@ -26,7 +28,7 @@
                     <div class="card-body">
                         {{ all_forms.hidden_tag() }}
                         {{ all_forms.shooter_username_one.label }}
-                        {{ all_forms.shooter_username_one(class_='form-control', onchange="changeDateSelect('1'); ", id="name1") }}<br>
+                        {{ all_forms.shooter_username_one(class_='form-control', onchange="changeRangeSelect('1'); changeDateSelect('1')", id="name1") }}<br>
                         {{ all_forms.shooting_range_one.label }}
                         {{ all_forms.shooting_range_one(class_='form-control', onchange="changeDateSelect('1')", id="dist1") }}<br>
                         {{ all_forms.dates_one.label }}
@@ -34,9 +36,9 @@
                         <hr>
                         {% if submit == 'True' %}
                             <p>
-                                Mean: {{ first_mean }}
-                                Median: {{ first_median }}
-                                Standard Deviation: {{ first_std }}
+                                Mean: {{ first_mean }} |
+                                Median: {{ first_median }} |
+                                Standard Deviation: {{ first_std }}<br>
                                 Weather: {{ first_weather }}
                             </p>
                             {{ first_script | safe }}
@@ -49,7 +51,7 @@
                 <div class="card h-100 justify-content-center">
                     <div class="card-body">
                         {{ all_forms.shooter_username_two.label }}
-                        {{ all_forms.shooter_username_two(class_='form-control', onchange="changeDateSelect('2')", id="name2") }}<br>
+                        {{ all_forms.shooter_username_two(class_='form-control', onchange="changeRangeSelect('2'); changeDateSelect('2')", id="name2") }}<br>
                         {{ all_forms.shooting_range_two.label }}
                         {{ all_forms.shooting_range_two(class_='form-control', onchange="changeDateSelect('2')", id="dist2") }}<br>
                         {{ all_forms.dates_two.label }}
@@ -57,9 +59,9 @@
                         <hr>
                         {% if submit == 'True' %}
                             <p>
-                                Mean: {{ second_mean }}
-                                Median: {{ second_median }}
-                                Standard Deviation: {{ second_std }}
+                                Mean: {{ second_mean }} |
+                                Median: {{ second_median }} |
+                                Standard Deviation: {{ second_std }}<br>
                                 Weather: {{ second_weather }}
                             </p>
                             {{ second_script | safe }}
@@ -141,15 +143,21 @@
     function changeRangeSelect(selectNum) {
         let range = document.getElementById('dist' + selectNum)
         removeOptions(range)
-        addRanges(range)
+        addRanges(selectNum)
+    }
+    function preSelectDate(selectNum, value){
+        document.getElementById('date' + selectNum).selectedIndex = value
     }
     //When page first loads, run the following to add dates to the select fields
-    // and also ranges to the appropriate select fields
+    // and also ranges to the appropriate select fields. Also preselects the dates that had been selected previously
+    let prevDate1 = $('#prev_date_1').data('one');
+    let prevDate2 = $('#prev_date_2').data('two');
     addRanges('1')
     addRanges('2')
     addDates('1')
     addDates('2')
-    console.log(document.getElementById('date1'))
+    preSelectDate('1', prevDate1)
+    preSelectDate('2', prevDate2)
 </script>
 
 <!-- <section>

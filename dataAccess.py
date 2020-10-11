@@ -340,7 +340,7 @@ def get_dates_for_all():  # collect the dates for every shooter in a dictionary 
         c.execute('SELECT distance, time FROM shoots WHERE username=? ORDER BY time desc;', (user[0],))
         shoots = c.fetchall()
         for shoot in shoots:
-            date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y')
+            date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y (%H:%M)')
             if shoot[0] not in dateDict:
                 dateDict[shoot[0]] = [(date, shoot[1])]
             else:

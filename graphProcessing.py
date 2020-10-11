@@ -16,6 +16,8 @@ from shotProcessing import validateShots
 # The values of each dictionary will be another dictionary that looks like the following:
 # { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']}
 # where the list in xValue must be the same length as the list in yValue
+# the dates can also include anything after the date if its separated by a space e.g '10/08/2020 15:30' or '10/08/2020 hello'
+# everything after the space is ignored
 # So an example of values would be
 # {
 # 'Andrew': { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']} ,
@@ -23,13 +25,15 @@ from shotProcessing import validateShots
 # }
 def compareLine(values, xLabel, yLabel, title):
     # break down values into three lists
-
-    # listx is a list containing a list of scores eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
+    # listy is a list containing a list of scores eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
     # Each of the list of shots are one line and should all be the same length does
-    # listy is a list of dates (dd/mm/yyyy) for each line eg. [['10/08/2020', '11/08/2020', '12/08/2020'],  ['13/08/2020', '14/08/2020', '15/08/2020']]
+    # listx is a list of dates (dd/mm/yyyy) for each line eg. [['10/08/2020', '11/08/2020', '12/08/2020'],  ['13/08/2020', '14/08/2020', '15/08/2020']]
     # listName is a list of names eg. ['Andrew', 'Ryan']
     listx = []
     listy = []
+    for shooter in values:
+        for row in range(len(values[shooter]['xValue'])):
+            values[shooter]['xValue'][row] = values[shooter]['xValue'][row].split(" ")[0]
     listName = []
     for key in values:
         listName.append(key)
