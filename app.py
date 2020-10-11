@@ -296,10 +296,10 @@ def upload():
                 files = request.files.getlist('file')
                 for file in files:
                     count['total'] += 1
-                    filename = secure_filename(file.filename)
-                    filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    fileName = secure_filename(file.filename)
+                    filePath = os.path.join(app.config['UPLOAD_FOLDER'], fileName)
                     file.save(filePath)  # Add file to upload folder
-                    print(filename, "was uploaded")  # Debug
+                    print(fileName, "was uploaded")  # Debug
                     try:
                         shoot = validateShots(filePath)  # Fixes up file to obtain relevant data and valid shots
                         shoot['rifleRange'] = form.rifleRange.data
@@ -316,9 +316,9 @@ def upload():
                             invalidShoots.append(shoot)
                     except:
                         count['failure'] += 1
-                        print(str(filename) + " had an error in uploading")
+                        print(str(fileName) + " had an error in uploading")
                     os.remove(filePath)  # Delete file
-                    print(filename, "was removed")  # Debug
+                    print(fileName, "was removed")  # Debug
         else:
             shoots = json.loads(request.form["invalidShootInfo"])
             count['success'] = int(request.form["success"])
