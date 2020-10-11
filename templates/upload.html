@@ -107,38 +107,60 @@
     {% endif %}
     <!-- todo: Add brief info on how to upload here, what files to look for -->
     <!-- Also mention this ONLY WORKS WITH SILVER MOUNTAIN TARGETS -->
-    Upload shoot strings here. <br>
-    Files should appear as 'string-' followed by a number, e.g. 'string-1434928243577' <br>
-    <form method="post" enctype="multipart/form-data">
-        <!-- Code from https://plugins.krajee.com/file-theme-demo -->
-        <!-- FONT AWESOME THEME -->
-        <!-- load the JS files in the right order -->
-        <script src="../static/node_modules/bootstrap-fileinput/js/fileinput.js"></script>
-        <script src="../static/node_modules/bootstrap-fileinput/themes/fa/theme.js"></script>
-        {{ form.csrf_token }}
-        <!--Create upload button-->
-        <div class="file-loading">
-            {{ form.file(id="input-fa", name_="input-fa[]", multiple_type="file", accept="text/*") }}
-        </div>
-        <script>
-            $("#input-fa").fileinput({
-                theme: "fa",
-                dropZoneTitle: "Drag and drop txt files here…",
-                allowedFileExtensions: ["txt"]
-        });
-        </script>
-        <hr>
-        <div class="input-group mb-3">
-            <div class="input-group-append">
-                {{ form.rifleRange(class_="form-control") }}
-            </div>
-            <div class="input-group-append">
-                {{ form.distance(class_="form-control") }}
-            </div>
-            <div class="input-group-append">
-                {{ form.weather(class_="form-control") }}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container justify-content-center text-center">
+            <div class="bs-example">
+                <h2>Upload</h2>
             </div>
         </div>
-        {{ form.identifier(value="upload") }}
-    </form>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card h-100 justify-content-center">
+                    <div class="card-header">
+                        <p>
+                        Upload shoot strings here. <br>
+                        Files should appear as 'string-' followed by a number, e.g. 'string-1434928243577.txt'
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            <!-- Code from https://plugins.krajee.com/file-theme-demo -->
+                            <!-- FONT AWESOME THEME -->
+                            <!-- load the JS files in the right order -->
+                            <script src="../static/node_modules/bootstrap-fileinput/js/fileinput.js"></script>
+                            <script src="../static/node_modules/bootstrap-fileinput/themes/fa/theme.js"></script>
+                            {{ form.csrf_token }}
+                            <!--Create upload button-->
+                            <div class="file-loading">
+                                {{ form.file(id="input-fa", name_="input-fa[]", multiple_type="file", accept="text/*") }}
+                            </div>
+                            <script>
+                                $("#input-fa").fileinput({
+                                    theme: "fa",
+                                    dropZoneTitle: "Drag and drop txt files here…",
+                                    allowedFileExtensions: ["txt"]
+                            });
+                            </script>
+                            <hr>
+                            <div class="input-group mb-3">
+                                <div class="input-group-append">
+                                    {{ form.rifleRange(class_="form-control") }}
+                                </div>
+                                <div class="input-group-append">
+                                    {{ form.distance(class_="form-control") }}
+                                </div>
+                                <div class="input-group-append">
+                                    {{ form.weather(class_="form-control") }}
+                                </div>
+                            </div>
+                            {{ form.identifier(value="upload") }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
