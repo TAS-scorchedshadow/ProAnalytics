@@ -35,12 +35,15 @@ def registerUser(form):
         else:
             done = True
     print(assignedID)
-
+    if form.year.data == "":
+        year = null
+    else:
+        year = form.year.data
     school = form.school.data
     email = form.email.data
     password = form.password.data
     hashedPassword = encrypt_password(password)
-    addUser(assignedID, fName, sName, school, email, hashedPassword)
+    addUser(assignedID, fName, sName, school, email, hashedPassword,year)
     initialiseSettings(assignedID)
 
 

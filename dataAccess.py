@@ -36,12 +36,12 @@ def convertStrTime(ts):
 
 # Adds a row to the users table of PARS.db with the indicated information
 # Only used to add essential information
-def addUser(username, fname, sname, school, email, password):
+def addUser(username, fname, sname, school, email, password,year):
     conn = sqlite3.connect('PARS.db')
     c = conn.cursor()
-    c.execute("INSERT INTO users (username, fName, sName, school, email, password)"
-              "VALUES (?,?,?,?,?,?)",
-              (username, fname, sname, school, email, password))
+    c.execute("INSERT INTO users (username, fName, sName, school, email, password,year)"
+              "VALUES (?,?,?,?,?,?,?)",
+              (username, fname, sname, school, email, password, year))
     conn.commit()
     conn.close()
 

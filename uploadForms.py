@@ -22,10 +22,11 @@ class uploadForm(FlaskForm):
 
 # form for registering
 class signUpForm(FlaskForm):
-    fName = StringField("Enter First Name:")
-    sName = StringField("Enter Last Name:")
-    email = EmailField("Email:")
+    fName = StringField("Enter First Name:",validators=[InputRequired()])
+    sName = StringField("Enter Last Name:",validators=[InputRequired()])
+    email = EmailField("Email:",validators=[InputRequired()])
     school = SelectField("Select a school", choices=[('sbhs','Sydney Boys High School')])
+    year = SelectField("Select a school", choices=['','7','8','9','10','11','12'])
     password = PasswordField("Password:")
     confirmPassword = PasswordField("Password:")
 

@@ -15,8 +15,7 @@
                 <div  class = "form-group" >
                     <label for="fName">First Name</label>
                     {{ form.fName(class_="field form-control") }}
-                </div>
-                <div  class = "form-group" >
+
                     <label for="sName">Surname</label>
                     {{ form.sName(class_="field form-control")}}
 
@@ -28,6 +27,9 @@
 
                     <label for="school">School</label>
                     {{ form.school(class_="field form-control", placeholder="Sydney Boys High School") }}
+
+                    <label for="year">Year</label>
+                    {{ form.year(class_="field form-control")}}
 
                     <label for="password">Password</label>
                     {{ form.password(class_="field form-control", id ="pass1", minlength="5")}}
