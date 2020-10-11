@@ -30,7 +30,7 @@ def convertTimeStr(date):
 # convert unix time into readable string (dd/mm/yyyy)
 # ts is unix time in milliseconds as an integer
 def convertStrTime(ts):
-    newDate = datetime.fromtimestamp(int(shoot[0]) / 1000).strftime('%d-%m-%y')
+    newDate = datetime.fromtimestamp(int(ts) / 1000).strftime('%d-%m-%y')
     return newDate
 
 
@@ -197,7 +197,7 @@ def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain 
 def get_graph_details(username,distance, time):
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
-    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore, shootID, median, mean, std, weather FROM shoots WHERE username=? AND distance=? AND time=?;',
+    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore, shootID, median, mean, std, weather, totalShots FROM shoots WHERE username=? AND distance=? AND time=?;',
               (username, distance, time))
     shoots = c.fetchall()
     return shoots
@@ -235,7 +235,7 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
             # row[6] is score
         # create graph and put the data into target_list (along with shotNum)
         script, div = graphProcessing.drawTarget(shots, range, (shoot[6] / 2), (shoot[7], shoot[8]))
-        date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d-%m-%y')
+        date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime("%H:%M (%d/%m/%Y)")
         standard_dev = round(shoot[13], 2)
         mean = round(shoot[12], 1)
         target_list.append(

@@ -10177,6 +10177,52 @@ h3 {
     border-color: #dee2e6;
   }
 }
+body {
+  background-color: #6B6E70;
+}
+
+label {
+  color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6, p, th, td {
+  color: #fff;
+}
+
+.card {
+  background-color: #474B4F;
+}
+
+.card-header {
+  background-color: #222629;
+}
+
+.input-group-text {
+  background-color: #474B4F;
+  color: #fff;
+  border: 1px solid #222629;
+}
+
+.text-primary {
+  color: #86c232;
+}
+
+.text-secondary {
+  color: #72c213;
+}
+
+#text-primary {
+  color: #86c232;
+}
+
+.jumbotron-fluid {
+  background-color: #474B4F;
+}
+
+.fa-clock {
+  color: white;
+}
+
 .custom-radio-list {
   list-style-type: none;
   padding: 0;
@@ -10282,46 +10328,32 @@ a.article {
   color: #fff !important;
 }
 
-body {
-  background-color: #6B6E70;
+.fileinput-remove-button {
+  background-color: #d91414;
 }
 
-label {
-  color: #fff;
+.fileinput-remove-button:hover {
+  background-color: #a30000;
 }
 
-h1, h2, h3, h4, h5, h6, p, th, td {
-  color: #fff;
+.fileinput-upload-button {
+  background-color: #86c232;
 }
 
-.card {
+.fileinput-upload-button:hover {
+  background-color: #72c213;
+}
+
+.btn-file {
+  color: white;
   background-color: #474B4F;
+  border-color: #474B4F;
 }
 
-.card-header {
+.btn-file:hover {
+  color: white;
   background-color: #222629;
-}
-
-.input-group-text {
-  background-color: #474B4F;
-  color: #fff;
-  border: 1px solid #222629;
-}
-
-.text-primary {
-  color: #86c232;
-}
-
-.text-secondary {
-  color: #61892F;
-}
-
-#text-primary {
-  color: #86c232;
-}
-
-.jumbotron-fluid {
-  background-color: #474B4F;
+  border-color: #474B4F;
 }
 
 /*# sourceMappingURL=adminSidebar.css.map */

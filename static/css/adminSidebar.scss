@@ -1,5 +1,8 @@
+//Modifying bootstrap css
+
+//Color palette where 1 is the primary color
 $palette-1: #86c232;
-$palette-2: #61892F;
+$palette-2: #72c213;
 $palette-3: #6B6E70;
 $palette-4: #474B4F;
 $palette-5: #222629;
@@ -13,6 +16,7 @@ $theme-colors: (
 
 $link-hover-decoration : none;
 
+//Alerts
 .alert-secondary {
   color: #121415;
   background-color: $palette-4 !important;
@@ -23,6 +27,56 @@ $link-hover-decoration : none;
 }
 
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+//Non-bootstrap css
+
+//General
+
+body{
+    background-color: $palette-3;
+}
+
+label{
+    color: $txt-color;
+}
+
+h1, h2, h3, h4, h5, h6, p, th, td {
+    color: $txt-color;
+}
+
+.card {
+    background-color: $palette-4;
+}
+.card-header{
+    background-color: $palette-5;
+}
+
+.input-group-text{
+    background-color: $palette-4;
+    color: #fff;
+    border: 1px solid $palette-5;
+}
+
+.text-primary{
+    color: $palette-1;
+}
+
+.text-secondary{
+    color: $palette-2;
+}
+#text-primary {
+    color: $palette-1;
+}
+
+.jumbotron-fluid{
+    background-color: $palette-4;
+}
+
+.fa-clock{
+    color: white;
+}
+
+//Sidebar
 
 .custom-radio-list {
     list-style-type: none;
@@ -132,42 +186,27 @@ a.article {
     color: #fff !important;
 }
 
-body{
-    background-color: $palette-3;
-}
+//Upload page
 
-label{
-    color: $txt-color;
+.fileinput-remove-button{
+    background-color: #d91414;
 }
-
-h1, h2, h3, h4, h5, h6, p, th, td {
-    color: $txt-color;
+.fileinput-remove-button:hover{
+    background-color: #a30000;
 }
-
-.card {
+.fileinput-upload-button{
+    background-color: $palette-1;
+}
+.fileinput-upload-button:hover{
+    background-color: $palette-2;
+}
+.btn-file{
+    color: white;
     background-color: $palette-4;
+    border-color: $palette-4;
 }
-.card-header{
+.btn-file:hover{
+    color: white;
     background-color: $palette-5;
-}
-
-.input-group-text{
-    background-color: $palette-4;
-    color: #fff;
-    border: 1px solid $palette-5;
-}
-
-.text-primary{
-    color: $palette-1;
-}
-
-.text-secondary{
-    color: $palette-2;
-}
-#text-primary {
-    color: $palette-1;
-}
-
-.jumbotron-fluid{
-    background-color: $palette-4;
+    border-color: $palette-4;
 }
