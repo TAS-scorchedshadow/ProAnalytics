@@ -164,15 +164,9 @@ def comparativeHomePage():
             yFill_one = []
             for t in range(len(all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data])):
                 internal_dict_one = {}
-                if (
-                all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][1]) >= int(
-                        all_forms.dates_one.data):
-                    xFill_one.append(
-                        all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][0])
-                    yFill_one.append(
-                        get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data,
-                                          all_dates_dict[all_forms.shooter_username_one.data][
-                                              all_forms.shooting_range_one.data][t][1])[0][3])
+                #if (all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][1]) >= int(all_forms.dates_one.data):
+                xFill_one.append(all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][0])
+                yFill_one.append(get_graph_details(all_forms.shooter_username_one.data, all_forms.shooting_range_one.data,all_dates_dict[all_forms.shooter_username_one.data][all_forms.shooting_range_one.data][t][1])[0][3])
                 internal_dict_one["yValue"] = yFill_one
                 internal_dict_one["xValue"] = xFill_one
                 values[all_forms.shooter_username_one.data + " " + strTimeOne] = internal_dict_one
@@ -180,9 +174,9 @@ def comparativeHomePage():
             yFill_two = []
             for t in range(len(all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data])):
                 internal_dict_two = {}
-                if (all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1]) >= int(all_forms.dates_two.data):
-                    xFill_two.append(all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][0])
-                    yFill_two.append(get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data,all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1])[0][3])
+                #if (all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1]) >= int(all_forms.dates_two.data):
+                xFill_two.append(all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][0])
+                yFill_two.append(get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data,all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1])[0][3])
                 internal_dict_two["yValue"] = yFill_two
                 internal_dict_two["xValue"] = xFill_two
                 values[all_forms.shooter_username_two.data + " " + strTimeTwo] = internal_dict_two
