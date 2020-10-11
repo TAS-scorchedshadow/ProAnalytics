@@ -18,9 +18,11 @@
             {% for user in all_shooters[year] %}
                 <div class="col-2">
                     <div class="card">
-                        <a href="/report?username={{ user[0] }}">
-                            <p style="text-align: center"><u>{{ user[1] + ' ' + user[2] }}</u></p>
-                        </a>
+                        <div style="padding-top: 10px">
+                            <a href="/report?username={{ user[0] }}">
+                                <p style="text-align: center"><u>{{ user[1] + ' ' + user[2] }}</u></p>
+                            </a>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
