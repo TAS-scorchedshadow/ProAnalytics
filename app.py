@@ -283,6 +283,7 @@ def report():
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
+    # Upload done by Ryan T
     # todo: neaten this up
     # todo: make verify page clearer (i.e. make it so that user knows that username field is for usernames)
     if current_user.admin == 1:
