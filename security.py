@@ -35,7 +35,7 @@ def registerUser(form):
         else:
             done = True
     print(assignedID)
-    if form.year.data == "":
+    if form.year.data == "None":
         year = null
     else:
         year = form.year.data
