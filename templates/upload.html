@@ -107,7 +107,8 @@
     {% endif %}
     <!-- todo: Add brief info on how to upload here, what files to look for -->
     <!-- Also mention this ONLY WORKS WITH SILVER MOUNTAIN TARGETS -->
-
+    Upload shoot strings here. <br>
+    Files should appear as 'string-' followed by a number, e.g. 'string-1434928243577' <br>
     <form method="post" enctype="multipart/form-data">
         <!-- Code from https://plugins.krajee.com/file-theme-demo -->
         <!-- FONT AWESOME THEME -->
@@ -122,7 +123,7 @@
         <script>
             $("#input-fa").fileinput({
                 theme: "fa",
-                {#uploadUrl: "upload", <!-- Has many fancy features, but doesn't work with our solution -->#}
+                dropZoneTitle: "Drag and drop txt files here…",
                 allowedFileExtensions: ["txt"]
         });
         </script>
