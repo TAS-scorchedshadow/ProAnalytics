@@ -255,7 +255,7 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
     return target_list, shot_table
 
 
-def get_table_stats(shooter):  # return a dictionary containing the average percentage score and sd for each range
+def get_table_stats(shooter):  # return a dictionary containing the average score out of 50 and sd for each range
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
     c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time desc;', (shooter,))
@@ -263,15 +263,20 @@ def get_table_stats(shooter):  # return a dictionary containing the average perc
     num_of_shots = 0
     quick_table = {}
     for shoot in shoots:
+        # average score (changed to out of 50)
+        avgScore = (float(shoot[9]) / (int(shoot[10]) * 5)) * 50
+        sd = float(shoot[13])
         if shoot[3] not in quick_table:
-            quick_table[shoot[3]] = {'percentage': list([(float(shoot[9]) / (int(shoot[10]) * 5)) * 100]),
-                                     'sd': list([float(shoot[13])])}
+            quick_table[shoot[3]] = {'avgScore': [avgScore],
+                                     'sd': [sd],
+                                     }
         else:
-            quick_table[shoot[3]]['percentage'].append((float(shoot[9]) / (int(shoot[10]) * 5)) * 100)
-            quick_table[shoot[3]]['sd'].append(float(shoot[13]))
+            quick_table[shoot[3]]['avgScore'].append(avgScore)
+            quick_table[shoot[3]]['sd'].append(sd)
         num_of_shots += shoot[10]
     for distance in quick_table:
-        quick_table[distance]['percentage'] = round(numpy.mean(quick_table[distance]['percentage']), 1)
+        print(quick_table[distance]['avgScore'])
+        quick_table[distance]['avgScore'] = round(numpy.mean(quick_table[distance]['avgScore']), 1)
         quick_table[distance]['sd'] = round(numpy.mean(quick_table[distance]['sd']), 2)
 
     # sort the quick_table list so that the rows on the table are in ascending order (from top to bottom)
@@ -297,16 +302,16 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
     listName = []
     for shoot in shoots:
         distance = shoot[3]
-        percentageScore = (float(shoot[9])/(int(shoot[10])*5))*100
+        avgScore = (float(shoot[9])/(int(shoot[10])*5))*50
         dateOfShoot = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y')
         isInList = False
         for data in lineList:
             if distance in data:
-                data[1].append(percentageScore)
+                data[1].append(avgScore)
                 data[2].append(dateOfShoot)
                 isInList = True
         if not isInList:
-            lineList.append([distance, [percentageScore, ], [dateOfShoot, ]])
+            lineList.append([distance, [avgScore, ], [dateOfShoot, ]])
 
     # sort the lineList from lowest range to highest range
     lineList = sorted(lineList, key=lambda x: x[0])
@@ -320,7 +325,7 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
     #     listName.append(data[0])
     #     listx.append(data[1])
     #     listy.append(data[2])
-    line_script, line_div = graphProcessing.compareLine(values, 'Dates', 'Scores', 'Scores for Each Range')
+    line_script, line_div = graphProcessing.compareLine(values, 'Dates', 'Scores (Out of 50)', 'Scores for Each Range')
     return line_script, line_div
 
 

@@ -117,7 +117,7 @@
                                 <tr>
                                     <th>Range</th>
                                     <th>
-                                        Avg. Accuracy
+                                        Avg. Score (out of 50)
                                         <!-- Popup graph button -->
                                         <button id="graphButton"><i class="fas fa-chart-line"></i></button>
                                     </th>
@@ -126,7 +126,7 @@
                                 {% for range in stat_dict['sorted_table'] %}
                                     <tr>
                                         <td>{{ range[0] }}</td>
-                                        <td>{{ range[1]['percentage'] }}</td>
+                                        <td>{{ range[1]['avgScore'] }}</td>
                                         <td>{{ range[1]['sd'] }}</td>
                                     </tr>
                                 {%-endfor %}
