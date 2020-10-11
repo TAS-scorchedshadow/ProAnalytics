@@ -62,13 +62,6 @@ def landingPage():
 def adminHome():
     return render_template('adminHome.html')
 
-@app.route('/test')
-def adminHome2():
-    get_all_usernames()
-    return render_template('report.html')
-
-
-
 @app.route('/studentList')
 @login_required
 def studentList():
