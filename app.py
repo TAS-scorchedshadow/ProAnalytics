@@ -365,7 +365,7 @@ def signup():
                 return render_template('signUpForm.html', form=form, emailError=True)
             else:
                 registerUser(form)
-                return render_template('adminHome.html')
+                return flask.redirect('/')
     return render_template('signUpForm.html', form=form, emailError=False)
 
 
@@ -397,7 +397,7 @@ def signin():
                 if not is_safe_url(next):
                     return flask.abort(400)
                 if current_user.admin == 1:
-                    return render_template('adminHome.html')
+                    return flask.redirect('/adminHome')
                 return flask.redirect(next or flask.url_for('report', username=current_user.username))
     return render_template('signInForm.html', form=form)
 
