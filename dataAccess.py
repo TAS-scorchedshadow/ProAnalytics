@@ -235,7 +235,7 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
             # row[6] is score
         # create graph and put the data into target_list (along with shotNum)
         script, div = graphProcessing.drawTarget(shots, range, (shoot[6] / 2), (shoot[7], shoot[8]))
-        date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d-%m-%y')
+        date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime("%H:%M (%d/%m/%Y)")
         standard_dev = round(shoot[13], 2)
         mean = round(shoot[12], 1)
         target_list.append(
