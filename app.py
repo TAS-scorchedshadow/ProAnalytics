@@ -90,7 +90,6 @@ def comparativeHomePage():
     all_ranges = get_ranges_for_all()
     all_ranges = json.dumps(all_ranges)
 
-    # f the radio button is submit
     if request.method == "POST":
 
         # passes the values selected from the SelectFields to the get_graph_details
@@ -257,14 +256,14 @@ def report():
         dayStart = datetime.fromtimestamp(int(dayStart) / 1000).strftime('%d-%m-%y')
         dayStart = time.mktime(datetime.strptime(dayStart, "%d-%m-%y").timetuple()) * 1000
 
+    # dayEnd is the same day as dayStart but at 11:59:59 p.m.
+    dayEnd = dayStart + 86399000
+
     # store all dates into a list (for the user to select from)
     form.date.choices = get_all_dates(username)
 
-    # dayEnd is the same day as day 1 but at 11:59:59 p.m.
-    dayEnd = dayStart + 86399000
-
+    # collect the data used for each target and table
     target_list, shot_table = get_shoots_dict(username, dayStart, dayEnd)
-    # collect general stats
 
     # TODO have the stats only apply to the current season
     # # find the previous year
