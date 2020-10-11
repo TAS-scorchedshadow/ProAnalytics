@@ -70,9 +70,8 @@ def compareLine(values, xLabel, yLabel, title):
 
 #Designed to provide a comparison between shooters
 #allStudentsTotal is a dictionary with the name as the key & the value as a list, where the first value is year & the second is the score
-def compareBar(username_one, username_two, score_one, score_two):
+def compareBar(username_one, username_two, score_one, score_two, xLabelBar, yLabelBar, titleBar):
     # init vars
-    username_two = username_two + "0000000000000"
     names = [username_one, username_two]
     scores = [score_one, score_two]
     colour_list = ["blue", "red"]
@@ -85,7 +84,7 @@ def compareBar(username_one, username_two, score_one, score_two):
         score=scores,
         colour=colour_list,
     ))
-    p_vbar = figure(x_range=names, plot_height=200, plot_width=800, sizing_mode='scale_width', title="Comparison Bar",
+    p_vbar = figure(x_range=names, plot_height=400, plot_width=800, sizing_mode='scale_width', x_axis_label = xLabelBar, y_axis_label=yLabelBar, title=titleBar,
                     toolbar_location=None, tools="hover")
     p_vbar.hover.tooltips = [
         ("Name", "@name"),

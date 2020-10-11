@@ -17,7 +17,7 @@ from security import registerUser, validateLogin, User
 from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates, get_all_usernames,\
     get_shoots_dict, get_line_graph_ranges, get_all_shooter_names,\
     get_graph_details, get_shot_details, get_dates_for_all, get_ranges_for_all, usernameExists,\
-    get_shooter_and_year
+    get_shooter_and_year, convertStrTime
 
 from werkzeug.utils import secure_filename, redirect
 from drawtarget import create_target
@@ -82,7 +82,7 @@ def studentList():
 def shooterHome():
     return render_template('shooterHome.html')
 
-
+#By Rishi Wig
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
 
@@ -115,6 +115,8 @@ def comparativeHomePage():
         second_mean = second_shoot_data[0][6]
         second_std = second_shoot_data[0][7]
         second_weather = second_shoot_data[0][8]
+        strTimeOne = convertStrTime(all_forms.dates_one.data)
+        strTimeTwo = convertStrTime(all_forms.dates_two.data)
 
         # filters through each piece of data from the list of tuples and assigns them to the
         # variables necessary. e.g.
@@ -145,7 +147,15 @@ def comparativeHomePage():
 
         # If the radio selected button is bar
         if (all_forms.graphType.data) == "Bar":
-            bar_script, bar_div = graphProcessing.compareBar(all_forms.shooter_username_one.data, all_forms.shooter_username_two.data, first_shoot_data[0][3], second_shoot_data[0][3])
+            xLabelBar = "Names"
+            yLableBar = "Total scores on shoot"
+            if all_forms.shooter_username_one.data == all_forms.shooter_username_two.data and all_forms.shooting_range_one.data == all_forms.shooting_range_two.data and all_forms.dates_one.data == all_forms.dates_two.data:
+                titleBar = "Graph will be incorrect if selections are identical"
+            else:
+                titleBar = "Comparison bar graph between "+ all_forms.shooter_username_one.data + " & " + all_forms.shooter_username_two.data
+            usernameBar_one = all_forms.shooter_username_one.data + " " +  strTimeOne
+            usernameBar_two = all_forms.shooter_username_two.data + " " + strTimeTwo
+            bar_script, bar_div = graphProcessing.compareBar(usernameBar_one, usernameBar_two, first_shoot_data[0][3], second_shoot_data[0][3], xLabelBar, yLableBar, titleBar)
             return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = bar_script,
                                    graph_div=bar_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges,
                                    first_median = first_median, first_mean = first_mean, first_std = first_std, first_weather = first_weather,
@@ -173,26 +183,23 @@ def comparativeHomePage():
                                               all_forms.shooting_range_one.data][t][1])[0][3])
                 internal_dict_one["yValue"] = yFill_one
                 internal_dict_one["xValue"] = xFill_one
-                values[all_forms.shooter_username_one.data] = internal_dict_one
+                values[all_forms.shooter_username_one.data + " " + strTimeOne] = internal_dict_one
             xFill_two = []
             yFill_two = []
             for t in range(len(all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data])):
                 internal_dict_two = {}
-                if (
-                all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1]) >= int(
-                        all_forms.dates_two.data):
-                    xFill_two.append(
-                        all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][0])
-                    yFill_two.append(
-                        get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data,
-                                          all_dates_dict[all_forms.shooter_username_two.data][
-                                              all_forms.shooting_range_two.data][t][1])[0][3])
+                if (all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1]) >= int(all_forms.dates_two.data):
+                    xFill_two.append(all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][0])
+                    yFill_two.append(get_graph_details(all_forms.shooter_username_two.data, all_forms.shooting_range_two.data,all_dates_dict[all_forms.shooter_username_two.data][all_forms.shooting_range_two.data][t][1])[0][3])
                 internal_dict_two["yValue"] = yFill_two
                 internal_dict_two["xValue"] = xFill_two
-                values[all_forms.shooter_username_two.data + "0000000000"] = internal_dict_two
+                values[all_forms.shooter_username_two.data + " " + strTimeTwo] = internal_dict_two
             xLabel = "Dates"
             yLabel = "Times"
-            title = "Comparison Line"
+            if all_forms.shooter_username_one.data == all_forms.shooter_username_two.data and all_forms.shooting_range_one.data == all_forms.shooting_range_two.data and all_forms.dates_one.data == all_forms.dates_two.data:
+                title = "Graph will be incorrect if selections are identical"
+            else:
+                title = "Comparison line graph between "+ all_forms.shooter_username_one.data + " & " + all_forms.shooter_username_two.data
             line_script, line_div = graphProcessing.compareLine(values, xLabel, yLabel, title)
             return render_template('comparativeHomePage.html', first_script=first_script, first_div=first_div, second_script=second_script, second_div=second_div, graph_script = line_script,
                                    graph_div=line_div, all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges,
