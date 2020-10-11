@@ -10,3 +10,4 @@ __pycache__
 >>>>>>> master
 /venv/Lib/site-packages/
 /venv/Scripts/
+/venv/pyvenv.cfg
