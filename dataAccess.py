@@ -33,6 +33,7 @@ def addUser(username, fname, sname, school, email, password):
 
 
 def addShoot(shoot):
+    # addShoot done by Ryan T
     # Adds a row to the 'shoots' table of PARS.db with shoot information,
     # Then adds all shots of that shoot to the 'shots' table of PARS.db
     conn = sqlite3.connect('PARS.db')

@@ -2,8 +2,10 @@
 {% set active_page = "upload" %}
 {% block page_title %} Upload {% endblock %}
 {% block page_content %}
+    <!-- Most raw logic by Ryan T. Styling by Henry G. -->
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Alert message code modified from https://www.w3schools.com/howto/howto_js_alert.asp -->
         <style>
             .alert {
               padding: 20px;
@@ -43,7 +45,7 @@
             }
         </style>
     </head>
-    <!-- File styling assests-->
+    <!-- File styling assets -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.2/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
     <!-- if using RTL (Right-To-Left) orientation, load the RTL CSS file after fileinput.css by uncommenting below -->
     <!-- link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.2/css/fileinput-rtl.min.css" media="all" rel="stylesheet" type="text/css" /-->
@@ -103,6 +105,8 @@
             </script>
         </body>
     {% endif %}
+    <!-- todo: Add brief info on how to upload here, what files to look for -->
+    <!-- Also mention this ONLY WORKS WITH SILVER MOUNTAIN TARGETS -->
 
     <form method="post" enctype="multipart/form-data">
         <!-- Code from https://plugins.krajee.com/file-theme-demo -->
@@ -118,7 +122,7 @@
         <script>
             $("#input-fa").fileinput({
                 theme: "fa",
-                {#uploadUrl: "upload", <!-- This allows for better multi file upload, but implodes on itself -->#}
+                {#uploadUrl: "upload", <!-- Has many fancy features, but doesn't work with our solution -->#}
                 allowedFileExtensions: ["txt"]
         });
         </script>
