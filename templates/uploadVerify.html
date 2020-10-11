@@ -2,10 +2,12 @@
 {% set active_page = "upload" %}
 {% block page_title %} Upload {% endblock %}
 {% block page_content %}
+    <!-- Raw logic by Ryan T. Styling by Henry G. -->
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta id="foo" data-boo="{{ usernameList }}">
         <!-- Typeahead styling taken from https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=typeahead-with-local-dataset -->
+        <!-- Alert message code modified from https://www.w3schools.com/howto/howto_js_alert.asp -->
         <style>
             .alert {
               padding: 20px;
@@ -143,6 +145,8 @@
         </body>
     {% endif %}
     <h1>Verify Username</h1>
+    <!-- todo: Explanation of what to do here as well -->
+
     <form action="" method="post">
         {{ form.csrf_token }}
         {% for invalidShoot in invalidShoots %}
