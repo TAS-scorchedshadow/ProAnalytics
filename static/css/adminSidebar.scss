@@ -210,3 +210,10 @@ a.article {
     background-color: $palette-5;
     border-color: $palette-4;
 }
+
+//Jumbotron
+#jumboTitle{
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+}

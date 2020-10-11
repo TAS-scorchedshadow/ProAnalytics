@@ -116,3 +116,9 @@ a.article:hover{
 h4, p, th, td {
     color: $txt-color;
 }
+//Jumbotron
+#jumboTitle{
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+}
