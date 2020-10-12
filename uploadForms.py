@@ -45,6 +45,7 @@ class reportForm(FlaskForm):
     date = SelectField('Date',)
     submit = SubmitField("Select")
 
+#by Rishi Wig
 class comparativeSelect(FlaskForm):
     graphType = RadioField('Graph', choices=['Line', 'Bar'])
     shooter_username_one = SelectField('Username', choices=get_all_usernames())

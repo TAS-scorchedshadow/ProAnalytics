@@ -75,7 +75,7 @@ def studentList():
 def shooterHome():
     return render_template('shooterHome.html')
 
-#By Rishi Wig
+#Comparative page by Rishi Wig
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
 
@@ -91,6 +91,7 @@ def comparativeHomePage():
     all_ranges = json.dumps(all_ranges)
     count_one = 0
     count_two = 0
+
     if request.method == "POST":
         # following allows for select field to remember previously selected data
         picked_date = all_forms.dates_one.data
