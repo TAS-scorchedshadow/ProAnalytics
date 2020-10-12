@@ -6,9 +6,6 @@ from flask_login._compat import unicode
 from passlib.context import CryptContext
 from dataAccess import addUser, usernameExists, emailExists, findPassword, initialiseSettings, findID
 
-# -- All work in this security.py is done by Dylan H --
-
-
 # Password encryption taken from https://blog.tecladocode.com/learn-python-password-encryption-with-flask/
 pwd_context = CryptContext(
     schemes=["pbkdf2_sha256"],
@@ -64,7 +61,7 @@ def validateLogin(form): #takes a submitted form and checks if the username exsi
             passwordError = True
     return usernameError, passwordError
 
-# Note the UserMixin class could also be implemented here
+
 class User():
     def __init__(self,username, active = True):
         self.username = username

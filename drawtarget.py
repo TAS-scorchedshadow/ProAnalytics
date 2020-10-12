@@ -3,8 +3,8 @@ from bokeh.embed import components
 from bokeh.models import Range1d
 
 
-# -- Target rendering by Ryan T --
 def create_target(range_type):
+    # Target rendering by Ryan T
     # Dimensions are obtained from:
     # https://en.wikipedia.org/wiki/Shooting_target#International_Confederation_of_Fullbore_Rifle_Associations
     # Details are as follows: "Range": (Distance, V Ring, 5 Ring, 4 Ring, 3 Ring, 2 Ring)
