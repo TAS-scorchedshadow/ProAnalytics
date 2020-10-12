@@ -74,6 +74,7 @@ def compareLine(values, xLabel, yLabel, title):
 
 #Designed to provide a comparison between shooters
 #allStudentsTotal is a dictionary with the name as the key & the value as a list, where the first value is year & the second is the score
+# -- mostly by Rishi Wig, some modifications by Henry Guo --
 def compareBar(username_one, username_two, score_one, score_two, xLabelBar, yLabelBar, titleBar):
     # init vars
     names = [username_one, username_two]
@@ -109,6 +110,7 @@ def compareBar(username_one, username_two, score_one, score_two, xLabelBar, yLab
 
 
 def create_target(range_type):
+    # --Prototype by Henry and Dylan, expanded by Ryan Tan --
     # Details are as follows: "Range": (Distance, V Ring, 5 Ring, 4 Ring, 3 Ring, 2 Ring)
     # Distance is in metres, rings are Diameters in mm
     target_details = {"300m": (300, 70, 140, 280, 420, 600),
@@ -166,6 +168,7 @@ def create_target(range_type):
 
 
 def drawTarget(shots, targetSize, groupRadius, groupCenter):
+    # -- Henry Guo --
     # shots (dictionary of shots with their number and x,y positions {shotNum: [x, y, score], ...}
     # targetSize (str)
     # groupRadius (float)

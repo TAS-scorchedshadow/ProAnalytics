@@ -4,7 +4,8 @@ import numpy
 from datetime import datetime
 
 
-# All work in this file is done by Ryan T
+# -- All work in this file(shotProcessing.py) is done by Ryan T --
+
 # Reformats the shots to filter for relevant data
 def validateShots(txtfile):
     totalShots = 0      # Total number of shots
@@ -96,10 +97,9 @@ def checkSighter(shot):
     except KeyError:
         return False
 
-
+# By Rishi Wig
 # Rishi's code. Have no idea what it does though
 # Should not be necessary anymore, shotStats exists now. todo: Pending removal.
-
 # general calculations for the mean, median, range & standard deviation of the dataset. The information is returned
 # at the bottom data brought in from the json, and the shot score statistical information is created
 def statisticsScore():
