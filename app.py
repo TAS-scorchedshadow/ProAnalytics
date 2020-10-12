@@ -289,8 +289,7 @@ def report():
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
-    # todo: neaten this up
-    # todo: make verify page clearer (i.e. make it so that user knows that username field is for usernames)
+    # todo: modularise this if possible
     if current_user.admin == 1:
         # Create Form
         form = uploadForm()
