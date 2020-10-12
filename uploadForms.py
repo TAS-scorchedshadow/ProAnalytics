@@ -5,9 +5,11 @@ from flask_wtf.file import FileAllowed, FileRequired
 from wtforms.validators import DataRequired, InputRequired
 from dataAccess import shoot_range, get_all_shooter_names, get_all_usernames, get_all_dates
 
+# This file contains all the required forms from various parts of this project
+
 # form for uploading files
+# -- By Ryan T --
 class uploadForm(FlaskForm):
-    # Done by Ryan T
     file = MultipleFileField(u'Submit File')
     rifleRange = SelectField("Rifle Range:", choices=[('Malabar', 'Malabar')])
     distance = SelectField("Distance:", choices=[('300m', '300m'), ('500m', '500m'), ('600m', '600m'),
@@ -22,6 +24,7 @@ class uploadForm(FlaskForm):
     total = HiddenField("Total")
 
 # form for registering
+# -- Dylan H--
 class signUpForm(FlaskForm):
     fName = StringField("Enter First Name:",validators=[InputRequired()])
     sName = StringField("Enter Last Name:",validators=[InputRequired()])
@@ -34,6 +37,7 @@ class signUpForm(FlaskForm):
     submit = SubmitField("Sign Up")
 
 # form for logging in
+# -- Dylan H--
 class signIn(FlaskForm):
     username = StringField("Username or password")
     password = PasswordField("Password:")
@@ -41,10 +45,12 @@ class signIn(FlaskForm):
     submit = SubmitField("Sign In")
 
 # form for report page
+# -- Henry G --
 class reportForm(FlaskForm):
     date = SelectField('Date',)
     submit = SubmitField("Select")
 
+# -- Rishi Wig --
 class comparativeSelect(FlaskForm):
     graphType = RadioField('Graph', choices=['Line', 'Bar'])
     shooter_username_one = SelectField('Username', choices=get_all_usernames())
