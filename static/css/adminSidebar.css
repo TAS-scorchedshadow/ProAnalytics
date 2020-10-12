@@ -10329,11 +10329,11 @@ a.article {
 }
 
 .fileinput-remove-button {
-  background-color: #d91414;
+  background-color: #ef4836;
 }
 
 .fileinput-remove-button:hover {
-  background-color: #a30000;
+  background-color: #cc3e2f;
 }
 
 .fileinput-upload-button {
@@ -10353,13 +10353,13 @@ a.article {
 .btn-file:hover {
   color: white;
   background-color: #222629;
-  border-color: #474B4F;
+  border-color: #222629;
 }
 
 #jumboTitle {
   -webkit-text-fill-color: white;
   -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-color: white;
 }
 
 /*# sourceMappingURL=adminSidebar.css.map */

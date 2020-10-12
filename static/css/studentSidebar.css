@@ -10273,7 +10273,7 @@ h4, p, th, td {
 #jumboTitle {
   -webkit-text-fill-color: white;
   -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-color: white;
 }
 
 /*# sourceMappingURL=studentSidebar.css.map */

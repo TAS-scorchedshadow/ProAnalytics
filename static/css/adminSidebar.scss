@@ -189,10 +189,10 @@ a.article {
 //Upload page
 
 .fileinput-remove-button{
-    background-color: #d91414;
+    background-color: #ef4836;
 }
 .fileinput-remove-button:hover{
-    background-color: #a30000;
+    background-color: #cc3e2f;
 }
 .fileinput-upload-button{
     background-color: $palette-1;
@@ -202,8 +202,8 @@ a.article {
 }
 .btn-file{
     color: white;
-    background-color: $palette-5;
-    border-color: $palette-5;
+    background-color: $palette-4;
+    border-color: $palette-4;
 }
 .btn-file:hover{
     color: white;
@@ -213,7 +213,7 @@ a.article {
 
 //Jumbotron
 #jumboTitle{
-  -webkit-text-fill-color: white;
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: white;
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: white;
 }

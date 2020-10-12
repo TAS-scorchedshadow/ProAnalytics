@@ -7,6 +7,7 @@ from dataAccess import shoot_range, get_all_shooter_names, get_all_usernames, ge
 
 # form for uploading files
 class uploadForm(FlaskForm):
+    # Done by Ryan T
     file = MultipleFileField(u'Submit File')
     rifleRange = SelectField("Rifle Range:", choices=[('Malabar', 'Malabar')])
     distance = SelectField("Distance:", choices=[('300m', '300m'), ('500m', '500m'), ('600m', '600m'),

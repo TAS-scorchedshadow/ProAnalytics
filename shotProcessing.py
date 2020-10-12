@@ -97,7 +97,9 @@ def checkSighter(shot):
         return False
 
 
-# todo: not necessary anymore, shotStats exists now. Pending removal.
+# Rishi's code. Have no idea what it does though
+# Should not be necessary anymore, shotStats exists now. todo: Pending removal.
+
 # general calculations for the mean, median, range & standard deviation of the dataset. The information is returned
 # at the bottom data brought in from the json, and the shot score statistical information is created
 def statisticsScore():
