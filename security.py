@@ -64,6 +64,7 @@ def validateLogin(form): #takes a submitted form and checks if the username exsi
             passwordError = True
     return usernameError, passwordError
 
+
 # Note the UserMixin class could also be implemented here
 class User():
     def __init__(self,username, active = True):

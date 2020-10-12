@@ -11,24 +11,35 @@ import time
 
 from shotProcessing import validateShots
 
+
 # values is a dictionary with each key being the name for the line.
 # If comparing shooters, this can be the shooters name e.g Rishi Wig
+
 # The values of each dictionary will be another dictionary that looks like the following:
 # { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']}
 # where the list in xValue must be the same length as the list in yValue
-# the dates can also include anything after the date if its separated by a space e.g '10/08/2020 15:30' or '10/08/2020 hello'
+
+# the dates can also include anything after the date if its separated by a space
+# e.g '10/08/2020 15:30' or '10/08/2020 hello'
 # everything after the space is ignored
+
 # So an example of values would be
 # {
 # 'Andrew': { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']} ,
 # 'Rishi': { 'yValue': [50, 46, 49] , 'xValue': ['10/08/2020', '11/08/2020', '12/08/2020']}
 # }
+
 def compareLine(values, xLabel, yLabel, title):
     # break down values into three lists
-    # listy is a list containing a list of scores eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
+    # listy is a list containing a list of scores
+    # eg. [ [50,46,48,49,50,50] , [50,44,50,49,48,49] ]
     # Each of the list of shots are one line and should all be the same length does
-    # listx is a list of dates (dd/mm/yyyy) for each line eg. [['10/08/2020', '11/08/2020', '12/08/2020'],  ['13/08/2020', '14/08/2020', '15/08/2020']]
-    # listName is a list of names eg. ['Andrew', 'Ryan']
+
+    # listx is a list of dates (dd/mm/yyyy) for each line
+    # eg. [['10/08/2020', '11/08/2020', '12/08/2020'],  ['13/08/2020', '14/08/2020', '15/08/2020']]
+
+    # listName is a list of names
+    # eg. ['Andrew', 'Ryan']
     listx = []
     listy = []
     for shooter in values:
@@ -72,9 +83,10 @@ def compareLine(values, xLabel, yLabel, title):
     script, div = components(cLine)
     return script, div
 
-#Designed to provide a comparison between shooters
-#allStudentsTotal is a dictionary with the name as the key & the value as a list, where the first value is year & the second is the score
-# -- mostly by Rishi Wig, some modifications by Henry Guo --
+# Designed to provide a comparison between shooters
+# allStudentsTotal is a dictionary with the name as the key & the value as a list,
+# where the first value is year & the second is the score
+# -- Rishi Wig, with some modifications by Henry Guo --
 def compareBar(username_one, username_two, score_one, score_two, xLabelBar, yLabelBar, titleBar):
     # init vars
     names = [username_one, username_two]
@@ -110,9 +122,11 @@ def compareBar(username_one, username_two, score_one, score_two, xLabelBar, yLab
 
 
 def create_target(range_type):
-    # --Prototype by Henry and Dylan, expanded by Ryan Tan --
+    # -- Prototype by Henry and Dylan, expanded by Ryan Tan --
+    # Dimensions are obtained from:
+    # https://en.wikipedia.org/wiki/Shooting_target#International_Confederation_of_Fullbore_Rifle_Associations
     # Details are as follows: "Range": (Distance, V Ring, 5 Ring, 4 Ring, 3 Ring, 2 Ring)
-    # Distance is in metres, rings are Diameters in mm
+    # Distance is in metres. Rings are diameters in mm
     target_details = {"300m": (300, 70, 140, 280, 420, 600),
                       "400m": (400, 95, 185, 375, 560, 800),
                       "500m": (500, 145, 290, 660, 1000, 1320),
@@ -131,7 +145,8 @@ def create_target(range_type):
         ("(x,y)", "(@x, @y)"),
     ]
 
-    p = figure(plot_width=plot_size, plot_height=plot_size, tools=["hover"], sizing_mode="scale_width",toolbar_location=None, tooltips=TOOLTIPS)
+    p = figure(plot_width=plot_size, plot_height=plot_size, tools=["hover"], sizing_mode="scale_width",
+               toolbar_location=None, tooltips=TOOLTIPS)
     p.toolbar.logo = None
     # Draws the rings of the target from the largest to the smallest
     p.circle([0], [0], radius=int(target_details[range_type][5]/2), color="black", line_color="white", line_width=4)

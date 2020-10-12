@@ -7,8 +7,8 @@ from dataAccess import shoot_range, get_all_shooter_names, get_all_usernames, ge
 
 # This file contains all the required forms from various parts of this project
 
-# form for uploading files
-# -- By Ryan T --
+# Form for uploading files
+# -- Ryan Tan --
 class uploadForm(FlaskForm):
     file = MultipleFileField(u'Submit File')
     rifleRange = SelectField("Rifle Range:", choices=[('Malabar', 'Malabar')])
@@ -23,8 +23,9 @@ class uploadForm(FlaskForm):
     success = HiddenField("Success")
     total = HiddenField("Total")
 
-# form for registering
-# -- Dylan H--
+
+# Form for registering
+# -- Dylan Huynh --
 class signUpForm(FlaskForm):
     fName = StringField("Enter First Name:",validators=[InputRequired()])
     sName = StringField("Enter Last Name:",validators=[InputRequired()])
@@ -36,20 +37,24 @@ class signUpForm(FlaskForm):
 
     submit = SubmitField("Sign Up")
 
-# form for logging in
-# -- Dylan H--
+
+# Form for logging in
+# -- Dylan Huynh --
 class signIn(FlaskForm):
     username = StringField("Username or password")
     password = PasswordField("Password:")
 
     submit = SubmitField("Sign In")
 
-# form for report page
-# -- Henry G --
+
+# Form for report page
+# -- Henry Guo --
 class reportForm(FlaskForm):
     date = SelectField('Date',)
     submit = SubmitField("Select")
 
+
+# Forms for comparisons
 # -- Rishi Wig --
 class comparativeSelect(FlaskForm):
     graphType = RadioField('Graph', choices=['Line', 'Bar'])
@@ -63,6 +68,7 @@ class comparativeSelect(FlaskForm):
     dates_two = SelectField('Dates')
 
     submit = SubmitField('ENTER')
+
 
 class comparativeSpecify(FlaskForm):
     shooter_username_one = SelectField('Username', choices=get_all_shooter_names())

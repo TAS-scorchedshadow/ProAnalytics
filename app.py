@@ -47,7 +47,8 @@ UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/upload')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-# -- Dylan Huynh (Same for all home pages) --
+# Home pages
+# -- Dylan Huynh --
 @app.route('/')
 def landingPage():
     if current_user.is_authenticated:
@@ -78,7 +79,8 @@ def studentList():
     return render_template('studentList.html', all_shooters=all_shooters)
 
 
-# -- Comparative page by Rishi Wig --
+# Comparative page
+# -- Rishi Wig --
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
 
@@ -220,7 +222,9 @@ def comparativeHomePage():
                                second_median=second_median, second_mean=second_mean, second_std=second_std, second_weather=second_weather, submit='True', count_one=count_one, count_two=count_two)
     return render_template('comparativeHomePage.html', all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges, submit='False', count_one=count_one, count_two=count_two)  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
 
-# --Report page by Henry Guo --
+
+# Report Page
+# -- Henry Guo --
 @app.route('/report', methods=['GET', 'POST'])
 @login_required
 def report():
@@ -285,7 +289,9 @@ def report():
                            form=form, stat_dict=stat_dict, line_script=line_script,
                            line_div=line_div, shooter_name=shooter_name)
 
-# --Upload by Ryan Tan--
+
+# Upload Page
+# -- Ryan Tan--
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
@@ -358,7 +364,9 @@ def upload():
     else:
         return render_template('accessDenied.html')
 
-# -- Sign In and Registration by Dylan Huynh --
+
+# Sign In and Registration
+# -- Dylan Huynh --
 @app.route('/user/signup', methods=['GET', 'POST'])
 def signup():
     # create form

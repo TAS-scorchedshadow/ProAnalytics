@@ -33,8 +33,9 @@ def convertStrTime(ts):
     newDate = datetime.fromtimestamp(int(ts) / 1000).strftime('%d-%m-%y')
     return newDate
 
+
+# -- Ryan Tan --
 def addShoot(shoot):
-    # addShoot done by Ryan T
     # Adds a row to the 'shoots' table of PARS.db with shoot information,
     # Then adds all shots of that shoot to the 'shots' table of PARS.db
     conn = sqlite3.connect('PARS.db')
@@ -71,6 +72,7 @@ def addShoot(shoot):
                    shots[i]['x'], shots[i]['y'], shots[i]['v'], shots[i]['ts']))
     conn.commit()
     conn.close()
+
 
 # -- Following by Dylan Huynh --
 # Adds a row to the users table of PARS.db with the indicated information
@@ -135,7 +137,9 @@ def initialiseSettings(username):  # initialise user settings from database
     conn.close()
 # -- End of Dylan's functions --
 
-#by Rishi Wig, not used
+
+# < Unused functions >
+# -- Rishi Wig --
 def shoot_range(): #creates a list of tuples of all ranges possible
     conn = sqlite3.connect('PARS.db')
     cur = conn.cursor()
@@ -147,7 +151,7 @@ def shoot_range(): #creates a list of tuples of all ranges possible
         all.append(create_tuple)
     return all
 
-#by Henry Guo, not used
+# -- Henry Guo --
 def get_all_shooter_names(): #creates a list of all of the shooter's names in the users table
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -173,7 +177,8 @@ def get_all_usernames(): #creates a list of all of the usernames in the shoots t
             usernames.append(name[0])
     return usernames
 
-#by Rishi Wig
+
+# -- Rishi Wig --
 def get_all_dates(shooter):  # collect all the dates that a shooter has shot in and returns it as a list (sorted from latest to oldest)
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -188,7 +193,8 @@ def get_all_dates(shooter):  # collect all the dates that a shooter has shot in 
     print(timeList)
     return timeList
 
-#By Rishi Wig
+
+# -- Rishi Wig --
 def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain all the information on a shoot from a shooter in a specific time frame
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -198,7 +204,8 @@ def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain 
     print(shoots)
     return shoots
 
-#By Rishi Wig
+
+# -- Rishi Wig --
 def get_graph_details(username,distance, time):
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -207,7 +214,8 @@ def get_graph_details(username,distance, time):
     shoots = c.fetchall()
     return shoots
 
-#By Rishi Wig
+
+# -- Rishi Wig --
 def get_shot_details(shootId):
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
