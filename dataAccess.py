@@ -8,6 +8,7 @@ from flask_login._compat import unicode
 DATABASE = 'PARS.db'
 
 
+# -- Henry Guo --
 # capitalise first letter in string
 def capitalise(string):
     return string[0].upper() + string[1:]
@@ -20,6 +21,7 @@ def get_db():
         return db
 
 
+# -- Henry Guo --
 # convert to unix time (ts)
 # date is a string in the format dd/mm/yyyy
 def convertTimeStr(date):
@@ -27,6 +29,7 @@ def convertTimeStr(date):
     return newDate
 
 
+# -- Henry Guo --
 # convert unix time into readable string (dd/mm/yyyy)
 # ts is unix time in milliseconds as an integer
 def convertStrTime(ts):
@@ -36,6 +39,7 @@ def convertStrTime(ts):
 
 # -- Ryan Tan --
 def addShoot(shoot):
+    # addShoot done by Ryan T
     # Adds a row to the 'shoots' table of PARS.db with shoot information,
     # Then adds all shots of that shoot to the 'shots' table of PARS.db
     conn = sqlite3.connect('PARS.db')
@@ -138,8 +142,7 @@ def initialiseSettings(username):  # initialise user settings from database
 # -- End of Dylan's functions --
 
 
-# < Unused functions >
-# -- Rishi Wig --
+# -- Rishi Wig --  < Unused >
 def shoot_range(): #creates a list of tuples of all ranges possible
     conn = sqlite3.connect('PARS.db')
     cur = conn.cursor()
@@ -151,7 +154,7 @@ def shoot_range(): #creates a list of tuples of all ranges possible
         all.append(create_tuple)
     return all
 
-# -- Henry Guo --
+# -- Henry Guo -- < Unused >
 def get_all_shooter_names(): #creates a list of all of the shooter's names in the users table
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -166,6 +169,7 @@ def get_all_shooter_names(): #creates a list of all of the shooter's names in th
     print(addName)
     return shooters
 
+# -- Henry Guo --
 def get_all_usernames(): #creates a list of all of the usernames in the shoots table
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -178,7 +182,7 @@ def get_all_usernames(): #creates a list of all of the usernames in the shoots t
     return usernames
 
 
-# -- Rishi Wig --
+# -- Rishi Wig  and Henry Guo --
 def get_all_dates(shooter):  # collect all the dates that a shooter has shot in and returns it as a list (sorted from latest to oldest)
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -194,7 +198,7 @@ def get_all_dates(shooter):  # collect all the dates that a shooter has shot in 
     return timeList
 
 
-# -- Rishi Wig --
+# -- Rishi Wig--
 def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain all the information on a shoot from a shooter in a specific time frame
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -223,7 +227,7 @@ def get_shot_details(shootId):
     shoots = c.fetchall()
     return shoots
 
-
+# -- Henry Guo --
 def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries which contain all the information on a shoot, including a target's script div
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -268,7 +272,7 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
         )
     return target_list, shot_table
 
-
+# -- Henry Guo --
 def get_table_stats(shooter):  # return a dictionary containing the average score out of 50 and sd for each range
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -302,7 +306,7 @@ def get_table_stats(shooter):  # return a dictionary containing the average scor
     stat_dict = {'sorted_table': sorted_table, 'num_of_shots': num_of_shots, 'stages_shot': stages_shot}
     return stat_dict
 
-
+# -- Henry Guo --
 def get_line_graph_ranges(shooter):  # create the script and div for a line graph that compares the scores for each range over time
     conn = sqlite3.connect("PARS.db")
     c = conn.cursor()
@@ -342,7 +346,7 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
     line_script, line_div = graphProcessing.compareLine(values, 'Dates', 'Scores (Out of 50)', 'Scores for Each Range')
     return line_script, line_div
 
-
+# -- Henry Guo --
 def get_dates_for_all():  # collect the dates for every shooter in a dictionary and separated by range
     all_dates = {}
     conn = sqlite3.connect("PARS.db")
@@ -362,7 +366,7 @@ def get_dates_for_all():  # collect the dates for every shooter in a dictionary 
         all_dates[user[0]] = dateDict
     return all_dates
 
-
+# -- Henry Guo --
 def get_ranges_for_all():  # collect the ranges every shooter has in a dictionary
     all_ranges = {}
     conn = sqlite3.connect("PARS.db")
@@ -378,7 +382,7 @@ def get_ranges_for_all():  # collect the ranges every shooter has in a dictionar
                 all_ranges[user[0]].append(shoot[0])
     return all_ranges
 
-
+# -- Henry Guo --
 def get_shooter_and_year():  # collect shooter and their year group they are in into a dictionary
     all_shooters = {}
     conn = sqlite3.connect("PARS.db")
