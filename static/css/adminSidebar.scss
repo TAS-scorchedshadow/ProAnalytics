@@ -202,18 +202,18 @@ a.article {
 }
 .btn-file{
     color: white;
-    background-color: $palette-4;
-    border-color: $palette-4;
+    background-color: $palette-5;
+    border-color: $palette-5;
 }
 .btn-file:hover{
     color: white;
     background-color: $palette-5;
-    border-color: $palette-4;
+    border-color: $palette-5;
 }
 
 //Jumbotron
 #jumboTitle{
   -webkit-text-fill-color: white;
   -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-color: white;
 }
