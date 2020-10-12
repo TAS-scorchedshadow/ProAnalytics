@@ -33,19 +33,6 @@ def convertStrTime(ts):
     newDate = datetime.fromtimestamp(int(ts) / 1000).strftime('%d-%m-%y')
     return newDate
 
-
-# Adds a row to the users table of PARS.db with the indicated information
-# Only used to add essential information
-def addUser(username, fname, sname, school, email, password,year):
-    conn = sqlite3.connect('PARS.db')
-    c = conn.cursor()
-    c.execute("INSERT INTO users (username, fName, sName, school, email, password,year)"
-              "VALUES (?,?,?,?,?,?,?)",
-              (username, fname, sname, school, email, password, year))
-    conn.commit()
-    conn.close()
-
-
 def addShoot(shoot):
     # addShoot done by Ryan T
     # Adds a row to the 'shoots' table of PARS.db with shoot information,
@@ -82,6 +69,18 @@ def addShoot(shoot):
                   "VALUES (?,?,?,?,?,?,?,?,?,?)",
                   (shootID, shoot['username'], shotNum, sighter, shots[i]['score'], shots[i]['Vscore'],
                    shots[i]['x'], shots[i]['y'], shots[i]['v'], shots[i]['ts']))
+    conn.commit()
+    conn.close()
+
+# -- Following by Dylan Huynh --
+# Adds a row to the users table of PARS.db with the indicated information
+# Only used to add essential information
+def addUser(username, fname, sname, school, email, password,year):
+    conn = sqlite3.connect('PARS.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO users (username, fName, sName, school, email, password,year)"
+              "VALUES (?,?,?,?,?,?,?)",
+              (username, fname, sname, school, email, password, year))
     conn.commit()
     conn.close()
 
@@ -134,6 +133,7 @@ def initialiseSettings(username):  # initialise user settings from database
         session['school'] = row[4]
         session['email'] = row[5]
     conn.close()
+# -- End of Dylan's functions --
 
 #by Rishi Wig, not used
 def shoot_range(): #creates a list of tuples of all ranges possible

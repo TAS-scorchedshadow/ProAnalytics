@@ -47,6 +47,7 @@ UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/upload')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
+# -- Dylan Huynh (Same for all home pages) --
 @app.route('/')
 def landingPage():
     if current_user.is_authenticated:
@@ -62,6 +63,14 @@ def landingPage():
 def adminHome():
     return render_template('adminHome.html')
 
+
+@app.route('/shooterHome')
+@login_required
+def shooterHome():
+    return render_template('shooterHome.html')
+
+
+# -- Andrew Tam & Henry Guo --
 @app.route('/studentList')
 @login_required
 def studentList():
@@ -69,13 +78,7 @@ def studentList():
     return render_template('studentList.html', all_shooters=all_shooters)
 
 
-
-@app.route('/shooterHome')
-@login_required
-def shooterHome():
-    return render_template('shooterHome.html')
-
-#Comparative page by Rishi Wig
+# -- Comparative page by Rishi Wig --
 @app.route('/comparativeHomePage',  methods=['GET', 'POST'])
 def comparativeHomePage():
 
@@ -217,17 +220,7 @@ def comparativeHomePage():
                                second_median=second_median, second_mean=second_mean, second_std=second_std, second_weather=second_weather, submit='True', count_one=count_one, count_two=count_two)
     return render_template('comparativeHomePage.html', all_forms=all_forms, all_dates=all_dates, all_ranges=all_ranges, submit='False', count_one=count_one, count_two=count_two)  # form_usernameOne=form_usernameOne, form_usernameTwo=form_usernameTwo, form_rangeOne=form_rangeOne, form_rangeTwo=form_rangeTwo, form_graph=form_graph)
 
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-
-@app.route('/profile')
-def profile():
-    return render_template('profile.html')
-
-
+# --Report page by Henry Guo --
 @app.route('/report', methods=['GET', 'POST'])
 @login_required
 def report():
@@ -292,11 +285,10 @@ def report():
                            form=form, stat_dict=stat_dict, line_script=line_script,
                            line_div=line_div, shooter_name=shooter_name)
 
-
+# --Upload by Ryan Tan--
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
-    # Upload done by Ryan T
     # todo: neaten this up
     # todo: make verify page clearer (i.e. make it so that user knows that username field is for usernames)
     if current_user.admin == 1:
@@ -367,7 +359,7 @@ def upload():
     else:
         return render_template('accessDenied.html')
 
-
+# -- Sign In and Registration by Dylan Huynh --
 @app.route('/user/signup', methods=['GET', 'POST'])
 def signup():
     # create form
@@ -416,18 +408,6 @@ def signin():
     return render_template('signInForm.html', form=form)
 
 
-@app.route('/target')
-def testDrawTarget():
-    script, div = graphProcessing.drawTarget()
-    return render_template('target.html', script=script, div=div)
-
-
-@app.route('/comparativeBar')
-def comparitiveBar():
-    script, div = graphProcessing.compareBar()
-    return render_template('comparativeBar.html', script=script, div=div)
-
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html')
@@ -448,6 +428,23 @@ def unauthorized():
 def logout():
     logout_user()
     return redirect(url_for('landingPage'))
+
+# -- Test Data worked on by everyone --
+@app.route('/target')
+def testDrawTarget():
+    script, div = graphProcessing.drawTarget()
+    return render_template('target.html', script=script, div=div)
+
+
+@app.route('/comparativeBar')
+def comparitiveBar():
+    script, div = graphProcessing.compareBar()
+    return render_template('comparativeBar.html', script=script, div=div)
+
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
 
 
 if __name__ == '__main__':

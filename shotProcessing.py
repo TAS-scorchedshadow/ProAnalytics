@@ -4,7 +4,8 @@ import numpy
 from datetime import datetime
 
 
-# All work in this file is done by Ryan T
+# -- All work in this file(shotProcessing.py) is done by Ryan T --
+
 # Reformats the shots to filter for relevant data
 def validateShots(txtfile):
     totalShots = 0      # Total number of shots
