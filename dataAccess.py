@@ -4,8 +4,20 @@ from datetime import datetime
 import graphProcessing
 from flask import g, session
 from flask_login._compat import unicode
+import psycopg2
+DB_NAME = "dwjfhvlj"
+DB_USER = "dwjfhvlj"
+DB_PASS = "8thg6lLwJuI00TJrJqd7bUAax05gNZDF"
+DB_HOST = "topsy.db.elephantsql.com"
+DB_PORT = "5432"
 
 DATABASE = 'PARS.db'
+
+
+def connect():
+    conn = psycopg2.connect(database=DB_NAME, user=DB_USER,
+                            password=DB_PASS, host=DB_HOST, port=DB_PORT)
+    return conn
 
 
 # -- Henry Guo --
@@ -42,7 +54,7 @@ def addShoot(shoot):
     # addShoot done by Ryan T
     # Adds a row to the 'shoots' table of PARS.db with shoot information,
     # Then adds all shots of that shoot to the 'shots' table of PARS.db
-    conn = sqlite3.connect('PARS.db')
+    conn = connect()
     c = conn.cursor()
     # Add data to shoots table
     c.execute("INSERT INTO shoots (username, rifleRange, distance, time, duration,"
