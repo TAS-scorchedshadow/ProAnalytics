@@ -13,6 +13,8 @@ DB_PORT = "5432"
 
 DATABASE = 'PARS.db'
 
+# todo: Rewrite ALL database functions to use %s instead of ? (see addShoot(shoot) )
+
 
 def connect():
     conn = psycopg2.connect(database=DB_NAME, user=DB_USER,
@@ -50,21 +52,23 @@ def convertStrTime(ts):
 
 
 # -- Ryan Tan --
+# Adds a row to the 'shoots' table of database with shoot information,
+# Then adds all shots of that shoot to the 'shots' table of the database
 def addShoot(shoot):
-    # addShoot done by Ryan T
-    # Adds a row to the 'shoots' table of PARS.db with shoot information,
-    # Then adds all shots of that shoot to the 'shots' table of PARS.db
     conn = connect()
     c = conn.cursor()
     # Add data to shoots table
-    c.execute("INSERT INTO shoots (username, rifleRange, distance, time, duration,"
-              "groupSize, groupCentreX, groupCentreY,"
-              "totalScore, totalShots, median, mean, std, weather)"
-              "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-              (shoot['username'], shoot['rifleRange'], shoot['distance'], shoot['time'], shoot['duration'],
-               shoot['groupSize'], shoot['groupCentreX'], shoot['groupCentreY'],
-               shoot['totalScore'], shoot['totalShots'],
-               shoot['stats']['median'], shoot['stats']['mean'], shoot['stats']['std'], shoot['weather']))
+    SQL = """
+          INSERT INTO shoots (username, rifleRange, distance, time, duration,
+          groupSize, groupCentreX, groupCentreY,
+          totalScore, totalShots, median, mean, std, weather)
+          VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+          """
+    data = (shoot['username'], shoot['rifleRange'], shoot['distance'], shoot['time'], shoot['duration'],
+            shoot['groupSize'], shoot['groupCentreX'], shoot['groupCentreY'],
+            shoot['totalScore'], shoot['totalShots'],
+            shoot['stats']['median'], shoot['stats']['mean'], shoot['stats']['std'], shoot['weather'])
+    c.execute(SQL, data)
     conn.commit()
     # Get ID of the added shoot
     c.execute('SELECT * FROM shoots ORDER BY shootID desc;')
@@ -82,10 +86,13 @@ def addShoot(shoot):
             sighterCount += 1
         else:
             shotNum = i + 1 - sighterCount
-        c.execute("INSERT INTO shots (shootID, username, shotNum, sighter, score, scoreV, x, y, velocity, datetime)"
-                  "VALUES (?,?,?,?,?,?,?,?,?,?)",
-                  (shootID, shoot['username'], shotNum, sighter, shots[i]['score'], shots[i]['Vscore'],
-                   shots[i]['x'], shots[i]['y'], shots[i]['v'], shots[i]['ts']))
+        SQL = """
+              INSERT INTO shots (shootID, username, shotNum, sighter, score, scoreV, x, y, velocity, datetime)
+              VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+              """
+        data = (shootID, shoot['username'], shotNum, str(sighter), shots[i]['score'], str(shots[i]['Vscore']),
+                shots[i]['x'], shots[i]['y'], shots[i]['v'], shots[i]['ts'])
+        c.execute(SQL, data)
     conn.commit()
     conn.close()
 
@@ -94,19 +101,25 @@ def addShoot(shoot):
 # Adds a row to the users table of PARS.db with the indicated information
 # Only used to add essential information
 def addUser(username, fname, sname, school, email, password,year):
-    conn = sqlite3.connect('PARS.db')
+    conn = connect()
     c = conn.cursor()
-    c.execute("INSERT INTO users (username, fName, sName, school, email, password,year)"
-              "VALUES (?,?,?,?,?,?,?)",
-              (username, fname, sname, school, email, password, year))
+    SQL = """
+          INSERT INTO users (username, fName, sName, school, email, password, year)
+          VALUES (%s, %s, %s, %s, %s, %s, %s)
+          """
+    data = (username, fname, sname, school, email, password, year)
+    c.execute(SQL, data)
     conn.commit()
     conn.close()
 
 
-def usernameExists(username):  # Checks if username exists in database
-    conn = sqlite3.connect('PARS.db')
+# Checks if username exists in database
+def usernameExists(username):
+    conn = connect()
     c = conn.cursor()
-    c.execute('SELECT * FROM users WHERE username=?', (username,))
+    SQL = "SELECT * FROM users WHERE username=%s"
+    data = (username,)
+    c.execute(SQL, data)
     result = c.fetchone()
     if result:
         return True
@@ -114,26 +127,34 @@ def usernameExists(username):  # Checks if username exists in database
         return False
 
 
-def findID(username):  # Checks if username exists in database
-    conn = sqlite3.connect('PARS.db')
+# Checks if username exists in database
+def findID(username):
+    conn = connect()
     c = conn.cursor()
-    c.execute('SELECT * FROM users WHERE username=?', (username,))
+    SQL = "SELECT * FROM users WHERE username=%s"
+    data = (username,)
+    c.execute(SQL, data)
     userid = c.fetchone()[0]
     return userid
 
 
-def findPassword(username): #Finds an encrypted password in the database given a username
-    conn = sqlite3.connect('PARS.db')
+# Finds an encrypted password in the database given a username
+def findPassword(username):
+    conn = connect()
     c = conn.cursor()
-    c.execute('SELECT * FROM users WHERE username=?', (username,))
+    SQL = "SELECT * FROM users WHERE username=%s"
+    data = (username,)
+    c.execute(SQL, data)
     password = c.fetchone()[6]  # Gets position of password
     return password
 
 
 def emailExists(email):  # Checks if email exists in database
-    conn = sqlite3.connect('PARS.db')
+    conn = connect()
     c = conn.cursor()
-    c.execute('SELECT * FROM users WHERE email=?', (email,))
+    SQL = "SELECT * FROM users WHERE email=%s"
+    data = (email,)
+    c.execute(SQL, data)
     result = c.fetchone()
     if result:
         return True
@@ -141,10 +162,13 @@ def emailExists(email):  # Checks if email exists in database
         return False
 
 
-def initialiseSettings(username):  # initialise user settings from database
-    conn = sqlite3.connect('PARS.db')
+# initialise user settings from database
+def initialiseSettings(username):
+    conn = connect()
     c = conn.cursor()
-    for row in c.execute('SELECT * FROM users WHERE username=?', (username,)):
+    SQL = "SELECT * FROM users WHERE username=%s"
+    data = (username,)
+    for row in c.execute(SQL, data):
         print(row)
         session['fName'] = row[2]
         session['sName'] = row[3]
@@ -155,20 +179,23 @@ def initialiseSettings(username):  # initialise user settings from database
 
 
 # -- Rishi Wig --  < Unused >
-def shoot_range(): #creates a list of tuples of all ranges possible
-    conn = sqlite3.connect('PARS.db')
-    cur = conn.cursor()
-    cur.execute("SELECT distance FROM shoots")
-    rows = cur.fetchall()
+# creates a list of tuples of all ranges possible
+def shoot_range():
+    conn = connect()
+    c = conn.cursor()
+    c.execute("SELECT distance FROM shoots")
+    rows = c.fetchall()
     all = []
     for row in rows:
         create_tuple = (row[0], row[0])
         all.append(create_tuple)
     return all
 
+
 # -- Henry Guo -- < Unused >
-def get_all_shooter_names(): #creates a list of all of the shooter's names in the users table
-    conn = sqlite3.connect("PARS.db")
+# creates a list of all of the shooter's names in the users table
+def get_all_shooter_names():
+    conn = connect()
     c = conn.cursor()
     c.execute("SELECT fName, sName, admin FROM users")
     names = c.fetchall()
@@ -181,9 +208,11 @@ def get_all_shooter_names(): #creates a list of all of the shooter's names in th
     print(addName)
     return shooters
 
+
 # -- Henry Guo --
-def get_all_usernames(): #creates a list of all of the usernames in the shoots table
-    conn = sqlite3.connect("PARS.db")
+# creates a list of all of the usernames in the shoots table
+def get_all_usernames():
+    conn = connect()
     c = conn.cursor()
     c.execute("SELECT username FROM users")
     names = c.fetchall()
@@ -195,10 +224,13 @@ def get_all_usernames(): #creates a list of all of the usernames in the shoots t
 
 
 # -- Rishi Wig  and Henry Guo --
-def get_all_dates(shooter):  # collect all the dates that a shooter has shot in and returns it as a list (sorted from latest to oldest)
-    conn = sqlite3.connect("PARS.db")
+# collect all the dates that a shooter has shot in and returns it as a list (sorted from latest to oldest)
+def get_all_dates(shooter):
+    conn = connect()
     c = conn.cursor()
-    c.execute('SELECT time FROM shoots WHERE username=? ORDER BY time desc;', (shooter,))
+    SQL = "SELECT time FROM shoots WHERE username=%s ORDER BY time desc;"
+    data = (shooter,)
+    c.execute(SQL, data)
     shootTimes = c.fetchall()
     timeList = []
     for shoot in shootTimes:
@@ -211,37 +243,47 @@ def get_all_dates(shooter):  # collect all the dates that a shooter has shot in 
 
 
 # -- Rishi Wig--
-def get_shoots(shooter, dayStart, dayEnd):  # get a tuple of lists that contain all the information on a shoot from a shooter in a specific time frame
-    conn = sqlite3.connect("PARS.db")
+# get a tuple of lists that contain all the information on a shoot from a shooter in a specific time frame
+def get_shoots(shooter, dayStart, dayEnd):
+    conn = connect()
     c = conn.cursor()
-    c.execute('SELECT * FROM shoots WHERE username=? AND time BETWEEN ? AND ? ORDER BY time desc;',
-              (shooter, dayStart, dayEnd))
+    SQL = "SELECT * FROM shoots WHERE username=%s AND time BETWEEN %s AND %s ORDER BY time desc;"
+    data = (shooter, dayStart, dayEnd)
+    c.execute(SQL, data)
     shoots = c.fetchall()
     print(shoots)
     return shoots
 
 
 # -- Rishi Wig --
-def get_graph_details(username,distance, time):
-    conn = sqlite3.connect("PARS.db")
+def get_graph_details(username, distance, time):
+    conn = connect()
     c = conn.cursor()
-    c.execute('SELECT groupSize,groupCentreX,groupCentreY,totalScore, shootID, median, mean, std, weather, totalShots FROM shoots WHERE username=? AND distance=? AND time=?;',
-              (username, distance, time))
+    SQL = """
+          SELECT groupSize, groupCentreX, groupCentreY, totalScore, shootID, median, mean, std, weather, totalShots
+          FROM shoots WHERE username=%s AND distance=%s AND time=%s;
+          """
+    data = (username, distance, time)
+    c.execute(SQL, data)
     shoots = c.fetchall()
     return shoots
 
 
 # -- Rishi Wig --
-def get_shot_details(shootId):
-    conn = sqlite3.connect("PARS.db")
+def get_shot_details(shootID):
+    conn = connect()
     c = conn.cursor()
-    c.execute('SELECT shotNum, x, y, score FROM shots WHERE shootID=?;', (shootId,))
+    SQL = "SELECT shotNum, x, y, score FROM shots WHERE shootID=%s"
+    data = (shootID,)
+    c.execute(SQL, data)
     shoots = c.fetchall()
     return shoots
 
+
 # -- Henry Guo --
-def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries which contain all the information on a shoot, including a target's script div
-    conn = sqlite3.connect("PARS.db")
+# return a list of dictionaries which contain all the information on a shoot, including a target's script div
+def get_shoots_dict(shooter, dayStart, dayEnd):
+    conn = connect()
     c = conn.cursor()
     shot_table = {}
     target_list = []
@@ -250,7 +292,9 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
     # search through each shoot to collect a list of shots
     for shoot in shoots:
         shot_table[str(shoot[0])] = []
-        c.execute('SELECT * FROM shots WHERE shootID=?', (shoot[0],))
+        SQL = "SELECT * FROM shots WHERE shootID=%s"
+        data = (shoot[0],)
+        c.execute(SQL, data)
         range = shoot[3]
         shots_tuple = c.fetchall()
         shots = {}
@@ -284,11 +328,15 @@ def get_shoots_dict(shooter, dayStart, dayEnd):  # return a list of dictionaries
         )
     return target_list, shot_table
 
+
 # -- Henry Guo --
-def get_table_stats(shooter):  # return a dictionary containing the average score out of 50 and sd for each range
-    conn = sqlite3.connect("PARS.db")
+# return a dictionary containing the average score out of 50 and sd for each range
+def get_table_stats(shooter):
+    conn = connect()
     c = conn.cursor()
-    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time desc;', (shooter,))
+    SQL = "SELECT * FROM shoots WHERE username=%s ORDER BY time desc;"
+    data = (shooter,)
+    c.execute(SQL, data)
     shoots = c.fetchall()
     num_of_shots = 0
     quick_table = {}
@@ -318,12 +366,16 @@ def get_table_stats(shooter):  # return a dictionary containing the average scor
     stat_dict = {'sorted_table': sorted_table, 'num_of_shots': num_of_shots, 'stages_shot': stages_shot}
     return stat_dict
 
+
 # -- Henry Guo --
-def get_line_graph_ranges(shooter):  # create the script and div for a line graph that compares the scores for each range over time
-    conn = sqlite3.connect("PARS.db")
+# create the script and div for a line graph that compares the scores for each range over time
+def get_line_graph_ranges(shooter):
+    conn = connect()
     c = conn.cursor()
     # create line graph
-    c.execute('SELECT * FROM shoots WHERE username=? ORDER BY time asc;', (shooter,))
+    SQL = "SELECT * FROM shoots WHERE username=%s ORDER BY time asc;"
+    data = (shooter,)
+    c.execute(SQL, data)
     shoots = c.fetchall()
     values = {}
     lineList = []  # should end up looking like [ [300m, [x,x,x,x,x], [y,y,y,y,y]] , [500m, [x,x,x,x,x], [y,y,y,y,y]] ]
@@ -358,16 +410,20 @@ def get_line_graph_ranges(shooter):  # create the script and div for a line grap
     line_script, line_div = graphProcessing.compareLine(values, 'Dates', 'Scores (Out of 50)', 'Scores for Each Range')
     return line_script, line_div
 
+
 # -- Henry Guo --
-def get_dates_for_all():  # collect the dates for every shooter in a dictionary and separated by range
+# collect the dates for every shooter in a dictionary and separated by range
+def get_dates_for_all():
     all_dates = {}
-    conn = sqlite3.connect("PARS.db")
+    conn = connect()
     c = conn.cursor()
     c.execute('SELECT username FROM users')
     users = c.fetchall()
     for user in users:
         dateDict = {}
-        c.execute('SELECT distance, time FROM shoots WHERE username=? ORDER BY time desc;', (user[0],))
+        SQL = "SELECT distance, time FROM shoots WHERE username=%s ORDER BY time desc;"
+        data = (user[0],)
+        c.execute(SQL, data)
         shoots = c.fetchall()
         for shoot in shoots:
             date = datetime.fromtimestamp(int(shoot[1]) / 1000).strftime('%d/%m/%Y (%H:%M)')
@@ -378,26 +434,32 @@ def get_dates_for_all():  # collect the dates for every shooter in a dictionary 
         all_dates[user[0]] = dateDict
     return all_dates
 
+
 # -- Henry Guo --
-def get_ranges_for_all():  # collect the ranges every shooter has in a dictionary
+# collect the ranges every shooter has in a dictionary
+def get_ranges_for_all():
     all_ranges = {}
-    conn = sqlite3.connect("PARS.db")
+    conn = connect()
     c = conn.cursor()
     c.execute('SELECT username FROM users')
     users = c.fetchall()
     for user in users:
         all_ranges[user[0]] = []
-        c.execute('SELECT distance FROM shoots WHERE username=?;', (user[0],))
+        SQL = "SELECT distance FROM shoots WHERE username=?;"
+        data = (user[0])
+        c.execute(SQL, data)
         shoots = c.fetchall()
         for shoot in shoots:
             if shoot[0] not in all_ranges[user[0]]:
                 all_ranges[user[0]].append(shoot[0])
     return all_ranges
 
+
 # -- Henry Guo --
-def get_shooter_and_year():  # collect shooter and their year group they are in into a dictionary
+# collect shooter and their year group they are in into a dictionary
+def get_shooter_and_year():
     all_shooters = {}
-    conn = sqlite3.connect("PARS.db")
+    conn = connect()
     c = conn.cursor()
     c.execute('SELECT username, fName, sName, year FROM users WHERE admin IS 0 ORDER BY year asc')
     users = c.fetchall()

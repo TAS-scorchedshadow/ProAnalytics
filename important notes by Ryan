@@ -1,0 +1,5 @@
+Database update is *not* done yet; users table must still be added.
+There is also a chance that due to not using conn.close, there may be issues.
+Speaking of connecting to the database, there needs to be an error message in the case the database is full.
+
+- Ryan
