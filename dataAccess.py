@@ -13,8 +13,6 @@ DB_PORT = "5432"
 
 DATABASE = 'PARS.db'
 
-# todo: Rewrite ALL database functions to use %s instead of ? (see addShoot(shoot) )
-
 
 def connect():
     conn = psycopg2.connect(database=DB_NAME, user=DB_USER,
@@ -168,6 +166,7 @@ def initialiseSettings(username):
     c = conn.cursor()
     SQL = "SELECT * FROM users WHERE username=%s"
     data = (username,)
+    # todo: Does not seem to be iterable with a for loop
     for row in c.execute(SQL, data):
         print(row)
         session['fName'] = row[2]
@@ -445,8 +444,9 @@ def get_ranges_for_all():
     users = c.fetchall()
     for user in users:
         all_ranges[user[0]] = []
-        SQL = "SELECT distance FROM shoots WHERE username=?;"
+        SQL = "SELECT distance FROM shoots WHERE username=%s;"
         data = (user[0])
+        # todo: error where not all arguments are converted during string formatting
         c.execute(SQL, data)
         shoots = c.fetchall()
         for shoot in shoots:
@@ -461,6 +461,7 @@ def get_shooter_and_year():
     all_shooters = {}
     conn = connect()
     c = conn.cursor()
+    # todo: syntax error at or near "0", i.e. "WHERE admin IS 0" is not part of syntax
     c.execute('SELECT username, fName, sName, year FROM users WHERE admin IS 0 ORDER BY year asc')
     users = c.fetchall()
     for user in users:
