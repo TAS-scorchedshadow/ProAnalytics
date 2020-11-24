@@ -17,7 +17,6 @@ from dataAccess import emailExists, addShoot, get_table_stats, get_all_dates, ge
     get_shooter_and_year, convertStrTime
 
 from werkzeug.utils import secure_filename, redirect
-from drawtarget import create_target
 from datetime import datetime
 import time
 import os
