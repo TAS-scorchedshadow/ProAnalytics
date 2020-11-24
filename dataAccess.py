@@ -416,7 +416,7 @@ def get_dates_for_all():
     all_dates = {}
     conn = connect()
     c = conn.cursor()
-    c.execute('SELECT username FROM users')
+    c.execute('SELECT username FROM users WHERE admin=0;')
     users = c.fetchall()
     for user in users:
         dateDict = {}
@@ -445,8 +445,7 @@ def get_ranges_for_all():
     for user in users:
         all_ranges[user[0]] = []
         SQL = "SELECT distance FROM shoots WHERE username=%s;"
-        data = (user[0])
-        # todo: error where not all arguments are converted during string formatting
+        data = (user[0],)
         c.execute(SQL, data)
         shoots = c.fetchall()
         for shoot in shoots:
@@ -462,7 +461,7 @@ def get_shooter_and_year():
     conn = connect()
     c = conn.cursor()
     # todo: syntax error at or near "0", i.e. "WHERE admin IS 0" is not part of syntax
-    c.execute('SELECT username, fName, sName, year FROM users WHERE admin IS 0 ORDER BY year asc')
+    c.execute('SELECT username, fName, sName, year FROM users WHERE admin=0 ORDER BY year asc')
     users = c.fetchall()
     for user in users:
         if user[3] not in all_shooters:

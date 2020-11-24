@@ -3,14 +3,14 @@ from bokeh.embed import components
 from bokeh.models import Range1d
 
 
-# Target rendering (Possibly unused)
+# Target rendering
 # -- Ryan T --
 def create_target(range_type):
     # Dimensions are obtained from:
     # https://en.wikipedia.org/wiki/Shooting_target#International_Confederation_of_Fullbore_Rifle_Associations
     # Details are as follows: "Range": (Distance, V Ring, 5 Ring, 4 Ring, 3 Ring, 2 Ring)
     # Distance is in metres. Rings are diameters in mm
-    target_details = {"300m": (300, 70, 140, 280, 420, 600),
+    target_details = {"300m": (300, 70, 140, 280, 420, 600, 1200),
                       "400m": (400, 95, 185, 375, 560, 800),
                       "500m": (500, 145, 290, 660, 1000, 1320),
                       "600m": (600, 160, 320, 660, 1000, 1320),

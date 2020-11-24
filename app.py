@@ -78,6 +78,14 @@ def studentList():
     all_shooters = get_shooter_and_year()
     return render_template('studentList.html', all_shooters=all_shooters)
 
+# Rifle boss fight
+@app.route('/game')
+@login_required
+def game():
+    shooter = current_user.username
+    print(get_all_dates(shooter))
+    return render_template('game.html', shooter=shooter)
+
 
 # Comparative page
 # -- Rishi Wig --
